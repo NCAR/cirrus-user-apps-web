@@ -26,5 +26,3 @@ app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
 from app.main import views
-from app.nacordex import views
-from app.stratus import views

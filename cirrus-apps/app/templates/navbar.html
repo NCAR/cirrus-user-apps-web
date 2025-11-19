@@ -1,0 +1,44 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light" id="navbar-main">
+      <a class="navbar-brand" href="https://www2.cisl.ucar.edu/">
+        <img src="{{url_for('static',  filename='CISL-contemp-logo-blue.png')}}" class="logo" alt="logo">
+      </a>   
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul id="navbar-main-elements" class="navbar-nav mr-auto mt-2 mt-lg-0">   
+                <li class="nav-item">
+                    <a class="nav-link nav-internal" href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/01-intro/">CIRRUS Docs</a>
+                </li>    
+              <div class="dropdown">
+                <li class="nav-item">
+                  <button class="dropbtn">
+                    <a class="nav-link nav-internal" href="https://cloud-docs.k8s.ucar.edu/overview/services.html">
+                      Resources <i class="fa-solid fa-chevron-down" style="color: #000000;"></i>
+                    </a>
+                  </button>
+                </li>
+              <div class="dropdown-content">        
+                <a class="dropdown-link" href="https://jupyter.k8s.ucar.edu/">
+                  CIRRUS JupyterHub
+                </a><br>                
+                <a class="dropdown-link" href="https://hub.k8s.ucar.edu/">
+                  Container Registry - Harbor
+                </a><br>                
+                <a class="dropdown-link" href="https://bao.k8s.ucar.edu/ui/vault/auth?with=oidc">
+                  Secret Manager - OpenBao
+                </a><br>     
+              </div>
+            </div>
+            <li class="nav-item">
+            <a class="nav-link nav-internal" href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10905">Report issue</a>
+            </li>    
+          </ul>
+      </div>  
+      <div id="navbar-end">  
+        <div class="navbar-end-item">
+          <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+          </ul> 
+        </div>    
+      </div>
+</nav>

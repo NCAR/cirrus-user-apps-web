@@ -1,6 +1,18 @@
+- name: CESM LENS2 Dashboard
+  url: https://cesm-lens2-dashboard.k8s.ucar.edu/
+  screenshot: lens2-dashboard.png
+  
 - name: CTSM JupyterHub
   url: https://ctsm-jhub.k8s.ucar.edu/
   screenshot: ctsm-jhub.png
+  
+- name: DASH Search
+  url: https://data.ucar.edu/
+  screenshot: dash-search.png
+  
+- name: ERA5 Dashboard
+  url: https://era5.k8s.ucar.edu/dashboards
+  screenshot: era5-dashboard.png
 
 - name: GDEX
   url: https://gdex.ucar.edu/
@@ -9,3 +21,11 @@
 - name: Mesonet
   url: https://map-server.mesonet.k8s.ucar.edu/
   screenshot: mesonet.png
+
+- name: NEON Dashboard
+  url: https://ncar-neon-viz.k8s.ucar.edu/neon_dashboard
+  screenshot: neon-dashboard.png
+  
+- name: SkyWash
+  url: https://skywash.k8s.ucar.edu/
+  screenshot: skywash.png

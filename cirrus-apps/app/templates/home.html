@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-    <title>Home | NSF NCAR Stratus & GLADE UI</title>
+    <title>Home | NSF NCAR CIRRUS User Applications</title>
         <link rel="canonical" href="{{ url_for('home') }}"/>
         <meta property="og:title" content="Home | NCAR Stratus UI"/>
         <meta property="og:url" content="{{ url_for('home') }}"/>
@@ -21,8 +21,32 @@
     <body>
         <div id="nav"></div>
         <br>
+        <div class="container">
             <div class="bigbubble">
-            <h1>CIRRUS User Applications</h1>
+                <h2>CIRRUS User Applications</h2>
             </div>
+            
+            <div class="row row-cols-1 row-cols-md-2 g-4 mt-3">
+                {% for app in applications %}
+                <div class="col">
+                    <div class="card h-100">
+                        <a href="{{ app.url }}" target="_blank" class="text-decoration-none">
+                            <img src="{{ url_for('static', filename='screenshots/' + app.screenshot) }}" 
+                                 class="card-img-top" 
+                                 alt="{{ app.name }} screenshot"
+                                 style="object-fit: cover; height: 200px;">
+                        </a>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">
+                                <a href="{{ app.url }}" target="_blank" class="text-decoration-none">
+                                    {{ app.name }}
+                                </a>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
     </body>
 </html>

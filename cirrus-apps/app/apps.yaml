@@ -1,0 +1,11 @@
+- name: CTSM JupyterHub
+  url: https://ctsm-jhub.k8s.ucar.edu/
+  screenshot: ctsm-jhub.png
+
+- name: GDEX
+  url: https://gdex.ucar.edu/
+  screenshot: gdex.png
+
+- name: Mesonet
+  url: https://map-server.mesonet.k8s.ucar.edu/
+  screenshot: mesonet.png

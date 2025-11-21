@@ -1,11 +1,26 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-    <div class="container">
-        <a class="navbar-brand" href="https://www2.cisl.ucar.edu/">
-            <img src="{{url_for('static', filename='CISL-contemp-logo-blue.png')}}" 
-                 alt="CISL Logo" 
-                 class="navbar-logo">
-        </a>
-        
+<!-- Top Bar with Logo -->
+<div class="top-bar">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-auto">
+                <a href="https://www2.cisl.ucar.edu/" class="top-bar-logo-link">
+                    <img src="{{url_for('static', filename='CISL-contemp-logo-blue.png')}}" 
+                         alt="CISL Logo" 
+                         class="top-bar-logo">
+                </a>
+            </div>
+            <div class="col text-end">
+                <a href="mailto:cirrus-admin@ucar.edu" class="top-bar-contact">
+                    <i class="fas fa-envelope me-2"></i>Contact Us
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Navigation Menu Bar -->
+<nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
         <button class="navbar-toggler" 
                 type="button" 
                 data-bs-toggle="collapse" 
@@ -17,7 +32,7 @@
         </button>
         
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
+            <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('home') }}">Home</a>
                 </li>
@@ -43,33 +58,33 @@
                     <ul class="dropdown-menu" aria-labelledby="resourcesDropdown">
                         <li>
                             <a class="dropdown-item" href="https://mlc1-argo.k8s.ucar.edu/" target="_blank">
-                                <i class="fas fa-code-branch me-2"></i>ML Argo CD
+                                ML Argo CD
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="https://nwc1-argo.k8s.ucar.edu/" target="_blank">
-                                <i class="fas fa-code-branch me-2"></i>NWSC Argo CD
+                                NWSC Argo CD
                             </a>
                         </li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <a class="dropdown-item" href="https://jupyter.k8s.ucar.edu/" target="_blank">
-                                <i class="fas fa-book me-2"></i>CIRRUS JupyterHub
+                                CIRRUS JupyterHub
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="https://hub.k8s.ucar.edu/" target="_blank">
-                                <i class="fas fa-database me-2"></i>Harbor Registry
+                                Harbor Registry
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="https://grafana.k8s.ucar.edu/" target="_blank">
-                                <i class="fas fa-chart-line me-2"></i>Grafana
+                                Grafana
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="https://bao.k8s.ucar.edu/ui/vault/auth?with=oidc" target="_blank">
-                                <i class="fas fa-lock me-2"></i>OpenBao
+                                OpenBao
                             </a>
                         </li>
                     </ul>
@@ -78,7 +93,7 @@
                     <a class="nav-link" 
                        href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10905"
                        target="_blank">
-                        <i class="fas fa-ticket-alt me-1"></i>Report Issue
+                        Report Issue
                     </a>
                 </li>
             </ul>

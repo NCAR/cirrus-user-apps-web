@@ -24,45 +24,61 @@
     <footer class="footer mt-5">
         <div class="container">
             <div class="row py-5">
-                <div class="col-lg-4 mb-4 mb-lg-0">
-                    <h5 class="footer-heading mb-3">CIRRUS Platform</h5>
-                    <p class="footer-text">Cloud-native infrastructure for Earth system science at NSF NCAR</p>
-                    <div class="footer-links mt-3">
+                <div class="col-lg-3 mb-4 mb-lg-0">
+                    <h5 class="footer-heading mb-3">CIRRUS</h5>
+                    <div class="footer-links">
                         <a href="{{ url_for('home') }}" class="d-block mb-2">Home</a>
                         <a href="{{ url_for('apps') }}" class="d-block mb-2">Applications</a>
                         <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/01-intro/" target="_blank" class="d-block mb-2">Documentation</a>
-                        <a href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10905" target="_blank" class="d-block mb-2">Report Issue</a>
+                        <a href="mailto:cirrus-admin@ucar.edu" class="d-block mb-2">Contact</a>
                     </div>
                 </div>
                 
-                <div class="col-lg-4 mb-4 mb-lg-0">
-                    <h5 class="footer-heading mb-3">CISL Resources</h5>
+                <div class="col-lg-3 mb-4 mb-lg-0">
+                    <h5 class="footer-heading mb-3">Resources</h5>
                     <div class="footer-links">
-                        <a href="https://www.cisl.ucar.edu/" target="_blank" class="d-block mb-2">CISL Home</a>
+                        <a href="https://mlc1-argo.k8s.ucar.edu/" target="_blank" class="d-block mb-2">ML Argo CD</a>
+                        <a href="https://nwc1-argo.k8s.ucar.edu/" target="_blank" class="d-block mb-2">NWSC Argo CD</a>
                         <a href="https://jupyter.k8s.ucar.edu/" target="_blank" class="d-block mb-2">JupyterHub</a>
                         <a href="https://hub.k8s.ucar.edu/" target="_blank" class="d-block mb-2">Harbor Registry</a>
                         <a href="https://grafana.k8s.ucar.edu/" target="_blank" class="d-block mb-2">Grafana</a>
                     </div>
                 </div>
                 
-                <div class="col-lg-4">
-                    <h5 class="footer-heading mb-3">About</h5>
+                <div class="col-lg-3 mb-4 mb-lg-0">
+                    <h5 class="footer-heading mb-3">NSF NCAR</h5>
                     <div class="footer-links">
-                        <a href="https://ncar.ucar.edu/" target="_blank" class="d-block mb-2">NSF NCAR</a>
-                        <a href="https://www.ucar.edu/" target="_blank" class="d-block mb-2">UCAR</a>
-                        <a href="https://www.nsf.gov/" target="_blank" class="d-block mb-2">National Science Foundation</a>
+                        <a href="https://ncar.ucar.edu/" target="_blank" class="d-block mb-2">NSF NCAR Homepage</a>
+                        <a href="https://www.cisl.ucar.edu/" target="_blank" class="d-block mb-2">CISL</a>
+                        <a href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10905" target="_blank" class="d-block mb-2">Report Issue</a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3">
+                    <h5 class="footer-heading mb-3">UCAR</h5>
+                    <div class="footer-links">
+                        <a href="https://www.ucar.edu/" target="_blank" class="d-block mb-2">UCAR Homepage</a>
+                        <a href="https://www.ucar.edu/who-we-are/governance/member-institutions" target="_blank" class="d-block mb-2">Member Institutions</a>
                     </div>
                 </div>
             </div>
-            
-            <div class="row border-top pt-4">
-                <div class="col-12 text-center">
-                    <p class="footer-text mb-2">
-                        NSF NCAR is sponsored by the U.S. National Science Foundation and managed by the University Corporation for Atmospheric Research
-                    </p>
-                    <p class="footer-copyright mb-0">
-                        &copy; 2025 University Corporation for Atmospheric Research
-                    </p>
+        </div>
+        
+        <div class="legal-footer">
+            <div class="container">
+                <div class="row py-3">
+                    <div class="col-12 text-center">
+                        <p class="legal-footer-text mb-2">
+                            &copy; 2025 UCAR | 
+                            <a href="https://www.ucar.edu/privacy-policy" target="_blank" class="legal-link">Privacy</a> | 
+                            <a href="https://www.ucar.edu/terms-of-use" target="_blank" class="legal-link">Terms of Use</a> | 
+                            Sponsored by 
+                            <a href="https://www.nsf.gov/" target="_blank" class="legal-link">U.S. NSF</a>
+                        </p>
+                        <p class="legal-footer-address mb-0">
+                            Postal Address: P.O. Box 3000, Boulder, CO 80307-3000 • Shipping Address: 3090 Center Green Drive, Boulder, CO 80301
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

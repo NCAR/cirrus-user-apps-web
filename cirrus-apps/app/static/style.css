@@ -500,44 +500,56 @@ main {
 
 /* ===== FOOTER ===== */
 .footer {
-    background-color: #2c3e50;
+    background-color: #323133;
     color: #ffffff;
     border-top: none;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
+    line-height: 1.35;
 }
 
 .footer-heading {
     color: #ffffff;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.footer-text {
-    color: rgba(255, 255, 255, 0.8);
-    line-height: 1.6;
+    margin-bottom: 1rem;
 }
 
 .footer-links a {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.75);
     text-decoration: none;
     transition: var(--transition);
-    font-size: 0.9rem;
+    font-size: 0.875rem;
 }
 
 .footer-links a:hover {
     color: #ffffff;
-    padding-left: 5px;
 }
 
-.footer-copyright {
+/* Legal Footer Section */
+.legal-footer {
+    background-color: rgb(36.975, 36.975, 36.975);
     color: rgba(255, 255, 255, 0.7);
-    font-size: 0.85rem;
 }
 
-.footer .border-top {
-    border-color: rgba(255, 255, 255, 0.1) !important;
+.legal-footer-text {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.legal-footer-address {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.legal-link {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.legal-link:hover {
+    color: #ffffff;
+    text-decoration: underline;
 }
 
 /* NSF Footer Section */

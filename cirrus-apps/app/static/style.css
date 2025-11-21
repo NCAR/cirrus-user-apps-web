@@ -21,16 +21,14 @@
 }
 
 body {
-    font-family: 'Poppins', Arial, sans-serif;
+    font-family: 'Poppins', Arial, sans-serif !important;
     font-size: 1rem;
     line-height: 1.6;
     color: var(--text-dark);
-    background-image: url("/static/images/NCAR-Waves.png");
-    background-position: right top;
-    background-repeat: no-repeat;
-    background-color: #ffffff;
-    background-attachment: fixed;
-    background-size: 600px auto;
+    background-image: url("images/NCAR-Waves.png") !important;
+    background-position: right top !important;
+    background-repeat: no-repeat !important;
+    background-color: #dbe2e9 !important;
 }
 
 main {

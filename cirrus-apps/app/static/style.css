@@ -25,11 +25,12 @@ body {
     font-size: 1rem;
     line-height: 1.6;
     color: var(--text-dark);
-    background-image: url("images/NCAR-Waves.png");
+    background-image: url("/static/images/NCAR-Waves.png");
     background-position: right top;
     background-repeat: no-repeat;
     background-color: #ffffff;
     background-attachment: fixed;
+    background-size: 600px auto;
 }
 
 main {
@@ -310,6 +311,9 @@ main {
 }
 
 /* ===== FEATURES SECTION ===== */
+.features-section {
+    background-color: transparent;
+}
 
 .section-title {
     font-size: 2.5rem;
@@ -363,6 +367,74 @@ main {
     color: var(--text-light);
     line-height: 1.7;
     margin-bottom: 0;
+}
+
+/* ===== SERVICES SECTION ===== */
+.services-section {
+    background-color: #ffffff;
+}
+
+.service-card {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 2px solid #e9ecef;
+    height: 100%;
+    transition: var(--transition);
+}
+
+.service-card:hover {
+    border-color: var(--ncar-blue);
+    box-shadow: 0 8px 24px rgba(26, 101, 143, 0.1);
+    transform: translateY(-3px);
+}
+
+.service-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.service-icon {
+    font-size: 2rem;
+    color: var(--ncar-blue);
+}
+
+.service-card h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0;
+}
+
+.service-card > p {
+    font-size: 0.95rem;
+    color: var(--text-light);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+}
+
+.service-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.service-features li {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    padding: 0.5rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.service-features li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--ncar-blue);
+    font-weight: bold;
 }
 
 /* ===== CTA SECTION ===== */

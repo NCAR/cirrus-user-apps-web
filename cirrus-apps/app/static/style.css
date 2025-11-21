@@ -35,7 +35,7 @@ main {
 /* ===== TOP BAR (LOGO BAR) ===== */
 .top-bar {
     background-color: #ffffff;
-    padding: 1rem 0.75rem;
+    padding: 1rem 0;
     border-bottom: 3px solid var(--ncar-blue);
 }
 
@@ -75,7 +75,7 @@ main {
 /* ===== NAVBAR (MENU BAR) ===== */
 .navbar {
     background-color: #d9d9d6;
-    padding: 0 0.75rem;
+    padding: 0;
     border-bottom: 1px solid #c0c0bd;
 }
 

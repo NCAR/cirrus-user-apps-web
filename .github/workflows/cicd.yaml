@@ -13,7 +13,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  podman-build-push:
+  image-build-push:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repo 

@@ -168,6 +168,12 @@ body {
     background-color: #dbe2e9 !important;
 }
 
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 p {
     font-size: 1.25rem;
     line-height: 1.875rem;

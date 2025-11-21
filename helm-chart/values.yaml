@@ -1,0 +1,14 @@
+replicaCount: 1
+
+webapp:
+  name: cirrus-user-web
+  group: cirrus-user-web
+  path: /
+  tls:
+    fqdn: cirrus.k8s.ucar.edu
+    secretName: cirrus-user-web-ssl
+  container: 
+    image: hub.k8s.ucar.edu/ncote/cirrus-user-web:2024-10-04.22.03
+    port: 5000
+    memory: 1G
+    cpu: 2

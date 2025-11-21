@@ -1,12 +1,12 @@
 replicaCount: 1
 
 webapp:
-    image: hub.k8s.ucar.edu/ncote/cirrus-user-web:2025-11-21.23.05
-    image: hub.k8s.ucar.edu/ncote/cirrus-user-web:2025-11-21.23.05
+  name: cirrus-website
+  group: cirrus-website
   path: /
   tls:
     fqdn: cirrus.k8s.ucar.edu
-    image: hub.k8s.ucar.edu/ncote/cirrus-user-web:2025-11-21.23.05
+    secretName: cirrus-website-ssl
   container: 
     image: hub.k8s.ucar.edu/ncote/cirrus-user-web:2025-11-21.23.05
     port: 5000

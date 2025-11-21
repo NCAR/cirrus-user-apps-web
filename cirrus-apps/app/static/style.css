@@ -25,7 +25,11 @@ body {
     font-size: 1rem;
     line-height: 1.6;
     color: var(--text-dark);
+    background-image: url("images/NCAR-Waves.png");
+    background-position: right top;
+    background-repeat: no-repeat;
     background-color: #ffffff;
+    background-attachment: fixed;
 }
 
 main {

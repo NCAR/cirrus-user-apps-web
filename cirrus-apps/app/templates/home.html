@@ -23,6 +23,15 @@
         <div class="container">
             <img src="{{ url_for('static', filename='images/CIRRUS_Logo_NCARBlue.png') }}" style="object-fit: contain; height: 200px;">
             <div class="bigbubble">
+                    <div style="max-width: 800px; text-align: center; margin: 20px 0;">
+                        <p>
+                            CIRRUS is NSF NCAR's cloud-native platform leveraging Kubernetes clusters 
+                            across two sites. Built on GitOps principles with Argo CD, CIRRUS provides 
+                            scalable, production-ready infrastructure for deploying and managing applications. 
+                            Learn more in the 
+                            <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/01-intro/" target="_blank">CIRRUS documentation</a>.
+                        </p>
+                    </div>
                 <a href="{{  url_for('apps')  }}">CIRRUS User Applications</a>
             </div>
         </div>

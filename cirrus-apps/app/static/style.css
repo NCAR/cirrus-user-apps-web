@@ -369,7 +369,7 @@ main {
 
 /* ===== SERVICES SECTION ===== */
 .services-section {
-    background-color: #ffffff;
+    background-color: transparent;
 }
 
 .service-card {

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NSF NCAR CIRRUS{% endblock %}</title>
+    <link rel="canonical" href="{{ request.url }}"/>
+    <meta property="og:title" content="{% block og_title %}NSF NCAR CIRRUS{% endblock %}"/>
+    <meta property="og:url" content="{{ request.url }}"/>
+    <meta property="og:site_name" content="NSF NCAR CIRRUS"/>
+    <meta property="og:type" content="website"/>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}" type="text/css">
+    <script src="https://kit.fontawesome.com/e08b5a6906.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    
+    <footer class="footer mt-5">
+        <div class="container">
+            <div class="row py-5">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h5 class="footer-heading mb-3">CIRRUS Platform</h5>
+                    <p class="footer-text">Cloud-native infrastructure for Earth system science at NSF NCAR</p>
+                    <div class="footer-links mt-3">
+                        <a href="{{ url_for('home') }}" class="d-block mb-2">Home</a>
+                        <a href="{{ url_for('apps') }}" class="d-block mb-2">Applications</a>
+                        <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/01-intro/" target="_blank" class="d-block mb-2">Documentation</a>
+                        <a href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10905" target="_blank" class="d-block mb-2">Report Issue</a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h5 class="footer-heading mb-3">CISL Resources</h5>
+                    <div class="footer-links">
+                        <a href="https://www.cisl.ucar.edu/" target="_blank" class="d-block mb-2">CISL Home</a>
+                        <a href="https://jupyter.k8s.ucar.edu/" target="_blank" class="d-block mb-2">JupyterHub</a>
+                        <a href="https://hub.k8s.ucar.edu/" target="_blank" class="d-block mb-2">Harbor Registry</a>
+                        <a href="https://grafana.k8s.ucar.edu/" target="_blank" class="d-block mb-2">Grafana</a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <h5 class="footer-heading mb-3">About</h5>
+                    <div class="footer-links">
+                        <a href="https://ncar.ucar.edu/" target="_blank" class="d-block mb-2">NSF NCAR</a>
+                        <a href="https://www.ucar.edu/" target="_blank" class="d-block mb-2">UCAR</a>
+                        <a href="https://www.nsf.gov/" target="_blank" class="d-block mb-2">National Science Foundation</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row border-top pt-4">
+                <div class="col-12 text-center">
+                    <p class="footer-text mb-2">
+                        NSF NCAR is sponsored by the U.S. National Science Foundation and managed by the University Corporation for Atmospheric Research
+                    </p>
+                    <p class="footer-copyright mb-0">
+                        &copy; 2025 University Corporation for Atmospheric Research
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

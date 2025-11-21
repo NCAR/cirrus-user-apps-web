@@ -1,53 +1,75 @@
-<!DOCTYPE html>
-<html>
-    <title>Home | NSF NCAR CIRRUS User Applications</title>
-        <link rel="canonical" href="{{ url_for('home') }}"/>
-        <meta property="og:title" content="Home | NCAR Stratus UI"/>
-        <meta property="og:url" content="{{ url_for('home') }}"/>
-        <meta property="og:site_name" content="ncar_stratus_ui"/>
-        <meta property="og:type" content="website"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{url_for('static',  filename='style.css')}}" type="text/css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <script src="{{url_for('static',  filename='app.js')}}"></script>
-    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-    <script src="https://kit.fontawesome.com/e08b5a6906.js" crossorigin="anonymous"></script>
-    <script>
-        $(function(){
-            $('#nav').load("{{ url_for('navbar') }}")
-        })
-    </script>
-    <body>
-        <div id="nav"></div>
-        <br>
-        <div class="container">
-            <div class="bigbubble">
-                <h2>CIRRUS User Applications</h2>
-            </div>
-            
-            <div class="row row-cols-1 row-cols-md-2 g-4 mt-3">
-                {% for app in applications %}
-                <div class="col">
-                    <div class="card h-100">
-                        <a href="{{ app.url }}" target="_blank" class="text-decoration-none">
-                            <img src="{{ url_for('static', filename='screenshots/' + app.screenshot) }}" 
-                                class="card-img-top" 
-                                alt="{{ app.name }} screenshot"
-                                style="object-fit: contain; height: 300px; background-color: #f8f9fa;">
-                        </a>
-                        <div class="card-body text-center">
-                            <h5 class="card-title">
-                                <a href="{{ app.url }}" target="_blank" class="text-decoration-none">
-                                    {{ app.name }}
-                                </a>
-                            </h5>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
+{% extends "base.html" %}
+
+{% block title %}Applications | NSF NCAR CIRRUS{% endblock %}
+{% block og_title %}Applications | NSF NCAR CIRRUS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto text-center">
+                <h1 class="page-title">CIRRUS User Applications</h1>
+                <p class="page-description">
+                    Explore the diverse set of scientific applications and services deployed on the CIRRUS platform, 
+                    supporting Earth system science research and data analysis.
+                </p>
             </div>
         </div>
-        <br>
-    </body>
-</html>
+    </div>
+</div>
+
+<section class="apps-section py-5">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for app in applications %}
+            <div class="col">
+                <div class="app-card">
+                    <div class="app-card-image">
+                        <a href="{{ app.url }}" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ url_for('static', filename='screenshots/' + app.screenshot) }}" 
+                                 alt="{{ app.name }} screenshot"
+                                 class="img-fluid">
+                            <div class="app-card-overlay">
+                                <i class="fas fa-external-link-alt"></i>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="app-card-body">
+                        <h3 class="app-card-title">
+                            <a href="{{ app.url }}" target="_blank" rel="noopener noreferrer">
+                                {{ app.name }}
+                            </a>
+                        </h3>
+                        <a href="{{ app.url }}" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           class="btn btn-sm btn-outline-primary">
+                            Launch Application <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="help-section py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="mb-4">Need Help?</h2>
+                <p class="mb-4">
+                    If you're experiencing issues with any application or need assistance deploying your own, 
+                    our team is here to help.
+                </p>
+                <a href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10905" 
+                   target="_blank"
+                   class="btn btn-primary">
+                    <i class="fas fa-ticket-alt me-2"></i>Report an Issue
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

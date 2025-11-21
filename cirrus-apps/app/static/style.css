@@ -310,9 +310,6 @@ main {
 }
 
 /* ===== FEATURES SECTION ===== */
-.features-section {
-    background-color: var(--ncar-gray-light);
-}
 
 .section-title {
     font-size: 2.5rem;

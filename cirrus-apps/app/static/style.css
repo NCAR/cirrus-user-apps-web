@@ -540,6 +540,34 @@ main {
     border-color: rgba(255, 255, 255, 0.1) !important;
 }
 
+/* NSF Footer Section */
+.footer-nsf-section {
+    background-color: #ffffff;
+    border-top: 1px solid #dee2e6;
+}
+
+.footer-nsf-logo {
+    max-width: 120px;
+    height: auto;
+}
+
+.footer-nsf-text {
+    color: #6c757d;
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
+.footer-nsf-link {
+    color: var(--ncar-blue);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.footer-nsf-link:hover {
+    color: var(--ncar-blue-dark);
+    text-decoration: underline;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 991px) {
     .hero-title {

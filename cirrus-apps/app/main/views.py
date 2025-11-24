@@ -9,7 +9,6 @@ def home():
 
 @app.route('/status')
 def status():
-    # Load status monitors from YAML file
     status_file = os.path.join(app.root_path, 'status_monitors.yaml')
     with open(status_file, 'r') as f:
         monitors = yaml.safe_load(f)

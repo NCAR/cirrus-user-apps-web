@@ -25,11 +25,6 @@
             <div class="bigbubble">
                 <h2>CIRRUS Infrastructure Status</h2>
             </div>
-            <div class="row mt-4">
-                <div class="col-12">
-                    <p>Direct link test: <a href="{{ config.uptime_kuma_url }}/status/{{ page.slug }}" target="_blank">Open {{ page.name }} in new tab</a></p>
-                </div>
-            </div>
             {% for page in config.status_pages %}
             <div class="row mt-4">
                 <div class="col-12">
@@ -37,6 +32,11 @@
                     <iframe src="{{ config.uptime_kuma_url }}/status/{{ page.slug }}" 
                             style="width: 100%; height: 600px; border: none;"
                             title="{{ page.name }}"></iframe>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12">
+                    <p>Direct link test: <a href="{{ config.uptime_kuma_url }}/status/{{ page.slug }}" target="_blank">Open {{ page.name }} in new tab</a></p>
                 </div>
             </div>
             {% endfor %}

@@ -21,47 +21,18 @@
     <body>
         <div id="nav"></div>
         <br>
-        <div class="container">
+        <div class="container-fluid">
             <div class="bigbubble">
                 <h2>CIRRUS Infrastructure Status</h2>
             </div>
             
             <div class="row mt-4">
                 <div class="col-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="list-group list-group-flush">
-                                {% for monitor in monitors.monitors %}
-                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span class="fw-semibold">{{ monitor.name }}</span>
-                                    <img src="{{ monitors.uptime_kuma_url }}/api/badge/{{ monitor.badge_key }}/status" 
-                                         alt="{{ monitor.name }} status"
-                                         style="height: 20px;">
-                                </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="row mt-4">
-                <div class="col-12">
-                    <p class="text-muted text-center">
-                        <small>Status badges update automatically. Last refresh: <span id="last-refresh"></span></small>
-                    </p>
+                    <iframe src="http://kadmin.k8s.ucar.edu:3001/status/nwc1-nginx-external" 
+                            style="width: 100%; height: 800px; border: none;"
+                            title="Infrastructure Status"></iframe>
                 </div>
             </div>
         </div>
-        
-        <script>
-            // Display current time as last refresh
-            document.getElementById('last-refresh').textContent = new Date().toLocaleTimeString();
-            
-            // Auto-refresh badges every 60 seconds
-            setInterval(function() {
-                location.reload();
-            }, 60000);
-        </script>
     </body>
 </html>

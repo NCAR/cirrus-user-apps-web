@@ -1,14 +1,10 @@
-FROM python:3.9
+FROM python:3.10
 
 WORKDIR /app
 
-RUN git clone --no-checkout --branch main https://github.com/NCAR/cirrus-user-apps-web.git && \
-    cd cirrus-user-apps-web && \
-    git sparse-checkout init && \
-    git sparse-checkout set cirrus-apps && \
-    git checkout
+COPY cirrus-apps /app/cirrus-apps
 
-WORKDIR /app/cirrus-user-apps-web/cirrus-apps
+WORKDIR /app/cirrus-apps
 
 RUN pip install -r requirements.txt
 

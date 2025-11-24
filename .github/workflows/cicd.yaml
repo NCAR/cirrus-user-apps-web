@@ -37,6 +37,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
             push: true
+            no-cache: true
             tags:  hub.k8s.ucar.edu/ncote/cirrus-user-web:${{ steps.date.outputs.date }}
             file: Dockerfile
       - name: Update Helm values.yaml

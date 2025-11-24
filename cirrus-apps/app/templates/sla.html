@@ -18,6 +18,41 @@
             $('#nav').load("{{ url_for('navbar') }}")
         })
     </script>
+    <style>
+        .sla-table {
+            border: 1px solid #666;
+            border-collapse: collapse;
+            border-radius: 6px;
+            overflow: hidden;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+        .sla-table thead tr {
+            background-color: #0056b3;
+            color: #fff;
+        }
+        .sla-table th {
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 1.05rem;
+        }
+        .sla-table td {
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+        }
+        .alert-custom {
+            background-color: #e7f3ff;
+            border-left: 4px solid #0056b3;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .content-wrapper {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
     <body>
         <div id="nav"></div>
         <br>
@@ -26,177 +61,179 @@
                 <h2>Service Level Agreements (SLAs)</h2>
             </div>
             
-            <div class="row mt-4">
-                <div class="col-12">
-                    <p>This Service Level Agreement (SLA) outlines the relationship between the CIRRUS team - who provides the on-premise cloud infrastructure - and its recognized users, including UCAR Employees, Visitors, and external collaborators authorized to use the on-premise cloud resources.</p>
-                    
-                    <p>NSF NCAR | CISL operates Compute, Storage & Network hardware in robust Data Centers at multiple organizational facilities. The on-premise cloud offers users the ability to utilize those highly available, organizationally supported, compute resources for approved use cases. This includes access to routable network space and UCAR Domain Name Systems (DNS). These resources provide a supplement to computing needs that aren't fulfilled by the HPC offering, public cloud, or what is available locally.</p>
-                    
-                    <h4 class="mt-4">Primary Services and Dependencies</h4>
-                    <table class="sla-table">
-                        <thead>
-                            <tr>
-                                <th>Primary Services</th>
-                                <th>Service Dependencies</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Kubernetes Cluster</td>
-                                <td>Server nodes</td>
-                            </tr>
-                            <tr>
-                                <td>Argo CD</td>
-                                <td>Networking</td>
-                            </tr>
-                            <tr>
-                                <td>Harbor</td>
-                                <td>GLADE mount</td>
-                            </tr>
-                            <tr>
-                                <td>OpenBao</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>JupyterHub / Binder</td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    
-                    <p class="mt-3"><strong>Audience:</strong> Service Technical Staff, System Administrators, On & Off Site Personnel, and Authorized Affiliates</p>
-                    <p><strong>Recognized Customers:</strong> On & Off Site Personnel, and Authorized Affiliates</p>
-                    
-                    <div class="alert-custom">
-                        <strong>Availability:</strong> The service is designed to operate 24/7. However, support is currently limited to business hours only.
+            <div class="content-wrapper">
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <p>This Service Level Agreement (SLA) outlines the relationship between the CIRRUS team - who provides the on-premise cloud infrastructure - and its recognized users, including UCAR Employees, Visitors, and external collaborators authorized to use the on-premise cloud resources.</p>
+                        
+                        <p>NSF NCAR | CISL operates Compute, Storage & Network hardware in robust Data Centers at multiple organizational facilities. The on-premise cloud offers users the ability to utilize those highly available, organizationally supported, compute resources for approved use cases. This includes access to routable network space and UCAR Domain Name Systems (DNS). These resources provide a supplement to computing needs that aren't fulfilled by the HPC offering, public cloud, or what is available locally.</p>
+                        
+                        <h4 class="mt-4">Primary Services and Dependencies</h4>
+                        <table class="sla-table">
+                            <thead>
+                                <tr>
+                                    <th>Primary Services</th>
+                                    <th>Service Dependencies</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Kubernetes Cluster</td>
+                                    <td>Server nodes</td>
+                                </tr>
+                                <tr>
+                                    <td>Argo CD</td>
+                                    <td>Networking</td>
+                                </tr>
+                                <tr>
+                                    <td>Harbor</td>
+                                    <td>GLADE mount</td>
+                                </tr>
+                                <tr>
+                                    <td>OpenBao</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>JupyterHub / Binder</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <p class="mt-3"><strong>Audience:</strong> Service Technical Staff, System Administrators, On & Off Site Personnel, and Authorized Affiliates</p>
+                        <p><strong>Recognized Customers:</strong> On & Off Site Personnel, and Authorized Affiliates</p>
+                        
+                        <div class="alert-custom">
+                            <strong>Availability:</strong> The service is designed to operate 24/7. However, support is currently limited to business hours only.
+                        </div>
+                        
+                        <h3 class="mt-5">Response Level and Service Definitions</h3>
+                        
+                        <h4 class="mt-4">Severity Definitions</h4>
+                        <table class="sla-table">
+                            <thead>
+                                <tr>
+                                    <th>Severity</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Critical</strong></td>
+                                    <td>Complete loss of a core service or major functionality due to failure or incident (e.g., site-wide outage).<br><br>No workaround is available that will restore service reliably within one (1) hour. This may include a site wide security incident.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Urgent</strong></td>
+                                    <td>Significant degradation of a critical service or full failure of a non-critical service impacting productivity.<br><br>A workaround may exist but may not fully restore service.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Regular</strong></td>
+                                    <td>Minor or extended functionality issues - basic functionality is present.<br><br>A workaround is available. Includes feature requests, non-urgent upgrades, or inquiries.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4 class="mt-4">Response Times</h4>
+                        <table class="sla-table">
+                            <thead>
+                                <tr>
+                                    <th>Response Level</th>
+                                    <th>Business Hours<br>(M-F 08:00 - 17:00 MST)</th>
+                                    <th>After Hours</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Critical</strong></td>
+                                    <td>Response within 2 hours</td>
+                                    <td>Addressed at start of next business day</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Urgent</strong></td>
+                                    <td>Response within 4 hours</td>
+                                    <td>Addressed at start of next business day</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Regular</strong></td>
+                                    <td>Reviewed during business hours</td>
+                                    <td>Reviewed during business hours</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="alert-custom">
+                            <strong>Important:</strong> There is currently no after-hours support. All issues occurring after business hours will be triaged at the start of the next workday.
+                        </div>
+                        
+                        <h3 class="mt-5">User Applications Support Policy</h3>
+                        
+                        <p>CIRRUS provides and maintains the underlying Kubernetes infrastructure, but <strong>application owners are responsible for their applications</strong> deployed on the platform.</p>
+                        
+                        <h5 class="mt-3">CIRRUS Team Responsibilities:</h5>
+                        <ul>
+                            <li>Maintain Kubernetes cluster infrastructure and core platform services</li>
+                            <li>Ensure infrastructure availability and performance</li>
+                            <li>Provide consultation on best practices for application design and deployment</li>
+                            <li>Offer guidance on infrastructure features (persistent volume replication, storage options, etc.)</li>
+                        </ul>
+                        
+                        <h5 class="mt-3">Application Owner Responsibilities:</h5>
+                        <ul>
+                            <li>Design, develop, deploy, and maintain their applications</li>
+                            <li>Ensure applications are built to be resilient and can handle infrastructure maintenance windows</li>
+                            <li>Implement high availability patterns (database replication, persistent volume mirroring, etc.)</li>
+                            <li>Monitor and troubleshoot application-specific issues</li>
+                            <li>Follow Infrastructure as Code (IaC) practices for reproducible deployments</li>
+                        </ul>
+                        
+                        <h5 class="mt-3">Support Prioritization:</h5>
+                        <p>CIRRUS team support for user applications is provided on a <strong>consultation basis as time allows</strong>. Application support requests are prioritized according to the severity levels defined above, but will always be secondary to infrastructure-level issues affecting core platform services.</p>
+                        
+                        <p><strong>Infrastructure Maintenance:</strong> The CIRRUS team reserves the right to perform maintenance on infrastructure nodes at any time. Applications should be designed to tolerate node restarts, rescheduling, and temporary service disruptions without data loss or extended downtime.</p>
+                        
+                        <h3 class="mt-5">Backup & Disaster Recovery Policy</h3>
+                        
+                        <p>CIRRUS follows <strong>Infrastructure as Code (IaC)</strong> practices. All applications deployed on the on-prem cloud are defined via code repositories and can be redeployed as needed.</p>
+                        
+                        <ul>
+                            <li><strong>Application Backups:</strong> Applications themselves are not backed up individually; they are re-deployed via Argo CD and source-controlled templates.</li>
+                            <li><strong>Argo CD:</strong> Argo projects are backed up after changes, enabling project restoration in case of data loss.</li>
+                            <li><strong>Container Images (Harbor):</strong> Images stored in Harbor are backed up to object storage and can be restored from there.</li>
+                        </ul>
+                        
+                        <h5 class="mt-3">Persistent Volume Backups</h5>
+                        <p>Persistent Volumes (PVs) in CIRRUS can be replicated across sites to improve resiliency. To request PV replication for your application, please create a ticket.</p>
+                        
+                        <h3 class="mt-5">Change Management</h3>
+                        
+                        <p>All changes must be submitted via a Jira ticket.</p>
+                        
+                        <p>Tickets are reviewed and prioritized by the CIRRUS Product Owner.</p>
+                        
+                        <ul>
+                            <li><strong>Critical and Urgent</strong> tickets will be addressed based on SLA response times.</li>
+                            <li><strong>Regular</strong> requests are reviewed during the team's bi-weekly planning sessions.</li>
+                        </ul>
+                        
+                        <h3 class="mt-5">Contact Information</h3>
+                        
+                        <p><strong>Business Hours:</strong> 08:00 - 17:00 MST, Monday - Friday</p>
+                        <p><strong>Primary Contact:</strong> <a href="mailto:ncote@ucar.edu">Nick Cote</a></p>
+                        <p><strong>Secondary Contact:</strong> <a href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10903&summary=User%20Request:" target="_blank">Submit a Jira Request</a></p>
+                        <p><strong>Off Hours Contact:</strong> <a href="mailto:ncote@ucar.edu">Nick Cote</a> and/or <a href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10903&summary=User%20Request:" target="_blank">Jira Request</a></p>
+                        
+                        <h3 class="mt-5">Monitoring & Reporting</h3>
+                        
+                        <p>For observability, the CIRRUS infrastructure leverages:</p>
+                        
+                        <ul>
+                            <li><strong>Prometheus</strong> for metrics collection</li>
+                            <li><strong>Grafana</strong> for visualization and dashboards</li>
+                            <li><strong>Loki</strong> for centralized log aggregation</li>
+                        </ul>
+                        
+                        <p>These tools work together to detect, surface, and alert the CIRRUS team to any operational issues within the platform.</p>
                     </div>
-                    
-                    <h3 class="mt-5">Response Level and Service Definitions</h3>
-                    
-                    <h4 class="mt-4">Severity Definitions</h4>
-                    <table class="sla-table">
-                        <thead>
-                            <tr>
-                                <th>Severity</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Critical</strong></td>
-                                <td>Complete loss of a core service or major functionality due to failure or incident (e.g., site-wide outage).<br><br>No workaround is available that will restore service reliably within one (1) hour. This may include a site wide security incident.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Urgent</strong></td>
-                                <td>Significant degradation of a critical service or full failure of a non-critical service impacting productivity.<br><br>A workaround may exist but may not fully restore service.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Regular</strong></td>
-                                <td>Minor or extended functionality issues - basic functionality is present.<br><br>A workaround is available. Includes feature requests, non-urgent upgrades, or inquiries.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    
-                    <h4 class="mt-4">Response Times</h4>
-                    <table class="sla-table">
-                        <thead>
-                            <tr>
-                                <th>Response Level</th>
-                                <th>Business Hours<br>(M-F 08:00 - 17:00 MST)</th>
-                                <th>After Hours</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Critical</strong></td>
-                                <td>Response within 2 hours</td>
-                                <td>Addressed at start of next business day</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Urgent</strong></td>
-                                <td>Response within 4 hours</td>
-                                <td>Addressed at start of next business day</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Regular</strong></td>
-                                <td>Reviewed during business hours</td>
-                                <td>Reviewed during business hours</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    
-                    <div class="alert-custom">
-                        <strong>Important:</strong> There is currently no after-hours support. All issues occurring after business hours will be triaged at the start of the next workday.
-                    </div>
-                    
-                    <h3 class="mt-5">User Applications Support Policy</h3>
-                    
-                    <p>CIRRUS provides and maintains the underlying Kubernetes infrastructure, but <strong>application owners are responsible for their applications</strong> deployed on the platform.</p>
-                    
-                    <h5 class="mt-3">CIRRUS Team Responsibilities:</h5>
-                    <ul>
-                        <li>Maintain Kubernetes cluster infrastructure and core platform services</li>
-                        <li>Ensure infrastructure availability and performance</li>
-                        <li>Provide consultation on best practices for application design and deployment</li>
-                        <li>Offer guidance on infrastructure features (persistent volume replication, storage options, etc.)</li>
-                    </ul>
-                    
-                    <h5 class="mt-3">Application Owner Responsibilities:</h5>
-                    <ul>
-                        <li>Design, develop, deploy, and maintain their applications</li>
-                        <li>Ensure applications are built to be resilient and can handle infrastructure maintenance windows</li>
-                        <li>Implement high availability patterns (database replication, persistent volume mirroring, etc.)</li>
-                        <li>Monitor and troubleshoot application-specific issues</li>
-                        <li>Follow Infrastructure as Code (IaC) practices for reproducible deployments</li>
-                    </ul>
-                    
-                    <h5 class="mt-3">Support Prioritization:</h5>
-                    <p>CIRRUS team support for user applications is provided on a <strong>consultation basis as time allows</strong>. Application support requests are prioritized according to the severity levels defined above, but will always be secondary to infrastructure-level issues affecting core platform services.</p>
-                    
-                    <p><strong>Infrastructure Maintenance:</strong> The CIRRUS team reserves the right to perform maintenance on infrastructure nodes at any time. Applications should be designed to tolerate node restarts, rescheduling, and temporary service disruptions without data loss or extended downtime.</p>
-                    
-                    <h3 class="mt-5">Backup & Disaster Recovery Policy</h3>
-                    
-                    <p>CIRRUS follows <strong>Infrastructure as Code (IaC)</strong> practices. All applications deployed on the on-prem cloud are defined via code repositories and can be redeployed as needed.</p>
-                    
-                    <ul>
-                        <li><strong>Application Backups:</strong> Applications themselves are not backed up individually; they are re-deployed via Argo CD and source-controlled templates.</li>
-                        <li><strong>Argo CD:</strong> Argo projects are backed up after changes, enabling project restoration in case of data loss.</li>
-                        <li><strong>Container Images (Harbor):</strong> Images stored in Harbor are backed up to object storage and can be restored from there.</li>
-                    </ul>
-                    
-                    <h5 class="mt-3">Persistent Volume Backups</h5>
-                    <p>Persistent Volumes (PVs) in CIRRUS can be replicated across sites to improve resiliency. To request PV replication for your application, please create a ticket.</p>
-                    
-                    <h3 class="mt-5">Change Management</h3>
-                    
-                    <p>All changes must be submitted via a Jira ticket.</p>
-                    
-                    <p>Tickets are reviewed and prioritized by the CIRRUS Product Owner.</p>
-                    
-                    <ul>
-                        <li><strong>Critical and Urgent</strong> tickets will be addressed based on SLA response times.</li>
-                        <li><strong>Regular</strong> requests are reviewed during the team's bi-weekly planning sessions.</li>
-                    </ul>
-                    
-                    <h3 class="mt-5">Contact Information</h3>
-                    
-                    <p><strong>Business Hours:</strong> 08:00 - 17:00 MST, Monday - Friday</p>
-                    <p><strong>Primary Contact:</strong> <a href="mailto:ncote@ucar.edu">Nick Cote</a></p>
-                    <p><strong>Secondary Contact:</strong> <a href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10903&summary=User%20Request:" target="_blank">Submit a Jira Request</a></p>
-                    <p><strong>Off Hours Contact:</strong> <a href="mailto:ncote@ucar.edu">Nick Cote</a> and/or <a href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10903&summary=User%20Request:" target="_blank">Jira Request</a></p>
-                    
-                    <h3 class="mt-5">Monitoring & Reporting</h3>
-                    
-                    <p>For observability, the CIRRUS infrastructure leverages:</p>
-                    
-                    <ul>
-                        <li><strong>Prometheus</strong> for metrics collection</li>
-                        <li><strong>Grafana</strong> for visualization and dashboards</li>
-                        <li><strong>Loki</strong> for centralized log aggregation</li>
-                    </ul>
-                    
-                    <p>These tools work together to detect, surface, and alert the CIRRUS team to any operational issues within the platform.</p>
                 </div>
             </div>
         </div>

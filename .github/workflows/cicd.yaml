@@ -39,8 +39,6 @@ jobs:
             push: true
             tags:  hub.k8s.ucar.edu/ncote/cirrus-user-web:${{ steps.date.outputs.date }}
             file: Dockerfile
-            cache-from: "type=registry,ref=hub.k8s.ucar.edu/ncote/cirrus-user-web:cache"
-            cache-to: "type=registry,ref=hub.k8s.ucar.edu/ncote/cirrus-user-webe:cache,image-manifest=true,mode=max"
       - name: Update Helm values.yaml
         run: |
           sed -i "/cirrus-user-web/ c\    image: hub.k8s.ucar.edu/ncote/cirrus-user-web:${{ steps.date.outputs.date }}" helm-chart/values.yaml

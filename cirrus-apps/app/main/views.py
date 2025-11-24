@@ -7,6 +7,15 @@ import os
 def home():
     return render_template('home.html')
 
+@app.route('/status')
+def status():
+    # Load status monitors from YAML file
+    status_file = os.path.join(app.root_path, 'status_monitors.yaml')
+    with open(status_file, 'r') as f:
+        monitors = yaml.safe_load(f)
+    
+    return render_template('status.html', monitors=monitors)
+
 @app.route('/apps')
 def apps():
     # Load applications from YAML file

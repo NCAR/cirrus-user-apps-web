@@ -1,0 +1,14 @@
+uptime_kuma_url: http://kadmin.k8s.ucar.edu:3001
+
+monitors:
+  - name: ArgoCD - NWSC
+    badge_key: 11
+    
+  - name: ArgoCD - ML
+    badge_key: 10
+    
+  - name: External Ingress - NWSC
+    badge_key: 12
+    
+  - name: External Ingress - ML
+    badge_key: 13

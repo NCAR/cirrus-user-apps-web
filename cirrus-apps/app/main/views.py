@@ -3,7 +3,7 @@ from app import app
 import yaml
 import os
 import requests
-import datetime
+from datetime import datetime
 
 @app.route('/')
 def home():

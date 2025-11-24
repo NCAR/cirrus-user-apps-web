@@ -1,89 +1,51 @@
-<!DOCTYPE html>
-<html>
-    <title>Status | NSF NCAR CIRRUS Infrastructure</title>
-        <link rel="canonical" href="{{ url_for('status') }}"/>
-        <meta property="og:title" content="Status | NCAR Stratus UI"/>
-        <meta property="og:url" content="{{ url_for('status') }}"/>
-        <meta property="og:site_name" content="ncar_stratus_ui"/>
-        <meta property="og:type" content="website"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{url_for('static',  filename='style.css')}}" type="text/css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-    <script src="https://kit.fontawesome.com/e08b5a6906.js" crossorigin="anonymous"></script>
-    <script>
-        $(function(){
-            $('#nav').load("{{ url_for('navbar') }}")
-        })
-    </script>
-    <style>
-        .status-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 3px;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .status-up {
-            background-color: #28a745;
-            color: white;
-        }
-        .status-down {
-            background-color: #dc3545;
-            color: white;
-        }
-        .status-unknown {
-            background-color: #6c757d;
-            color: white;
-        }
-    </style>
-    <body>
-        <div id="nav"></div>
-        <br>
-        <div class="container">
-            <div class="bigbubble">
-                <h2>CIRRUS Infrastructure Status</h2>
-            </div>
-            
-            <div class="row mt-4">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="list-group list-group-flush">
-                                {% for page in config.status_pages %}
-                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span class="fw-semibold">{{ page.name }}</span>
-                                    <span class="status-badge status-{{ page.status|lower }}">
-                                        {{ page.status }}
-                                    </span>
-                                </div>
-                                {% endfor %}
+{% extends "base.html" %}
+
+{% block title %}Status | NSF NCAR CIRRUS Infrastructure{% endblock %}
+{% block og_title %}Status | NSF NCAR CIRRUS Infrastructure{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="bigbubble">
+        <h2>CIRRUS Infrastructure Status</h2>
+    </div>
+    
+    <div class="content-wrapper">
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="list-group list-group-flush">
+                            {% for page in config.status_pages %}
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <span class="fw-semibold">{{ page.name }}</span>
+                                <span class="status-badge status-{{ page.status|lower }}">
+                                    {{ page.status }}
+                                </span>
                             </div>
-                        </div>
-                        <div class="card-footer text-muted text-center">
-                            <small>Last checked: {{ config.last_check }}</small>
+                            {% endfor %}
                         </div>
                     </div>
-                </div>
-            </div>
-            
-            <div class="row mt-3">
-                <div class="col-12 text-center">
-                    <a href="{{ url_for('status') }}" class="btn btn-sm btn-outline-primary">
-                        <i class="fas fa-sync-alt"></i> Refresh Status
-                    </a>
+                    <div class="card-footer text-muted text-center">
+                        <small>Last checked: {{ config.last_check }}</small>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <script>
-            // Auto-refresh every 60 seconds
-            setInterval(function() {
-                location.reload();
-            }, 60000);
-        </script>
-    </body>
-</html>
+        <div class="row mt-3">
+            <div class="col-12 text-center">
+                <a href="{{ url_for('status') }}" class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-sync-alt"></i> Refresh Status
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Auto-refresh every 60 seconds
+    setInterval(function() {
+        location.reload();
+    }, 60000);
+</script>
+{% endblock %}

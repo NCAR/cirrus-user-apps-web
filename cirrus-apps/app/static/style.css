@@ -709,3 +709,35 @@ main {
         margin-top: 1rem;
     }
 }
+
+.sla-table {
+    border: 1px solid #666;
+    border-collapse: collapse;
+    border-radius: 6px;
+    overflow: hidden;
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+.sla-table thead tr {
+    background-color: #0056b3;
+    color: #fff;
+}
+
+.sla-table th {
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 1.05rem;
+}
+
+.sla-table td {
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+}
+
+.alert-custom {
+    background-color: #e7f3ff;
+    border-left: 4px solid #0056b3;
+    padding: 15px;
+    margin: 20px 0;
+}

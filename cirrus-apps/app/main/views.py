@@ -7,14 +7,6 @@ import os
 def home():
     return render_template('home.html')
 
-@app.route('/status')
-def status():
-    status_file = os.path.join(app.root_path, 'status_monitors.yaml')
-    with open(status_file, 'r') as f:
-        config = yaml.safe_load(f)
-    
-    return render_template('status.html', config=config)
-
 @app.route('/apps')
 def apps():
     # Load applications from YAML file
@@ -23,6 +15,18 @@ def apps():
         applications = yaml.safe_load(f)
     
     return render_template('apps.html', applications=applications)
+
+@app.route('/status')
+def status():
+    status_file = os.path.join(app.root_path, 'status_monitors.yaml')
+    with open(status_file, 'r') as f:
+        config = yaml.safe_load(f)
+    
+    return render_template('status.html', config=config)
+
+@app.route('/sla')
+def sla():
+    return render_template('sla.html')
 
 @app.route('/templates/navbar.html')
 def navbar():

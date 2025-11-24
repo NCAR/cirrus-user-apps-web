@@ -26,13 +26,16 @@
                 <h2>CIRRUS Infrastructure Status</h2>
             </div>
             
+            {% for page in config.status_pages %}
             <div class="row mt-4">
                 <div class="col-12">
-                    <iframe src="http://kadmin.k8s.ucar.edu:3001/status/nwc1-nginx-external" 
-                            style="width: 100%; height: 800px; border: none;"
-                            title="Infrastructure Status"></iframe>
+                    <h4>{{ page.name }}</h4>
+                    <iframe src="{{ config.uptime_kuma_url }}/status/{{ page.slug }}" 
+                            style="width: 100%; height: 600px; border: none;"
+                            title="{{ page.name }}"></iframe>
                 </div>
             </div>
+            {% endfor %}
         </div>
     </body>
 </html>

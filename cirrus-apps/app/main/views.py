@@ -11,9 +11,9 @@ def home():
 def status():
     status_file = os.path.join(app.root_path, 'status_monitors.yaml')
     with open(status_file, 'r') as f:
-        monitors = yaml.safe_load(f)
+        config = yaml.safe_load(f)
     
-    return render_template('status.html', monitors=monitors)
+    return render_template('status.html', config=config)
 
 @app.route('/apps')
 def apps():

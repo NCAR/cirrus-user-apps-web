@@ -774,3 +774,47 @@ main {
     background-color: #6c757d;
     color: white;
 }
+
+/* ReadTheDocs table styling */
+.content-wrapper article table {
+    width: 100%;
+    margin: 20px 0;
+    border-collapse: collapse !important;
+    background-color: white;
+    border: 2px solid #666 !important;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.content-wrapper article table th {
+    background-color: #0056b3 !important;
+    color: white !important;
+    font-weight: 600;
+    padding: 10px 20px;
+    text-align: center;
+    border: 1px solid #ccc !important;
+}
+
+.content-wrapper article table td {
+    padding: 10px 12px;
+    border: 1px solid #ccc !important;
+    text-align: left;
+}
+
+.content-wrapper article table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.content-wrapper article table thead,
+.content-wrapper article table tbody,
+.content-wrapper article table tr,
+.content-wrapper article table th,
+.content-wrapper article table td {
+    border-style: solid !important;
+}
+
+/* For tables with inline styles from ReadTheDocs */
+.content-wrapper article table[style] th {
+    background-color: #0056b3 !important;
+    color: white !important;
+}

@@ -4,6 +4,7 @@ import yaml
 import json
 import os
 import requests
+from bs4 import BeautifulSoup
 from datetime import datetime
 
 @app.route('/')
@@ -62,7 +63,46 @@ def status():
 
 @app.route('/sla')
 def sla():
-    return render_template('sla.html')
+    try:
+        url = 'https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/09-service-level-agreements/slas/'
+        print(f"Fetching SLA from: {url}")
+        
+        response = requests.get(url, timeout=10)
+        print(f"Response status code: {response.status_code}")
+        
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.content, 'html.parser')
+            
+            # Find the article tag with class md-content__inner
+            article = soup.find('article', class_='md-content__inner')
+            
+            if article:
+                # Remove unwanted elements
+                for element in article.find_all(['a'], class_='md-content__button'):
+                    element.decompose()
+                
+                for element in article.find_all(class_='headerlink'):
+                    element.decompose()
+                
+                for element in article.find_all('aside'):
+                    element.decompose()
+                
+                # Get the content
+                content_html = str(article)
+                print(f"Content extracted, length: {len(content_html)}")
+            else:
+                print("Could not find article element")
+                content_html = None
+        else:
+            content_html = None
+            print(f"Failed to fetch: status {response.status_code}")
+    except Exception as e:
+        print(f"Exception fetching SLA: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        content_html = None
+    
+    return render_template('sla.html', content_html=content_html)
 
 @app.route('/templates/navbar.html')
 def navbar():

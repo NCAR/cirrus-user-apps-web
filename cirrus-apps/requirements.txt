@@ -3,3 +3,5 @@ flask_session
 pyyaml
 requests
 beautifulsoup4
+jira
+python-dotenv

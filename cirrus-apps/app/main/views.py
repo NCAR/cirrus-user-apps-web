@@ -1,4 +1,4 @@
-from flask import render_template, request, session, flash, send_from_directory
+from flask import render_template, request, session
 from app import app
 import yaml
 import json
@@ -11,6 +11,10 @@ from datetime import datetime
 def home():
     return render_template('home.html')
 
+@app.route('/getting-started')
+def getting_started():
+    return render_template('getting-started.html')
+
 @app.route('/apps')
 def apps():
     apps_file = os.path.join(app.root_path, 'apps.yaml')
@@ -18,7 +22,7 @@ def apps():
         applications = yaml.safe_load(f)
     
     return render_template('apps.html', applications=applications)
-
+    
 @app.route('/status')
 def status():
     status_file = os.path.join(app.root_path, 'status_monitors.yaml')
@@ -28,33 +32,62 @@ def status():
     # Fetch status from each status page
     for page in config['status_pages']:
         try:
-            url = f"{config['uptime_kuma_url']}/api/status-page/{page['slug']}"
-            print(f"Fetching: {url}")
-            
-            response = requests.get(url, timeout=5)
-            print(f"Response status code: {response.status_code}")
+            # Fetch the public status page HTML
+            status_url = f"{config['uptime_kuma_url']}/status/{page['slug']}"
+            response = requests.get(status_url, timeout=5)
             
             if response.status_code == 200:
-                data = response.json()
-                print(f"Response data for {page['name']}:")
-                print(json.dumps(data, indent=2))
+                # Extract the preloadData JSON embedded in the HTML
+                import re
+                match = re.search(r"window\.preloadData = (\{.*?\});", response.text)
                 
-                # Get overall status - if any monitor is down, page is down
-                page['status'] = 'UP'
-                if 'publicGroupList' in data:
-                    for group in data['publicGroupList']:
+                if match:
+                    # The JSON uses single quotes, need to convert to valid JSON
+                    json_str = match.group(1)
+                    json_str = json_str.replace("'", '"').replace('null', 'null').replace('True', 'true').replace('False', 'false')
+                    preload_data = json.loads(json_str)
+                    
+                    # Get monitor info and check status via badge endpoint
+                    page['status'] = 'UP'
+                    page['monitors'] = []
+                    
+                    for group in preload_data.get('publicGroupList', []):
                         for monitor in group.get('monitorList', []):
-                            print(f"Monitor: {monitor.get('name')}, Status: {monitor.get('status')}")
-                            if monitor.get('status') != 1:  # 1 = UP in Uptime Kuma
-                                page['status'] = 'DOWN'
-                                break
+                            monitor_id = monitor.get('id')
+                            monitor_name = monitor.get('name')
+                            
+                            # Fetch badge to get actual status
+                            badge_url = f"{config['uptime_kuma_url']}/api/badge/{monitor_id}/status"
+                            badge_response = requests.get(badge_url, timeout=3)
+                            
+                            if badge_response.status_code == 200:
+                                # Parse SVG to extract status
+                                badge_text = badge_response.text
+                                if '>Up<' in badge_text:
+                                    monitor_status = 'UP'
+                                elif '>Down<' in badge_text:
+                                    monitor_status = 'DOWN'
+                                else:
+                                    monitor_status = 'UNKNOWN'
+                                
+                                page['monitors'].append({
+                                    'name': monitor_name,
+                                    'status': monitor_status
+                                })
+                                
+                                if monitor_status == 'DOWN':
+                                    page['status'] = 'DOWN'
+                            else:
+                                page['status'] = 'UNKNOWN'
                 else:
-                    print("No publicGroupList found in response")
+                    page['status'] = 'UNKNOWN'
             else:
-                print(f"Non-200 response: {response.text}")
                 page['status'] = 'UNKNOWN'
+                
         except Exception as e:
             print(f"Exception for {page['name']}: {str(e)}")
+            import traceback
+            traceback.print_exc()
             page['status'] = 'UNKNOWN'
     
     config['last_check'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S MST')

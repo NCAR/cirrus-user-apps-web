@@ -1,7 +1,11 @@
 - name: CESM LENS2 Dashboard
   url: https://cesm-lens2-dashboard.k8s.ucar.edu/
   screenshot: lens2-dashboard.png
-  
+
+- name: CLM-FATES and CLM PPE
+  url: https://ppeviewer.k8s.ucar.edu/
+  screenshot: clm-fates-ppe.png
+
 - name: CTSM JupyterHub
   url: https://ctsm-jhub.k8s.ucar.edu/
   screenshot: ctsm-jhub.png

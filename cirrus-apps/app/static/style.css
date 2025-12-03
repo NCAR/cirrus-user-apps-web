@@ -818,3 +818,148 @@ main {
     background-color: #0056b3 !important;
     color: white !important;
 }
+
+/* Getting Started Page Styles */
+.section-heading {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+}
+
+.use-case-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 2px solid #e9ecef;
+    height: 100%;
+    transition: var(--transition);
+}
+
+.use-case-card:hover {
+    border-color: var(--ncar-blue);
+    box-shadow: 0 4px 12px rgba(26, 101, 143, 0.1);
+}
+
+.use-case-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #1A658F 0%, #0f4461 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.use-case-card h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.benefit-item {
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.benefit-number {
+    width: 50px;
+    height: 50px;
+    background: var(--ncar-blue);
+    color: white;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.benefit-item h5 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.deployment-step {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 2px solid #e9ecef;
+}
+
+.step-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.step-number {
+    width: 50px;
+    height: 50px;
+    background: var(--ncar-blue);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.step-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.step-content pre {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 1rem;
+    overflow-x: auto;
+}
+
+.step-content code {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+.code-example {
+    margin: 1rem 0;
+}
+
+.resource-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 2px solid #e9ecef;
+    height: 100%;
+    text-align: center;
+}
+
+.resource-card h5 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--ncar-blue);
+}
+
+.resource-card i {
+    margin-right: 0.5rem;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    border-left: 4px solid #0c5460;
+    padding: 1rem;
+    border-radius: 6px;
+}

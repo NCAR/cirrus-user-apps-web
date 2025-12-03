@@ -1,0 +1,316 @@
+{% extends "base.html" %}
+
+{% block title %}Getting Started | NSF NCAR CIRRUS{% endblock %}
+{% block og_title %}Getting Started | NSF NCAR CIRRUS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto text-center">
+                <h1 class="page-title">Getting Started with CIRRUS</h1>
+                <p class="page-description">
+                    Deploy your research application on NCAR's cloud-native Kubernetes platform in four steps.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="content-wrapper">
+        <!-- What Can CIRRUS Do For Your Science? -->
+        <section class="mb-5">
+            <h2 class="section-heading">What Can CIRRUS Do For Your Science?</h2>
+            <p class="lead">CIRRUS enables researchers to deploy scalable, production-ready applications without managing infrastructure, allowing you to focus on science instead of DevOps.</p>
+            
+            <div class="row g-4 mt-3">
+                <div class="col-md-6">
+                    <div class="use-case-card">
+                        <div class="use-case-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4>Interactive Data Visualization</h4>
+                        <p>Deploy Jupyter notebooks, Panel dashboards, or Bokeh applications that connect directly to NCAR's data and compute resources.</p>
+                        <p class="text-muted small"><strong>Example:</strong> Climate model output visualization with real-time updates</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="use-case-card">
+                        <div class="use-case-icon">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <h4>Automated Pipelines</h4>
+                        <p>Deploy GitHub Actions runner scale sets on CIRRUS with significantly more resources than GitHub's free runners, including GPU access for ML/AI workflows.</p>
+                        <p class="text-muted small"><strong>Example:</strong> Train models on GPUs or run high-memory data processing in your CI/CD</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="use-case-card">
+                        <div class="use-case-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h4>Collaborative Research Tools</h4>
+                        <p>Share web applications, APIs, or analysis platforms with your research team or the wider community.</p>
+                        <p class="text-muted small"><strong>Example:</strong> Custom data access portal for field campaign data</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="use-case-card">
+                        <div class="use-case-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <h4>Scalable Computing</h4>
+                        <p>Run Dask clusters, distributed processing frameworks, or services that scale based on demand.</p>
+                        <p class="text-muted small"><strong>Example:</strong> Multi-node Dask cluster for parallel data analysis</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-5">
+
+        <!-- Why Choose CIRRUS? -->
+        <section class="mb-5">
+            <h2 class="section-heading">Why Choose CIRRUS?</h2>
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="benefit-item">
+                        <div class="benefit-number">1</div>
+                        <h5>No Infrastructure Management</h5>
+                        <p>Focus on your research. CIRRUS eliminates tedious manual tasks like managing DNS and SSL certificates.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="benefit-item">
+                        <div class="benefit-number">2</div>
+                        <h5>Complements Existing HPC</h5>
+                        <p>Host long-running services, web applications, and APIs. Read-only Glade access.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="benefit-item">
+                        <div class="benefit-number">3</div>
+                        <h5>GitOps Workflows</h5>
+                        <p>Version-controlled, reproducible deployments using Argo CD and Helm.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-4">
+                    <div class="benefit-item">
+                        <div class="benefit-number">4</div>
+                        <h5>Auto-Scaling</h5>
+                        <p>Applications scale automatically based on usage and resource needs.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="benefit-item">
+                        <div class="benefit-number">5</div>
+                        <h5>Enterprise Features</h5>
+                        <p>Monitoring, logging, secret management, and high availability built-in.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="benefit-item">
+                        <div class="benefit-number">6</div>
+                        <h5>Free for UCAR</h5>
+                        <p>No cloud bills. Available to UCAR employees and authorized collaborators.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-5">
+
+        <!-- Deployment Steps -->
+        <section class="mb-5">
+            <h2 class="section-heading">Four Steps to Deploy Your Application</h2>
+            <p class="lead">CIRRUS uses a GitOps workflow where your application is defined as code in a Git repository.</p>
+
+            <div class="deployment-step">
+                <div class="step-header">
+                    <span class="step-number">1</span>
+                    <h3>Containerize Your Application</h3>
+                </div>
+                <div class="step-content">
+                    <p>Package your application as a Docker container. This makes it portable and ensures it runs consistently across environments.</p>
+                    
+                    <div class="code-example">
+                        <p><strong>Example Dockerfile for a Python Flask app:</strong></p>
+                        <pre><code>FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+CMD ["python", "app.py"]</code></pre>
+                    </div>
+                    
+                    <p class="mt-3">Build and push your image to Harbor (CIRRUS container registry):</p>
+                    <pre><code>docker build -t hub.k8s.ucar.edu/your-project/your-app:v1.0 .
+docker push hub.k8s.ucar.edu/your-project/your-app:v1.0</code></pre>
+                    
+                    <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/03-deploying-applications/containerize/" 
+                       target="_blank" 
+                       class="btn btn-sm btn-outline-primary mt-3">
+                        <i class="fas fa-book"></i> Detailed Containerization Guide
+                    </a>
+                </div>
+            </div>
+
+            <div class="deployment-step">
+                <div class="step-header">
+                    <span class="step-number">2</span>
+                    <h3>Create a Helm Chart</h3>
+                </div>
+                <div class="step-content">
+                    <p>Define your application's Kubernetes resources using Helm, a package manager for Kubernetes. Helm charts describe what your app needs: containers, storage, networking, scaling rules, etc.</p>
+                    
+                    <p><strong>Basic Helm chart structure:</strong></p>
+                    <pre><code>my-app/
+├── Chart.yaml          # Chart metadata
+├── values.yaml         # Configuration values
+└── templates/
+    ├── deployment.yaml # Your application pods
+    ├── service.yaml    # Network access
+    └── ingress.yaml    # External URL (optional)</code></pre>
+                    
+                    <p class="mt-3">CIRRUS provides example templates to get you started:</p>
+                    <ul>
+                        <li><a href="https://github.com/NCAR/cirrus-examples" target="_blank">CIRRUS Examples Repository</a></li>
+                    </ul>
+                    
+                    <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/03-deploying-applications/helm/" 
+                       target="_blank" 
+                       class="btn btn-sm btn-outline-primary mt-3">
+                        <i class="fas fa-book"></i> Helm Chart Documentation
+                    </a>
+                </div>
+            </div>
+
+            <div class="deployment-step">
+                <div class="step-header">
+                    <span class="step-number">3</span>
+                    <h3>Push to Git Repository</h3>
+                </div>
+                <div class="step-content">
+                    <p>Store your Helm chart in a Git repository (GitHub recommended). CIRRUS uses GitOps principles where your Git repository is the source of truth.</p>
+                    
+                    <p><strong>Repository structure:</strong></p>
+                    <pre><code>your-repo/
+├── src/                # Your application code
+├── Dockerfile          # Container definition
+├── helm/               # Helm chart
+│   ├── Chart.yaml
+│   ├── values.yaml
+│   └── templates/
+└── .github/
+    └── workflows/      # CI/CD (optional)</code></pre>
+                    
+                    <div class="alert alert-info mt-3">
+                        <strong><i class="fas fa-info-circle"></i> New:</strong> CIRRUS now provides organizational GitHub runners for the NCAR GitHub organization. You can use these for CI/CD without providing a Personal Access Token.
+                    </div>
+                    
+                    <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/05-github-actions/scale-sets/" 
+                       target="_blank" 
+                       class="btn btn-sm btn-outline-primary mt-3">
+                        <i class="fas fa-book"></i> GitHub Actions Integration
+                    </a>
+                </div>
+            </div>
+
+            <div class="deployment-step">
+                <div class="step-header">
+                    <span class="step-number">4</span>
+                    <h3>Request Application Onboarding</h3>
+                </div>
+                <div class="step-content">
+                    <p>Submit a request to the CIRRUS team with your application details. We'll review your Helm chart and deploy it to the platform.</p>
+                    
+                    <p><strong>Information to include in your request:</strong></p>
+                    <ul>
+                        <li><strong>Git Repository URL:</strong> Link to your repository with Helm chart</li>
+                        <li><strong>GitHub Branch:</strong> Branch to deploy from (e.g., main, production)</li>
+                        <li><strong>Helm Chart Folder:</strong> Path to Helm chart directory in your repo</li>
+                        <li><strong>Application URL:</strong> Desired external URL (e.g., myapp.k8s.ucar.edu)</li>
+                    </ul>
+                    
+                    <p class="mt-3">The CIRRUS team will:</p>
+                    <ol>
+                        <li>Review your Helm chart for best practices and security</li>
+                        <li>Set up Argo CD to automatically sync your app from Git</li>
+                        <li>Configure monitoring, logging, and alerting</li>
+                        <li>Provide your application URL and access information</li>
+                    </ol>
+                    
+                    <div class="alert alert-info mt-4">
+                        <h6 class="alert-heading"><i class="fas fa-info-circle"></i> Submit your request:</h6>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <p class="mb-2"><strong>Create Jira ticket</strong></p>
+                                <p class="small text-muted mb-3">Link to open CIRRUS Jira ticket creation</p>
+                                <a href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10903&customfield_10281=CCPP-108" 
+                                   target="_blank" 
+                                   class="btn btn-outline-primary">
+                                    <i class="fas fa-external-link-alt"></i> Open Jira
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-5">
+
+        <!-- Next Steps -->
+        <section class="mb-5">
+            <h2 class="section-heading">Additional Resources</h2>
+            <div class="row g-4 mt-3">
+                <div class="col-md-4">
+                    <div class="resource-card">
+                        <h5><i class="fas fa-book-open"></i> Full Documentation</h5>
+                        <p>Comprehensive guides on deploying applications, managing secrets, and using platform services.</p>
+                        <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/" 
+                           target="_blank" 
+                           class="btn btn-sm btn-outline-primary">
+                            View Docs
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="resource-card">
+                        <h5><i class="fas fa-code"></i> Example Applications</h5>
+                        <p>Ready-to-use Helm chart templates for common application patterns.</p>
+                        <a href="https://github.com/NCAR/cirrus-examples" 
+                           target="_blank" 
+                           class="btn btn-sm btn-outline-primary">
+                            View Examples
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="resource-card">
+                        <h5><i class="fas fa-question-circle"></i> Get Help</h5>
+                        <p>Have questions? The CIRRUS team is here to help with deployment and troubleshooting.</p>
+                        <a href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10903&summary=User%20Request:" 
+                           target="_blank" 
+                           class="btn btn-sm btn-outline-primary">
+                            Contact Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

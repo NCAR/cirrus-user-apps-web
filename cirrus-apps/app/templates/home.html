@@ -12,20 +12,18 @@
                     <img src="{{ url_for('static', filename='images/CIRRUS_Logo_NCARBlue.png') }}" 
                          alt="CIRRUS Logo" 
                          class="hero-logo mb-4">
-                    <h1 class="hero-title">Cloud-Native Infrastructure at NSF NCAR</h1>
+                    <h1 class="hero-title">Host Your Research Application Without the Hassle</h1>
                     <p class="hero-description">
-                        CIRRUS is NSF NCAR's cloud-native platform leveraging Kubernetes clusters 
-                        across two sites. Built on GitOps principles with Argo CD, CIRRUS provides 
-                        scalable, production-ready infrastructure for deploying and managing applications.
+                        CIRRUS lets you deploy websites, dashboards, and APIs for your research without 
+                        managing servers, certificates, or infrastructure. Submit your code, and we'll 
+                        handle the rest - keeping it running 24/7 with automatic updates.
                     </p>
                     <div class="hero-actions">
-                        <a href="{{ url_for('apps') }}" class="btn btn-primary btn-lg me-3">
-                            <i class="fas fa-rocket me-2"></i>View Applications
+                        <a href="{{ url_for('getting_started') }}" class="btn btn-primary btn-lg me-3">
+                            <i class="fas fa-rocket me-2"></i>Get Started
                         </a>
-                        <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/01-intro/" 
-                           target="_blank" 
-                           class="btn btn-outline-primary btn-lg">
-                            <i class="fas fa-book me-2"></i>Documentation
+                        <a href="{{ url_for('apps') }}" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-eye me-2"></i>See Examples
                         </a>
                     </div>
                 </div>
@@ -38,8 +36,8 @@
     <div class="container">
         <div class="row text-center mb-5">
             <div class="col-lg-8 mx-auto">
-                <h2 class="section-title">Platform Capabilities</h2>
-                <p class="section-subtitle">Enterprise-grade infrastructure for Earth system science</p>
+                <h2 class="section-title">What Can You Build?</h2>
+                <p class="section-subtitle">Real applications running on CIRRUS today</p>
             </div>
         </div>
         
@@ -47,42 +45,171 @@
             <div class="col-md-4">
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-server"></i>
-                    </div>
-                    <h3>Multi-Cluster Architecture</h3>
-                    <p>Kubernetes clusters across multiple sites providing high availability and geographic distribution</p>
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-code-branch"></i>
-                    </div>
-                    <h3>GitOps with Argo CD</h3>
-                    <p>Infrastructure and applications managed declaratively through Git, ensuring consistency and auditability</p>
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon">
                         <i class="fas fa-chart-line"></i>
                     </div>
-                    <h3>Production-Ready</h3>
-                    <p>Enterprise monitoring, logging, and security features supporting mission-critical scientific applications</p>
+                    <h3>Interactive Dashboards</h3>
+                    <p>Share your data visualizations with colleagues through web-based dashboards that update automatically</p>
+                    <p class="text-muted small mt-2"><em>Examples: Climate model outputs, field campaign data explorers</em></p>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3>Public Websites</h3>
+                    <p>Host project websites, documentation portals, or data access interfaces that anyone can visit</p>
+                    <p class="text-muted small mt-2"><em>Examples: Project homepages, API documentation sites</em></p>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3>Data Services & APIs</h3>
+                    <p>Run automated workflows, data processing pipelines, or provide programmatic access to your research data</p>
+                    <p class="text-muted small mt-2"><em>Examples: Data download services, automated report generation</em></p>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<section class="services-section py-5">
+<section class="services-section py-5 bg-light">
     <div class="container">
         <div class="row text-center mb-5">
             <div class="col-lg-8 mx-auto">
-                <h2 class="section-title">Platform Services</h2>
-                <p class="section-subtitle">Comprehensive tools and infrastructure for modern application deployment</p>
+                <h2 class="section-title">Why Researchers Choose CIRRUS</h2>
+                <p class="section-subtitle">Focus on science, not servers</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="service-card">
+                    <div class="service-header">
+                        <i class="fas fa-clock service-icon"></i>
+                        <h3>Always Running</h3>
+                    </div>
+                    <p>Unlike Derecho compute jobs that shut down after a few hours, CIRRUS keeps your application running 24/7. Perfect for websites, dashboards, and services that need to be always available.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="service-card">
+                    <div class="service-header">
+                        <i class="fas fa-magic service-icon"></i>
+                        <h3>Automated Everything</h3>
+                    </div>
+                    <p>We automatically provision SSL certificates, configure DNS for your custom URL, and handle software updates. You just push code to GitHub and CIRRUS deploys it.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="service-card">
+                    <div class="service-header">
+                        <i class="fas fa-dollar-sign service-icon"></i>
+                        <h3>No Cloud Bills</h3>
+                    </div>
+                    <p>Free for UCAR employees and collaborators. No AWS bills, no credit card required, no budgeting headaches - just submit your application and go.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="service-card">
+                    <div class="service-header">
+                        <i class="fas fa-users service-icon"></i>
+                        <h3>Share Easily</h3>
+                    </div>
+                    <p>Get a custom URL like yourproject.k8s.ucar.edu that you can share with colleagues, put in papers, or link from your project website. No VPN required for public apps.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="service-card">
+                    <div class="service-header">
+                        <i class="fas fa-tachometer-alt service-icon"></i>
+                        <h3>Scales Automatically</h3>
+                    </div>
+                    <p>If your dashboard goes viral or your API gets hammered, CIRRUS automatically adds more resources. When traffic drops, it scales back down.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="service-card">
+                    <div class="service-header">
+                        <i class="fas fa-shield-alt service-icon"></i>
+                        <h3>Secure by Default</h3>
+                    </div>
+                    <p>Built-in security features, encrypted connections, and secure credential storage. We handle the security best practices so you don't have to become a security expert.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="how-it-works py-5">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="section-title">How It Works</h2>
+                <p class="section-subtitle">Four simple steps to get your application online</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h4>Package Your Code</h4>
+                    <p>Put your application in a Docker container (we have templates and examples)</p>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h4>Push to GitHub</h4>
+                    <p>Upload your code and configuration to a GitHub repository</p>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h4>Request Deployment</h4>
+                    <p>Fill out a simple form with your repo details and desired URL</p>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h4>We Deploy It</h4>
+                    <p>CIRRUS team reviews and deploys - usually within a day or two</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-5">
+            <div class="col-lg-8 mx-auto text-center">
+                <a href="{{ url_for('getting_started') }}" class="btn btn-primary btn-lg">
+                    View Detailed Guide <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="services-list py-5 bg-light">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="section-title">Included Platform Services</h2>
+                <p class="section-subtitle">Tools and infrastructure available to all CIRRUS users</p>
             </div>
         </div>
         
@@ -90,31 +217,13 @@
             <div class="col-lg-6">
                 <div class="service-card">
                     <div class="service-header">
-                        <i class="fas fa-lock service-icon"></i>
-                        <h3>OpenBao Secret Management</h3>
+                        <i class="fas fa-book service-icon"></i>
+                        <h3>JupyterHub</h3>
                     </div>
-                    <p>Secure, centralized storage for API tokens, credentials, and configuration variables with team collaboration support</p>
-                    <ul class="service-features">
-                        <li>Personal and shared secret paths</li>
-                        <li>Kubernetes integration via External Secrets</li>
-                        <li>OIDC authentication with UCAR credentials</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="col-lg-6">
-                <div class="service-card">
-                    <div class="service-header">
-                        <i class="fas fa-rocket service-icon"></i>
-                        <h3>GitHub Actions Runners</h3>
-                    </div>
-                    <p>Automated CI/CD with on-demand GitHub runner provisioning and scaling, including organizational runners for the NCAR GitHub organization</p>
-                    <ul class="service-features">
-                        <li>Auto-scaling runner sets</li>
-                        <li>NCAR organization-wide runners</li>
-                        <li>BuildKit integration for container builds</li>
-                        <li>Secure repository integration</li>
-                    </ul>
+                    <p>Launch Jupyter notebooks in your browser for interactive data analysis. Pre-configured with scientific Python packages and scalable compute resources.</p>
+                    <a href="https://jupyter.k8s.ucar.edu/" target="_blank" class="btn btn-sm btn-outline-primary mt-2">
+                        Launch JupyterHub <i class="fas fa-external-link-alt ms-1"></i>
+                    </a>
                 </div>
             </div>
             
@@ -124,57 +233,40 @@
                         <i class="fas fa-database service-icon"></i>
                         <h3>Harbor Container Registry</h3>
                     </div>
-                    <p>Enterprise container registry for storing and managing Docker images</p>
-                    <ul class="service-features">
-                        <li>Private and public repositories</li>
-                        <li>Image scanning and security</li>
-                        <li>Integrated with deployment pipelines</li>
-                    </ul>
+                    <p>Store your Docker container images securely. Private repositories for your team or public ones to share with the community.</p>
+                    <a href="https://hub.k8s.ucar.edu/" target="_blank" class="btn btn-sm btn-outline-primary mt-2">
+                        View Harbor <i class="fas fa-external-link-alt ms-1"></i>
+                    </a>
                 </div>
             </div>
             
             <div class="col-lg-6">
                 <div class="service-card">
                     <div class="service-header">
-                        <i class="fas fa-chart-area service-icon"></i>
-                        <h3>Grafana Monitoring</h3>
+                        <i class="fas fa-rocket service-icon"></i>
+                        <h3>GitHub Actions Runners</h3>
                     </div>
-                    <p>Comprehensive monitoring, logging, and alerting for all platform applications</p>
-                    <ul class="service-features">
-                        <li>Real-time metrics and dashboards</li>
-                        <li>Log aggregation and search</li>
-                        <li>Custom alerting and notifications</li>
-                    </ul>
+                    <p>Run automated tests and builds with more power than GitHub's free runners. GPU access available for ML/AI workflows.</p>
+                    <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/05-github-actions/scale-sets/" 
+                       target="_blank" 
+                       class="btn btn-sm btn-outline-primary mt-2">
+                        Learn More <i class="fas fa-external-link-alt ms-1"></i>
+                    </a>
                 </div>
             </div>
             
             <div class="col-lg-6">
                 <div class="service-card">
                     <div class="service-header">
-                        <i class="fas fa-book service-icon"></i>
-                        <h3>JupyterHub</h3>
+                        <i class="fas fa-lock service-icon"></i>
+                        <h3>OpenBao Secret Storage</h3>
                     </div>
-                    <p>Multi-user Jupyter notebook server for interactive computing and data analysis</p>
-                    <ul class="service-features">
-                        <li>Pre-configured scientific environments</li>
-                        <li>Scalable compute resources</li>
-                        <li>Collaborative notebooks</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="col-lg-6">
-                <div class="service-card">
-                    <div class="service-header">
-                        <i class="fas fa-sync-alt service-icon"></i>
-                        <h3>Argo CD Deployments</h3>
-                    </div>
-                    <p>GitOps continuous delivery across ML and NWSC clusters</p>
-                    <ul class="service-features">
-                        <li>Automated application synchronization</li>
-                        <li>Multi-cluster deployment support</li>
-                        <li>Rollback and health monitoring</li>
-                    </ul>
+                    <p>Securely store API keys, passwords, and credentials. Your secrets are encrypted and never stored in your code.</p>
+                    <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/04-secrets-management/openbao/" 
+                       target="_blank" 
+                       class="btn btn-sm btn-outline-primary mt-2">
+                        Learn More <i class="fas fa-external-link-alt ms-1"></i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -188,15 +280,8 @@
                 <div class="cta-card">
                     <div class="row align-items-center">
                         <div class="col-md-8">
-                            <h2 class="mb-3">Ready to Deploy on CIRRUS?</h2>
-                            <p class="mb-0">Explore our comprehensive documentation to learn how to deploy and manage your applications on the CIRRUS platform.</p>
-                        </div>
-                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                            <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/01-intro/" 
-                               target="_blank" 
-                               class="btn btn-light btn-lg">
-                                Get Started <i class="fas fa-arrow-right ms-2"></i>
-                            </a>
+                            <h2 class="mb-3">Ready to Deploy Your Research Application?</h2>
+                            <p class="mb-0">Get started with our step-by-step guide, explore example applications, or submit a deployment request today.</p>
                         </div>
                     </div>
                 </div>

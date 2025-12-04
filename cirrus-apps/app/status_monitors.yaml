@@ -1,8 +1,23 @@
 status_pages:
+  - name: Argo CD - ML
+    slug: mlc1-argocd
+
+  - name: Argo CD - NWSC
+    slug: nwc1-argocd
+
   - name: External Ingress - NWSC
     slug: nwc1-nginx-external
     
   - name: External Ingress - ML
     slug: mlc1-nginx-external
+
+  - name: Grafana
+    slug: grafana
+
+  - name: Harbor - Container Registry
+    slug: harbor
+
+  - name: OpenBao - Secrets Manager
+    slug: openbao
 
 uptime_kuma_url: http://kadmin.k8s.ucar.edu:3001

@@ -2,14 +2,15 @@
 
 /* ===== ROOT VARIABLES ===== */
 :root {
-    --ncar-blue: #1A658F;
-    --ncar-blue-dark: #0f4461;
-    --ncar-blue-light: #3a7fa8;
+    --ncar-blue: #0057C2;
+    --ncar-blue-dark: #00357A;
+    --ncar-blue-light: #42C0FF;
     --ncar-gray: #6c757d;
-    --ncar-gray-light: #f8f9fa;
+    --ncar-gray-light: #F1F0EE;
     --ncar-gray-medium: #e9ecef;
-    --text-dark: #212529;
-    --text-light: #6c757d;
+    --ncar-dark: #011837;
+    --text-dark: #00357A;
+    --text-light: #FFFFFF;
     --transition: all 0.3s ease;
 }
 
@@ -28,7 +29,7 @@ body {
     background-image: url("images/NCAR-Waves.png") !important;
     background-position: right top !important;
     background-repeat: no-repeat !important;
-    background-color: #dbe2e9 !important;
+    background-color: var(--ncar-gray-light) !important;
 }
 
 main {
@@ -184,7 +185,7 @@ main {
 
 /* ===== HERO SECTION ===== */
 .hero-section {
-    background: linear-gradient(135deg, #1A658F 0%, #0f4461 100%);
+    background: linear-gradient(135deg, #0057C2 50%, #00357A 80%);
     padding: 5rem 0;
     position: relative;
     overflow: hidden;
@@ -322,7 +323,7 @@ main {
 
 .section-subtitle {
     font-size: 1.15rem;
-    color: var(--text-light);
+    color: var(--ncar-blue-dark);
 }
 
 .feature-card {
@@ -362,9 +363,17 @@ main {
 
 .feature-card p {
     font-size: 0.95rem;
-    color: var(--text-light);
+    color: var(--ncar-blue-dark);
     line-height: 1.7;
     margin-bottom: 0;
+}
+
+.text-muted {
+    color: var(--ncar-blue) !important;
+}
+
+em {
+    color: var(--ncar-blue) !important;
 }
 
 /* ===== SERVICES SECTION ===== */
@@ -408,7 +417,7 @@ main {
 
 .service-card > p {
     font-size: 0.95rem;
-    color: var(--text-light);
+    color: var(--ncar-blue-dark);
     line-height: 1.7;
     margin-bottom: 1rem;
 }
@@ -461,7 +470,7 @@ main {
 
 /* ===== PAGE HEADER ===== */
 .page-header {
-    background: linear-gradient(135deg, #1A658F 0%, #0f4461 100%);
+    background: linear-gradient(135deg, #0057C2 50%, #00357A 80%);
     padding: 4rem 0;
     margin-bottom: 3rem;
 }
@@ -571,7 +580,7 @@ main {
 
 /* ===== FOOTER ===== */
 .footer {
-    background-color: #323133;
+    background-color: var(--ncar-dark);
     color: #ffffff;
     border-top: none;
     font-size: 0.875rem;

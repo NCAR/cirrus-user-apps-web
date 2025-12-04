@@ -369,11 +369,11 @@ main {
 }
 
 .text-muted {
-    color: var(--ncar-blue) !important;
+    color: var(--ncar-blue-dark) !important;
 }
 
 em {
-    color: var(--ncar-blue) !important;
+    color: var(--ncar-blue-dark) !important;
 }
 
 /* ===== SERVICES SECTION ===== */
@@ -473,6 +473,8 @@ em {
     background: linear-gradient(135deg, #0057C2 50%, #00357A 80%);
     padding: 4rem 0;
     margin-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
 }
 
 .page-title {

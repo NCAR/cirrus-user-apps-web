@@ -11,6 +11,10 @@ from datetime import datetime
 def home():
     return render_template('home.html')
 
+@app.route('/architecture')
+def architecture():
+    return render_template('architecture.html')
+
 @app.route('/getting-started')
 def getting_started():
     return render_template('getting-started.html')

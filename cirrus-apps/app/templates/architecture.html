@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Getting Started | NSF NCAR CIRRUS{% endblock %}
+{% block og_title %}Getting Started | NSF NCAR CIRRUS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto text-center">
+                <h1 class="page-title">CIRRUS Architecture</h1>
+                <p class="page-description">
+                    A look at the different components used to build CIRRUS and how they can be used to grow the reach of your science.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="content-wrapper">
+        <section class="mb-5">
+            <h2 class="section-heading">Basic CIRRUS Architecture</h2>
+            <img src="{{ url_for('static', filename='images/CIRRUS-basic-arch.png') }}" 
+                                 alt="CIRRUS Basic Architecture"
+                                 class="">
+        </section>
+    </div>
+</div>
+{% endblock %}

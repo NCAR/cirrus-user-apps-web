@@ -974,3 +974,8 @@ em {
     padding: 1rem;
     border-radius: 6px;
 }
+
+/* ===== SERVICES SECTION ===== */
+.architecture img {
+    width: 100%;
+}

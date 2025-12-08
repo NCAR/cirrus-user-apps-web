@@ -19,11 +19,48 @@
 
 <div class="container">
     <div class="content-wrapper">
-        <section class="mb-5">
+        <section class="mb-5 architecture">
             <h2 class="section-heading">Basic CIRRUS Architecture</h2>
             <img src="{{ url_for('static', filename='images/CIRRUS-basic-arch.png') }}" 
                                  alt="CIRRUS Basic Architecture"
                                  class="">
+                                 <h2>Understanding the CIRRUS Platform</h2>
+
+            <h2>Starting with the Basics: Containers and Kubernetes</h2>
+
+            <p>Kubernetes is a container orchestration platform that manages containerized applications at scale. Once you have a working container image, you store it in a container registry. CIRRUS provides Harbor as a private registry, and you can also use public registries like GHCR (GitHub Container Registry) or Docker Hub.</p>
+
+            <h2>Defining Your Application: Helm Charts</h2>
+
+            <p>Once your image is in a registry, it can be referenced in a Helm chart—a package that defines how your application deploys on Kubernetes, including configuration, resources, and dependencies.</p>
+
+            <h2>Automation: CI/CD with GitHub Actions</h2>
+
+            <p>GitHub Actions workflows automate your deployment pipeline. When you push code changes, workflows automatically build a new container image, push it to your container registry, update your Helm chart values to reference the new image, and trigger Argo CD to deploy the updated application.</p>
+
+            <p>With CIRRUS, you can connect a GitHub Actions Runner Scale Set to your repository. This provides access to more computational resources including GPUs, allowing your CI/CD workflows to run directly on the Kubernetes cluster with the hardware your builds and tests require.</p>
+
+            <h2>Continuous Deployment: Argo CD</h2>
+
+            <p>Argo CD continuously monitors your Helm charts in Git repositories. When changes are detected, it automatically syncs and deploys your application to the Kubernetes cluster, implementing true GitOps practices.</p>
+
+            <h2>Accessing Your Application: Ingress and TLS</h2>
+
+            <p>CIRRUS provides two ingress paths: LoxiLB for external traffic using BGP peering to provide publicly accessible endpoints, and NGINX Ingress for internal traffic within the UCAR network.</p>
+
+            <p>ExternalDNS automatically creates DNS records in the *.k8s.ucar.edu domain for your services, while cert-manager issues and manages TLS certificates from Let's Encrypt to provide HTTPS endpoints for your web applications.</p>
+
+            <h2>Security: Secrets Management</h2>
+
+            <p>OpenBao works with the External Secrets Operator to securely store sensitive data like API keys, passwords, and credentials. Secrets are encrypted at rest in OpenBao and securely injected into your containers with encryption in transit, ensuring sensitive information never lives in your Git repository or Helm charts.</p>
+
+            <h2>Databases: CloudNativePG</h2>
+
+            <p>If your application needs a database, CIRRUS offers CloudNativePG—a Kubernetes operator that deploys and manages highly available PostgreSQL clusters with automated backups, failover, and scaling.</p>
+
+            <h2>Observability: Monitoring and Logging</h2>
+
+            <p>CIRRUS provides access to Grafana, which integrates with Prometheus (for metrics) and Loki (for logs) to gather telemetry from your applications. You can create custom dashboards to analyze and monitor application performance, set up alerts, and troubleshoot issues.</p>
         </section>
     </div>
 </div>

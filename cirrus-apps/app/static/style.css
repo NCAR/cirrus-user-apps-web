@@ -979,3 +979,32 @@ em {
 .architecture img {
     width: 100%;
 }
+
+.status-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-width: 2px;
+}
+
+.status-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.status-card-up {
+    border-color: #28a745;
+}
+
+.status-card-degraded {
+    border-color: #ffc107;
+}
+
+.status-card-down {
+    border-color: #dc3545;
+}
+
+.service-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60px;
+}

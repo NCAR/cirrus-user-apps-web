@@ -9,12 +9,15 @@ status_pages:
 
   - name: External Ingress - NWSC
     slug: nwc1-nginx-external
+    logo_url: https://github.com/NCAR/cirrus-user-apps-web/tree/main/cirrus-apps/app/static/logos/loxilb.png
     
   - name: External Ingress - ML
     slug: mlc1-nginx-external
+    logo_url: https://github.com/NCAR/cirrus-user-apps-web/tree/main/cirrus-apps/app/static/logos/loxilb.png
 
   - name: Grafana
     slug: grafana
+    logo_url: https://github.com/NCAR/cirrus-user-apps-web/tree/main/cirrus-apps/app/static/logos/grafana.png
 
   - name: Harbor - Container Registry
     slug: harbor
@@ -22,5 +25,6 @@ status_pages:
 
   - name: OpenBao - Secrets Manager
     slug: openbao
+    logo_url: https://github.com/NCAR/cirrus-user-apps-web/tree/main/cirrus-apps/app/static/logos/openbao.png
 
 uptime_kuma_url: http://kadmin.k8s.ucar.edu:3001

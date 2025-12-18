@@ -1,9 +1,11 @@
 status_pages:
   - name: Argo CD - ML
     slug: mlc1-argocd
+    logo_url: https://github.com/NCAR/cirrus-user-apps-web/tree/main/cirrus-apps/app/static/logos/argo.png
 
   - name: Argo CD - NWSC
     slug: nwc1-argocd
+    logo_url: https://github.com/NCAR/cirrus-user-apps-web/tree/main/cirrus-apps/app/static/logos/argo.png
 
   - name: External Ingress - NWSC
     slug: nwc1-nginx-external
@@ -16,6 +18,7 @@ status_pages:
 
   - name: Harbor - Container Registry
     slug: harbor
+    logo_url: https://github.com/NCAR/cirrus-user-apps-web/tree/main/cirrus-apps/app/static/logos/harbor.png
 
   - name: OpenBao - Secrets Manager
     slug: openbao

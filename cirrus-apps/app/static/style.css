@@ -523,6 +523,10 @@ em {
     transition: var(--transition);
 }
 
+.app-card-availability {
+    font-size: 1rem;
+}
+
 .app-card:hover .app-card-image img {
     transform: scale(1.05);
 }

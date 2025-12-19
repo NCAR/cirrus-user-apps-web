@@ -1,35 +1,49 @@
 - name: CESM LENS2 Dashboard
   url: https://cesm-lens2-dashboard.k8s.ucar.edu/
   screenshot: lens2-dashboard.png
+  available: External
 
 - name: CLM-FATES and CLM PPE
   url: https://ppeviewer.k8s.ucar.edu/
   screenshot: clm-fates-ppe.png
+  available: Internal
+
+- name: CIRRUS JupyterHub
+  url: https://jupyter.k8s.ucar.edu/
+  screenshot: cirrus-jhub.png
+  available: Internal
 
 - name: CTSM JupyterHub
   url: https://ctsm-jhub.k8s.ucar.edu/
   screenshot: ctsm-jhub.png
+  available: External
   
 - name: DASH Search
   url: https://data.ucar.edu/
+  available: External
   screenshot: dash-search.png
   
 - name: ERA5 Dashboard
   url: https://era5.k8s.ucar.edu/dashboards
   screenshot: era5-dashboard.png
+  available: External
 
 - name: GDEX
   url: https://gdex.ucar.edu/
   screenshot: gdex.png
+  available: External
 
 - name: Mesonet
   url: https://map-server.mesonet.k8s.ucar.edu/
   screenshot: mesonet.png
+  available: External
 
 - name: NEON Dashboard
   url: https://ncar-neon-viz.k8s.ucar.edu/neon_dashboard
   screenshot: neon-dashboard.png
+  available: External
   
 - name: SkyWash
   url: https://skywash.k8s.ucar.edu/
   screenshot: skywash.png
+  available: External

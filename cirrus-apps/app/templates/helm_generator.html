@@ -1,0 +1,577 @@
+{% extends "base.html" %}
+
+{% block title %}Helm Chart Generator | NSF NCAR CIRRUS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto text-center">
+                <h1 class="page-title">Helm Chart Generator</h1>
+                <p class="page-description">
+                    Generate a customized Helm chart from CIRRUS templates - download as ZIP or create a PR to your repository
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="content-wrapper">
+        <form id="helmGeneratorForm">
+            <!-- Chart Type Selection -->
+            <section class="mb-5">
+                <h2 class="section-heading">Select Chart Type</h2>
+                <div class="row g-3">
+                    {% for key, template in templates.items() %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="chart-type-card" data-chart-type="{{ key }}">
+                            <input type="radio" name="chart_type" value="{{ key }}" id="chart-{{ key }}" required>
+                            <label for="chart-{{ key }}">
+                                <h5>{{ template.name }}</h5>
+                                <p class="small text-muted">{{ template.description }}</p>
+                            </label>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- Dynamic Fields -->
+            <section class="mb-5" id="chartFields" style="display: none;">
+                <h2 class="section-heading">Configure Your Application</h2>
+                
+                <div class="row g-4">
+                    <!-- App Name (always shown) -->
+                    <div class="col-md-6" data-field="app_name">
+                        <label for="app_name" class="form-label">Application Name *</label>
+                        <input type="text" class="form-control" id="app_name" name="app_name" 
+                               placeholder="my-app" pattern="[a-z0-9\-]+" required>
+                        <small class="text-muted">Lowercase letters, numbers, and hyphens only</small>
+                    </div>
+
+                    <!-- Image (most charts) -->
+                    <div class="col-md-6" data-field="image">
+                        <label for="image" class="form-label">Container Image *</label>
+                        <input type="text" class="form-control" id="image" name="image" 
+                               placeholder="hub.k8s.ucar.edu/your-project/your-app:v1.0">
+                        <small class="text-muted">Full image path including tag</small>
+                    </div>
+
+                    <!-- Replicas -->
+                    <div class="col-md-6" data-field="replicas">
+                        <label for="replicas" class="form-label">Replicas *</label>
+                        <input type="number" class="form-control" id="replicas" name="replicas" 
+                               value="1" min="1" max="100">
+                    </div>
+
+                    <!-- Min Replicas (autoscale) -->
+                    <div class="col-md-6" data-field="min_replicas">
+                        <label for="min_replicas" class="form-label">Minimum Replicas *</label>
+                        <input type="number" class="form-control" id="min_replicas" name="min_replicas" 
+                               value="1" min="1" max="100">
+                    </div>
+
+                    <!-- Max Replicas (autoscale) -->
+                    <div class="col-md-6" data-field="max_replicas">
+                        <label for="max_replicas" class="form-label">Maximum Replicas *</label>
+                        <input type="number" class="form-control" id="max_replicas" name="max_replicas" 
+                               value="10" min="1" max="100">
+                    </div>
+
+                    <!-- Target CPU (autoscale) -->
+                    <div class="col-md-6" data-field="target_cpu">
+                        <label for="target_cpu" class="form-label">Target CPU Utilization % *</label>
+                        <input type="number" class="form-control" id="target_cpu" name="target_cpu" 
+                               value="80" min="1" max="100">
+                    </div>
+
+                    <!-- Port -->
+                    <div class="col-md-6" data-field="port">
+                        <label for="port" class="form-label">Container Port *</label>
+                        <input type="number" class="form-control" id="port" name="port" 
+                               value="8080" min="1" max="65535">
+                    </div>
+
+                    <!-- Scheduler Port (dask) -->
+                    <div class="col-md-6" data-field="scheduler_port">
+                        <label for="scheduler_port" class="form-label">Scheduler Port *</label>
+                        <input type="number" class="form-control" id="scheduler_port" name="scheduler_port" 
+                               value="8786" min="1" max="65535">
+                    </div>
+
+                    <!-- Database Fields (postgres) -->
+                    <div class="col-md-6" data-field="db_name">
+                        <label for="db_name" class="form-label">Database Name *</label>
+                        <input type="text" class="form-control" id="db_name" name="db_name" 
+                               placeholder="app_db">
+                    </div>
+
+                    <div class="col-md-6" data-field="db_user">
+                        <label for="db_user" class="form-label">Database Username *</label>
+                        <input type="text" class="form-control" id="db_user" name="db_user" 
+                               placeholder="app_user">
+                    </div>
+
+                    <!-- Storage Size -->
+                    <div class="col-md-6" data-field="storage_size">
+                        <label for="storage_size" class="form-label">Storage Size *</label>
+                        <input type="text" class="form-control" id="storage_size" name="storage_size" 
+                               value="10Gi" pattern="[0-9]+[KMGT]i">
+                        <small class="text-muted">Examples: 10Gi, 100Gi, 1Ti</small>
+                    </div>
+
+                    <!-- Mount Path -->
+                    <div class="col-md-6" data-field="mount_path">
+                        <label for="mount_path" class="form-label">Mount Path *</label>
+                        <input type="text" class="form-control" id="mount_path" name="mount_path" 
+                               value="/data">
+                    </div>
+
+                    <!-- NFS Fields -->
+                    <div class="col-md-6" data-field="nfs_server">
+                        <label for="nfs_server" class="form-label">NFS Server *</label>
+                        <input type="text" class="form-control" id="nfs_server" name="nfs_server" 
+                               placeholder="nfs.example.com">
+                    </div>
+
+                    <div class="col-md-6" data-field="nfs_path">
+                        <label for="nfs_path" class="form-label">NFS Export Path *</label>
+                        <input type="text" class="form-control" id="nfs_path" name="nfs_path" 
+                               placeholder="/export/data">
+                    </div>
+
+                    <!-- Dask Worker Fields -->
+                    <div class="col-md-6" data-field="worker_replicas">
+                        <label for="worker_replicas" class="form-label">Worker Replicas *</label>
+                        <input type="number" class="form-control" id="worker_replicas" name="worker_replicas" 
+                               value="3" min="1" max="100">
+                    </div>
+
+                    <div class="col-md-6" data-field="worker_threads">
+                        <label for="worker_threads" class="form-label">Worker Threads *</label>
+                        <input type="number" class="form-control" id="worker_threads" name="worker_threads" 
+                               value="4" min="1" max="64">
+                    </div>
+
+                    <div class="col-md-6" data-field="worker_memory">
+                        <label for="worker_memory" class="form-label">Worker Memory *</label>
+                        <input type="text" class="form-control" id="worker_memory" name="worker_memory" 
+                               value="4Gi" pattern="[0-9]+[KMGT]i">
+                    </div>
+
+                    <!-- External Secret Path -->
+                    <div class="col-md-6" data-field="secret_path">
+                        <label for="secret_path" class="form-label">Vault Secret Path *</label>
+                        <input type="text" class="form-control" id="secret_path" name="secret_path" 
+                               placeholder="secret/data/myapp">
+                        <small class="text-muted">Path in bao.k8s.ucar.edu</small>
+                    </div>
+
+                    <!-- Ingress Toggle -->
+                    <div class="col-12" data-field="enable_ingress">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="enable_ingress" name="enable_ingress">
+                            <label class="form-check-label" for="enable_ingress">
+                                <strong>Enable External Access (Ingress)</strong>
+                                <p class="small text-muted mb-0">Expose your application with a public URL</p>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Domain (shown when ingress enabled) -->
+                    <div class="col-md-6" data-field="domain" id="domainField" style="display: none;">
+                        <label for="domain" class="form-label">Domain *</label>
+                        <input type="text" class="form-control" id="domain" name="domain" 
+                               placeholder="myapp.k8s.ucar.edu">
+                        <small class="text-muted">Your application URL</small>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Output Options -->
+            <section class="mb-5" id="outputSection" style="display: none;">
+                <h2 class="section-heading">Output Options</h2>
+                
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="output-option-card">
+                            <input type="radio" name="output_format" value="zip" id="output-zip" checked>
+                            <label for="output-zip">
+                                <i class="fas fa-file-archive fa-2x mb-2"></i>
+                                <h5>Download as ZIP</h5>
+                                <p class="small text-muted">Download the complete Helm chart as a ZIP file</p>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="output-option-card">
+                            <input type="radio" name="output_format" value="github_pr" id="output-pr">
+                            <label for="output-pr">
+                                <i class="fab fa-github fa-2x mb-2"></i>
+                                <h5>Create GitHub PR</h5>
+                                <p class="small text-muted">Automatically create a pull request in your repository</p>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GitHub PR Options -->
+                <div id="githubOptions" style="display: none;">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> <strong>GitHub Personal Access Token Required</strong>
+                        <p class="mb-0 small">Create a token at <a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a> with <code>repo</code> scope</p>
+                    </div>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="github_token" class="form-label">GitHub Token *</label>
+                            <input type="password" class="form-control" id="github_token" name="github_token" 
+                                   placeholder="ghp_...">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="github_repo" class="form-label">Repository URL *</label>
+                            <input type="text" class="form-control" id="github_repo" name="github_repo" 
+                                   placeholder="https://github.com/your-org/your-repo">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="github_branch" class="form-label">Base Branch</label>
+                            <input type="text" class="form-control" id="github_branch" name="github_branch" 
+                                   value="main">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Submit Button -->
+            <div class="text-center mb-5" id="submitSection" style="display: none;">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-rocket"></i> Generate Helm Chart
+                </button>
+            </div>
+        </form>
+
+        <!-- Loading Indicator -->
+        <div id="loadingIndicator" style="display: none;" class="text-center mb-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Generating...</span>
+            </div>
+            <p class="mt-3">Generating your Helm chart...</p>
+        </div>
+
+        <!-- Success Message -->
+        <div id="successMessage" style="display: none;" class="alert alert-success">
+            <h5><i class="fas fa-check-circle"></i> Success!</h5>
+            <p id="successText"></p>
+        </div>
+
+        <!-- Error Message -->
+        <div id="errorMessage" style="display: none;" class="alert alert-danger">
+            <h5><i class="fas fa-exclamation-circle"></i> Error</h5>
+            <p id="errorText"></p>
+        </div>
+    </div>
+</div>
+
+<style>
+.chart-type-card {
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.chart-type-card:hover {
+    border-color: #0d6efd;
+    box-shadow: 0 2px 8px rgba(13, 110, 253, 0.2);
+}
+
+.chart-type-card input[type="radio"] {
+    display: none;
+}
+
+.chart-type-card input[type="radio"]:checked + label {
+    color: #0d6efd;
+}
+
+.chart-type-card input[type="radio"]:checked ~ label h5 {
+    color: #0d6efd;
+}
+
+.chart-type-card.selected {
+    border-color: #0d6efd;
+    background-color: #f8f9fa;
+}
+
+.chart-type-card label {
+    cursor: pointer;
+    margin: 0;
+    display: block;
+}
+
+.output-option-card {
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    height: 100%;
+}
+
+.output-option-card:hover {
+    border-color: #0d6efd;
+    box-shadow: 0 2px 8px rgba(13, 110, 253, 0.2);
+}
+
+.output-option-card input[type="radio"] {
+    display: none;
+}
+
+.output-option-card input[type="radio"]:checked + label {
+    color: #0d6efd;
+}
+
+.output-option-card.selected {
+    border-color: #0d6efd;
+    background-color: #f8f9fa;
+}
+
+.output-option-card label {
+    cursor: pointer;
+    margin: 0;
+}
+
+.output-option-card i {
+    color: #6c757d;
+}
+
+.output-option-card input[type="radio"]:checked + label i {
+    color: #0d6efd;
+}
+</style>
+
+<script>
+const chartTemplates = {{ templates | tojson }};
+
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('helmGeneratorForm');
+    const chartTypeCards = document.querySelectorAll('.chart-type-card');
+    const chartFields = document.getElementById('chartFields');
+    const outputSection = document.getElementById('outputSection');
+    const submitSection = document.getElementById('submitSection');
+    const githubOptions = document.getElementById('githubOptions');
+    const enableIngressCheckbox = document.getElementById('enable_ingress');
+    const domainField = document.getElementById('domainField');
+
+    // Chart type selection
+    chartTypeCards.forEach(card => {
+        card.addEventListener('click', function() {
+            const radio = this.querySelector('input[type="radio"]');
+            radio.checked = true;
+            
+            // Update visual state
+            chartTypeCards.forEach(c => c.classList.remove('selected'));
+            this.classList.add('selected');
+            
+            // Show relevant fields
+            showFieldsForChartType(radio.value);
+            chartFields.style.display = 'block';
+            outputSection.style.display = 'block';
+            submitSection.style.display = 'block';
+        });
+    });
+
+    // Output format selection
+    document.querySelectorAll('input[name="output_format"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            document.querySelectorAll('.output-option-card').forEach(c => c.classList.remove('selected'));
+            this.closest('.output-option-card').classList.add('selected');
+            
+            const githubToken = document.getElementById('github_token');
+            const githubRepo = document.getElementById('github_repo');
+            
+            if (this.value === 'github_pr') {
+                githubOptions.style.display = 'block';
+                githubToken.setAttribute('required', 'required');
+                githubRepo.setAttribute('required', 'required');
+            } else {
+                githubOptions.style.display = 'none';
+                githubToken.removeAttribute('required');
+                githubRepo.removeAttribute('required');
+            }
+        });
+    });
+
+    // Ingress toggle
+    enableIngressCheckbox.addEventListener('change', function() {
+        const domainInput = document.getElementById('domain');
+        if (this.checked) {
+            domainField.style.display = 'block';
+            domainInput.setAttribute('required', 'required');
+        } else {
+            domainField.style.display = 'none';
+            domainInput.removeAttribute('required');
+        }
+    });
+
+    // Form submission
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        console.log('Form submitted');
+        
+        const formData = new FormData(form);
+        const chartType = formData.get('chart_type');
+        const outputFormat = formData.get('output_format');
+        
+        console.log('Chart type:', chartType);
+        console.log('Output format:', outputFormat);
+        
+        // Build values object
+        const values = {
+            chart_type: chartType,
+            output_format: outputFormat,
+            app_name: document.getElementById('app_name').value  // Always include app_name
+        };
+        
+        // Get all field values for this chart type
+        chartTemplates[chartType].fields.forEach(field => {
+            const element = document.getElementById(field);
+            if (element) {
+                if (element.type === 'checkbox') {
+                    values[field] = element.checked;
+                } else {
+                    values[field] = element.value;
+                }
+            }
+        });
+        
+        // Add GitHub fields if PR selected
+        if (outputFormat === 'github_pr') {
+            values.github_token = formData.get('github_token');
+            values.github_repo = formData.get('github_repo');
+            values.github_branch = formData.get('github_branch');
+        }
+        
+        console.log('Values:', values);
+        
+        // Show loading
+        document.getElementById('loadingIndicator').style.display = 'block';
+        document.getElementById('successMessage').style.display = 'none';
+        document.getElementById('errorMessage').style.display = 'none';
+        form.style.display = 'none';
+        
+        try {
+            if (outputFormat === 'zip') {
+                // Download ZIP
+                console.log('Fetching ZIP...');
+                const response = await fetch('/api/generate-helm', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(values)
+                });
+                
+                console.log('Response status:', response.status);
+                
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${values.app_name}-helm-chart.zip`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                    
+                    showSuccess('Helm chart downloaded successfully!');
+                } else {
+                    const error = await response.json();
+                    console.error('Error response:', error);
+                    showError(error.error || 'Failed to generate Helm chart');
+                }
+            } else {
+                // Create GitHub PR
+                console.log('Creating GitHub PR...');
+                const response = await fetch('/api/generate-helm', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(values)
+                });
+                
+                console.log('Response status:', response.status);
+                const result = await response.json();
+                console.log('Result:', result);
+                
+                if (response.ok) {
+                    showSuccess(`Pull request created successfully! <a href="${result.pr_url}" target="_blank">View PR</a>`);
+                } else {
+                    console.error('Error:', result.error);
+                    showError(result.error || 'Failed to create pull request');
+                }
+            }
+        } catch (error) {
+            console.error('Exception:', error);
+            showError('An unexpected error occurred: ' + error.message);
+        }
+        
+        document.getElementById('loadingIndicator').style.display = 'none';
+    });
+    
+    function showFieldsForChartType(chartType) {
+        const fields = chartTemplates[chartType].fields;
+        
+        // Hide all optional fields and remove required attribute
+        document.querySelectorAll('[data-field]').forEach(field => {
+            const input = field.querySelector('input, select, textarea');
+            if (field.dataset.field !== 'app_name') { // app_name is always required
+                field.style.display = 'none';
+                if (input) {
+                    input.removeAttribute('required');
+                }
+            }
+        });
+        
+        // Show required fields for this chart type and set required attribute
+        fields.forEach(fieldName => {
+            const field = document.querySelector(`[data-field="${fieldName}"]`);
+            if (field) {
+                field.style.display = 'block';
+                const input = field.querySelector('input, select, textarea');
+                // Set required for all fields except enable_ingress checkbox
+                if (input && fieldName !== 'enable_ingress') {
+                    input.setAttribute('required', 'required');
+                }
+            }
+        });
+    }
+    
+    function showSuccess(message) {
+        document.getElementById('successText').innerHTML = message;
+        document.getElementById('successMessage').style.display = 'block';
+        setTimeout(() => {
+            form.style.display = 'block';
+            form.reset();
+            chartFields.style.display = 'none';
+            outputSection.style.display = 'none';
+            submitSection.style.display = 'none';
+            document.querySelectorAll('.chart-type-card').forEach(c => c.classList.remove('selected'));
+            document.getElementById('successMessage').style.display = 'none';
+        }, 5000);
+    }
+    
+    function showError(message) {
+        document.getElementById('errorText').textContent = message;
+        document.getElementById('errorMessage').style.display = 'block';
+        form.style.display = 'block';
+    }
+});
+</script>
+{% endblock %}

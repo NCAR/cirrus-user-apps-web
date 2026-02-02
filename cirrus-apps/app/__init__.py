@@ -4,8 +4,11 @@ from pathlib import Path
 from flask import Flask
 from flask_session import Session
 
+from .routes.chart_generator import chart_generator_bp
+
 app = Flask(__name__)
 app.app_context().push()
+app.register_blueprint(chart_generator_bp)
 
 SECRET_FILE_PATH = Path(".flask_secret")
 try:

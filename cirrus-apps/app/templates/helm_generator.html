@@ -7,9 +7,9 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-10 mx-auto text-center">
-                <h1 class="page-title">Helm Chart Generator</h1>
+                <h1 class="page-title">Modular Helm Chart Generator</h1>
                 <p class="page-description">
-                    Generate a customized Helm chart from CIRRUS templates - download as ZIP or create a PR to your repository
+                    Build your custom Helm chart by selecting the components you need
                 </p>
             </div>
         </div>
@@ -19,168 +19,62 @@
 <div class="container">
     <div class="content-wrapper">
         <form id="helmGeneratorForm">
-            <!-- Chart Type Selection -->
+            
+            <!-- Base Application Configuration -->
             <section class="mb-5">
-                <h2 class="section-heading">Select Chart Type</h2>
-                <div class="row g-3">
-                    {% for key, template in templates.items() %}
-                    <div class="col-md-6 col-lg-4">
-                        <div class="chart-type-card" data-chart-type="{{ key }}">
-                            <input type="radio" name="chart_type" value="{{ key }}" id="chart-{{ key }}" required>
-                            <label for="chart-{{ key }}">
-                                <h5>{{ template.name }}</h5>
-                                <p class="small text-muted">{{ template.description }}</p>
-                            </label>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </section>
-
-            <!-- Dynamic Fields -->
-            <section class="mb-5" id="chartFields" style="display: none;">
-                <h2 class="section-heading">Configure Your Application</h2>
+                <h2 class="section-heading">
+                    <i class="fas fa-cube"></i> Base Application
+                </h2>
+                <p class="text-muted mb-4">Required fields for your containerized application</p>
                 
                 <div class="row g-4">
-                    <!-- App Name (always shown) -->
-                    <div class="col-md-6" data-field="app_name">
+                    <div class="col-md-6">
                         <label for="app_name" class="form-label">Application Name *</label>
                         <input type="text" class="form-control" id="app_name" name="app_name" 
                                placeholder="my-app" pattern="[a-z0-9\-]+" required>
                         <small class="text-muted">Lowercase letters, numbers, and hyphens only</small>
                     </div>
 
-                    <!-- Image (most charts) -->
-                    <div class="col-md-6" data-field="image">
+                    <div class="col-md-6">
                         <label for="image" class="form-label">Container Image *</label>
                         <input type="text" class="form-control" id="image" name="image" 
-                               placeholder="hub.k8s.ucar.edu/your-project/your-app:v1.0">
+                               placeholder="hub.k8s.ucar.edu/your-project/your-app:v1.0" required>
                         <small class="text-muted">Full image path including tag</small>
                     </div>
 
-                    <!-- Replicas -->
-                    <div class="col-md-6" data-field="replicas">
+                    <div class="col-md-6">
                         <label for="replicas" class="form-label">Replicas *</label>
                         <input type="number" class="form-control" id="replicas" name="replicas" 
-                               value="1" min="1" max="100">
+                               value="2" min="1" max="100" required>
+                        <small class="text-muted">Recommended: 2+ for zero-downtime during server maintenance</small>
                     </div>
 
-                    <!-- Min Replicas (autoscale) -->
-                    <div class="col-md-6" data-field="min_replicas">
-                        <label for="min_replicas" class="form-label">Minimum Replicas *</label>
-                        <input type="number" class="form-control" id="min_replicas" name="min_replicas" 
-                               value="1" min="1" max="100">
-                    </div>
-
-                    <!-- Max Replicas (autoscale) -->
-                    <div class="col-md-6" data-field="max_replicas">
-                        <label for="max_replicas" class="form-label">Maximum Replicas *</label>
-                        <input type="number" class="form-control" id="max_replicas" name="max_replicas" 
-                               value="10" min="1" max="100">
-                    </div>
-
-                    <!-- Target CPU (autoscale) -->
-                    <div class="col-md-6" data-field="target_cpu">
-                        <label for="target_cpu" class="form-label">Target CPU Utilization % *</label>
-                        <input type="number" class="form-control" id="target_cpu" name="target_cpu" 
-                               value="80" min="1" max="100">
-                    </div>
-
-                    <!-- Port -->
-                    <div class="col-md-6" data-field="port">
+                    <div class="col-md-6">
                         <label for="port" class="form-label">Container Port *</label>
                         <input type="number" class="form-control" id="port" name="port" 
-                               value="8080" min="1" max="65535">
+                               value="8080" min="1" max="65535" required>
                     </div>
 
-                    <!-- Scheduler Port (dask) -->
-                    <div class="col-md-6" data-field="scheduler_port">
-                        <label for="scheduler_port" class="form-label">Scheduler Port *</label>
-                        <input type="number" class="form-control" id="scheduler_port" name="scheduler_port" 
-                               value="8786" min="1" max="65535">
-                    </div>
-
-                    <!-- Database Fields (postgres) -->
-                    <div class="col-md-6" data-field="db_name">
-                        <label for="db_name" class="form-label">Database Name *</label>
-                        <input type="text" class="form-control" id="db_name" name="db_name" 
-                               placeholder="app_db">
-                    </div>
-
-                    <div class="col-md-6" data-field="db_user">
-                        <label for="db_user" class="form-label">Database Username *</label>
-                        <input type="text" class="form-control" id="db_user" name="db_user" 
-                               placeholder="app_user">
-                    </div>
-
-                    <!-- Storage Size -->
-                    <div class="col-md-6" data-field="storage_size">
-                        <label for="storage_size" class="form-label">Storage Size *</label>
-                        <input type="text" class="form-control" id="storage_size" name="storage_size" 
-                               value="10Gi" pattern="[0-9]+[KMGT]i">
-                        <small class="text-muted">Examples: 10Gi, 100Gi, 1Ti</small>
-                    </div>
-
-                    <!-- Mount Path -->
-                    <div class="col-md-6" data-field="mount_path">
-                        <label for="mount_path" class="form-label">Mount Path *</label>
-                        <input type="text" class="form-control" id="mount_path" name="mount_path" 
-                               value="/data">
-                    </div>
-
-                    <!-- NFS Fields -->
-                    <div class="col-md-6" data-field="nfs_server">
-                        <label for="nfs_server" class="form-label">NFS Server *</label>
-                        <input type="text" class="form-control" id="nfs_server" name="nfs_server" 
-                               placeholder="nfs.example.com">
-                    </div>
-
-                    <div class="col-md-6" data-field="nfs_path">
-                        <label for="nfs_path" class="form-label">NFS Export Path *</label>
-                        <input type="text" class="form-control" id="nfs_path" name="nfs_path" 
-                               placeholder="/export/data">
-                    </div>
-
-                    <!-- Dask Worker Fields -->
-                    <div class="col-md-6" data-field="worker_replicas">
-                        <label for="worker_replicas" class="form-label">Worker Replicas *</label>
-                        <input type="number" class="form-control" id="worker_replicas" name="worker_replicas" 
-                               value="3" min="1" max="100">
-                    </div>
-
-                    <div class="col-md-6" data-field="worker_threads">
-                        <label for="worker_threads" class="form-label">Worker Threads *</label>
-                        <input type="number" class="form-control" id="worker_threads" name="worker_threads" 
-                               value="4" min="1" max="64">
-                    </div>
-
-                    <div class="col-md-6" data-field="worker_memory">
-                        <label for="worker_memory" class="form-label">Worker Memory *</label>
-                        <input type="text" class="form-control" id="worker_memory" name="worker_memory" 
-                               value="4Gi" pattern="[0-9]+[KMGT]i">
-                    </div>
-
-                    <!-- External Secret Path -->
-                    <div class="col-md-6" data-field="secret_path">
-                        <label for="secret_path" class="form-label">Vault Secret Path *</label>
-                        <input type="text" class="form-control" id="secret_path" name="secret_path" 
-                               placeholder="secret/data/myapp">
-                        <small class="text-muted">Path in bao.k8s.ucar.edu</small>
-                    </div>
-
-                    <!-- Ingress Toggle -->
-                    <div class="col-12" data-field="enable_ingress">
+                    <div class="col-12">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="enable_ingress" name="enable_ingress">
                             <label class="form-check-label" for="enable_ingress">
-                                <strong>Enable External Access (Ingress)</strong>
-                                <p class="small text-muted mb-0">Expose your application with a public URL</p>
+                                <strong>Enable Web Access (Ingress)</strong>
+                                <p class="small text-muted mb-0">Expose your application with a URL</p>
                             </label>
                         </div>
                     </div>
 
-                    <!-- Domain (shown when ingress enabled) -->
-                    <div class="col-md-6" data-field="domain" id="domainField" style="display: none;">
+                    <div class="col-md-6" id="ingressTypeField" style="display: none;">
+                        <label for="ingress_type" class="form-label">Access Type *</label>
+                        <select class="form-select" id="ingress_type" name="ingress_type">
+                            <option value="external">External (nginx-external)</option>
+                            <option value="internal">Internal UCAR Only (nginx-internal)</option>
+                        </select>
+                        <small class="text-muted">Internal access requires UCAR network/VPN</small>
+                    </div>
+
+                    <div class="col-md-6" id="domainField" style="display: none;">
                         <label for="domain" class="form-label">Domain *</label>
                         <input type="text" class="form-control" id="domain" name="domain" 
                                placeholder="myapp.k8s.ucar.edu">
@@ -189,8 +83,234 @@
                 </div>
             </section>
 
+            <hr class="my-5">
+
+            <!-- Add-ons Selection -->
+            <section class="mb-5">
+                <h2 class="section-heading">
+                    <i class="fas fa-puzzle-piece"></i> Select Add-ons
+                </h2>
+                <p class="text-muted mb-4">Choose additional components for your application (select any combination)</p>
+                
+                <div class="row g-4">
+                    {% for key, addon in addons.items() %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="addon-card">
+                            <div class="form-check">
+                                <input class="form-check-input addon-checkbox" type="checkbox" 
+                                       id="addon_{{ key }}" value="{{ key }}" data-addon="{{ key }}">
+                                <label class="form-check-label" for="addon_{{ key }}">
+                                    <h5>{{ addon.name }}</h5>
+                                    <p class="small text-muted mb-0">{{ addon.description }}</p>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- Add-on Configuration Sections (hidden by default) -->
+            
+            <!-- CloudNativePG Configuration -->
+            <section class="addon-config mb-5" id="config_cnpg" style="display: none;">
+                <h3 class="config-heading">
+                    <i class="fas fa-server"></i> CloudNativePG Configuration
+                </h3>
+                
+                <h5 class="mt-4 mb-3">Cluster Settings</h5>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <label for="cnpg_instances" class="form-label">Cluster Instances</label>
+                        <input type="number" class="form-control" id="cnpg_instances" name="cnpg_instances" 
+                               value="3" min="1" max="10">
+                        <small class="text-muted">Recommended: 3 for HA</small>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="cnpg_storage_size" class="form-label">Storage Size</label>
+                        <input type="text" class="form-control" id="cnpg_storage_size" name="cnpg_storage_size" 
+                               value="20Gi" pattern="[0-9]+[KMGT]i">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="cnpg_backup_enabled" class="form-label">Backups</label>
+                        <select class="form-select" id="cnpg_backup_enabled" name="cnpg_backup_enabled">
+                            <option value="false">Disabled</option>
+                            <option value="true">Enabled (S3)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h5 class="mt-4 mb-3">App User Credentials (External Secrets)</h5>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <label for="cnpg_app_owner" class="form-label">App Username</label>
+                        <input type="text" class="form-control" id="cnpg_app_owner" name="cnpg_app_owner" 
+                               placeholder="app_user" value="app_user">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="cnpg_app_secret_path" class="form-label">OpenBao Secret Path</label>
+                        <input type="text" class="form-control" id="cnpg_app_secret_path" name="cnpg_app_secret_path" 
+                               placeholder="secret/data/myapp/db">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="cnpg_app_password_key" class="form-label">Password Key</label>
+                        <input type="text" class="form-control" id="cnpg_app_password_key" name="cnpg_app_password_key" 
+                               placeholder="password" value="password">
+                    </div>
+                </div>
+
+                <div class="col-12 mt-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="cnpg_enable_superuser" name="cnpg_enable_superuser">
+                        <label class="form-check-label" for="cnpg_enable_superuser">
+                            <strong>Enable Superuser External Secret</strong>
+                            <p class="small text-muted mb-0">For administrative access to the database</p>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="cnpgSuperuserFields" style="display: none;">
+                    <h5 class="mt-4 mb-3">Superuser Credentials (External Secrets)</h5>
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <label for="cnpg_superuser_secret_path" class="form-label">OpenBao Secret Path</label>
+                            <input type="text" class="form-control" id="cnpg_superuser_secret_path" name="cnpg_superuser_secret_path" 
+                                   placeholder="secret/data/myapp/db-superuser">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="cnpg_superuser_username_key" class="form-label">Username Key</label>
+                            <input type="text" class="form-control" id="cnpg_superuser_username_key" name="cnpg_superuser_username_key" 
+                                   placeholder="username" value="username">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="cnpg_superuser_password_key" class="form-label">Password Key</label>
+                            <input type="text" class="form-control" id="cnpg_superuser_password_key" name="cnpg_superuser_password_key" 
+                                   placeholder="password" value="password">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning mt-4">
+                    <small>
+                        <i class="fas fa-exclamation-triangle"></i> 
+                        <strong>SecretStore Required:</strong> 
+                        A SecretStore named <code>user-ro</code> must be created by CIRRUS admin before external secrets can be accessed. 
+                        Contact <a href="mailto:cirrus-admin@ucar.edu">cirrus-admin@ucar.edu</a> if you don't have one set up.
+                    </small>
+                </div>
+            </section>
+
+            <!-- Dask Configuration -->
+            <section class="addon-config mb-5" id="config_dask" style="display: none;">
+                <h3 class="config-heading">
+                    <i class="fas fa-project-diagram"></i> Dask Cluster Configuration
+                </h3>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <label for="worker_replicas" class="form-label">Worker Replicas</label>
+                        <input type="number" class="form-control" id="worker_replicas" name="worker_replicas" 
+                               value="3" min="1" max="100">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="worker_threads" class="form-label">Worker Threads</label>
+                        <input type="number" class="form-control" id="worker_threads" name="worker_threads" 
+                               value="4" min="1" max="64">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="worker_memory" class="form-label">Worker Memory</label>
+                        <input type="text" class="form-control" id="worker_memory" name="worker_memory" 
+                               value="4Gi" pattern="[0-9]+[KMGT]i">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Persistent Volume Configuration -->
+            <section class="addon-config mb-5" id="config_persistence" style="display: none;">
+                <h3 class="config-heading">
+                    <i class="fas fa-hdd"></i> Persistent Volume Configuration
+                </h3>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <label for="pv_access_mode" class="form-label">Access Mode</label>
+                        <select class="form-select" id="pv_access_mode" name="pv_access_mode">
+                            <option value="ReadWriteOnce">RWO - Single container access</option>
+                            <option value="ReadWriteMany">RWX - Multiple container access</option>
+                        </select>
+                        <small class="text-muted">RWO: One pod at a time | RWX: Multiple pods simultaneously</small>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="pv_storage_size" class="form-label">Storage Size</label>
+                        <input type="text" class="form-control" id="pv_storage_size" name="pv_storage_size" 
+                               value="10Gi" pattern="[0-9]+[KMGT]i">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="pv_mount_path" class="form-label">Mount Path</label>
+                        <input type="text" class="form-control" id="pv_mount_path" name="pv_mount_path" 
+                               value="/data">
+                    </div>
+                </div>
+            </section>
+                </div>
+            </section>
+
+            <!-- NFS Configuration -->
+            <section class="addon-config mb-5" id="config_nfs" style="display: none;">
+                <h3 class="config-heading">
+                    <i class="fas fa-network-wired"></i> NFS Volume Configuration
+                </h3>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <label for="nfs_server" class="form-label">NFS Server</label>
+                        <input type="text" class="form-control" id="nfs_server" name="nfs_server" 
+                               placeholder="nfs.example.com">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="nfs_path" class="form-label">Export Path</label>
+                        <input type="text" class="form-control" id="nfs_path" name="nfs_path" 
+                               placeholder="/export/data">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="nfs_mount_path" class="form-label">Mount Path in Container</label>
+                        <input type="text" class="form-control" id="nfs_mount_path" name="nfs_mount_path" 
+                               value="/mnt/nfs">
+                    </div>
+                    <div class="col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="nfs_readonly" name="nfs_readonly">
+                            <label class="form-check-label" for="nfs_readonly">
+                                <strong>Read-Only Mount</strong>
+                                <p class="small text-muted mb-0">Enable for read-only access (required for Glade)</p>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert alert-info mt-3">
+                    <small><i class="fas fa-info-circle"></i> <strong>For Glade access:</strong> Contact <a href="mailto:cirrus-admin@ucar.edu">cirrus-admin@ucar.edu</a> for the Glade NFS server FQDN and export policies. Set your path to <code>/glade/work/username</code> or <code>/glade/campaign/...</code> and enable read-only.</small>
+                </div>
+            </section>
+
+            <!-- External Secrets Configuration -->
+            <section class="addon-config mb-5" id="config_external_secrets" style="display: none;">
+                <h3 class="config-heading">
+                    <i class="fas fa-key"></i> External Secrets Configuration
+                </h3>
+                <div class="row g-4">
+                    <div class="col-md-12">
+                        <label for="secret_path" class="form-label">Vault Secret Path</label>
+                        <input type="text" class="form-control" id="secret_path" name="secret_path" 
+                               placeholder="secret/data/myapp">
+                        <small class="text-muted">Path in bao.k8s.ucar.edu (e.g., secret/data/myapp)</small>
+                    </div>
+                </div>
+                <div class="alert alert-info mt-3">
+                    <small><i class="fas fa-info-circle"></i> Secrets will be injected as environment variables</small>
+                </div>
+            </section>
+
+            <hr class="my-5">
+
             <!-- Output Options -->
-            <section class="mb-5" id="outputSection" style="display: none;">
+            <section class="mb-5">
                 <h2 class="section-heading">Output Options</h2>
                 
                 <div class="row g-3 mb-4">
@@ -225,12 +345,12 @@
                     
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label for="github_token" class="form-label">GitHub Token *</label>
+                            <label for="github_token" class="form-label">GitHub Token</label>
                             <input type="password" class="form-control" id="github_token" name="github_token" 
                                    placeholder="ghp_...">
                         </div>
                         <div class="col-md-6">
-                            <label for="github_repo" class="form-label">Repository URL *</label>
+                            <label for="github_repo" class="form-label">Repository URL</label>
                             <input type="text" class="form-control" id="github_repo" name="github_repo" 
                                    placeholder="https://github.com/your-org/your-repo">
                         </div>
@@ -244,7 +364,7 @@
             </section>
 
             <!-- Submit Button -->
-            <div class="text-center mb-5" id="submitSection" style="display: none;">
+            <div class="text-center mb-5">
                 <button type="submit" class="btn btn-primary btn-lg">
                     <i class="fas fa-rocket"></i> Generate Helm Chart
                 </button>
@@ -256,7 +376,7 @@
             <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Generating...</span>
             </div>
-            <p class="mt-3">Generating your Helm chart...</p>
+            <p class="mt-3">Generating your modular Helm chart...</p>
         </div>
 
         <!-- Success Message -->
@@ -274,41 +394,44 @@
 </div>
 
 <style>
-.chart-type-card {
+.addon-card {
     border: 2px solid #dee2e6;
     border-radius: 8px;
-    padding: 1rem;
-    cursor: pointer;
+    padding: 1.25rem;
     transition: all 0.3s ease;
     height: 100%;
 }
 
-.chart-type-card:hover {
-    border-color: #0d6efd;
-    box-shadow: 0 2px 8px rgba(13, 110, 253, 0.2);
+.addon-card:hover {
+    border-color: #0066cc;
+    box-shadow: 0 2px 8px rgba(0, 102, 204, 0.2);
 }
 
-.chart-type-card input[type="radio"] {
-    display: none;
+.addon-card .form-check-input:checked ~ .form-check-label {
+    color: #0066cc;
 }
 
-.chart-type-card input[type="radio"]:checked + label {
-    color: #0d6efd;
+.addon-card .form-check-input:checked ~ .form-check-label h5 {
+    color: #0066cc;
+    font-weight: 600;
 }
 
-.chart-type-card input[type="radio"]:checked ~ label h5 {
-    color: #0d6efd;
-}
-
-.chart-type-card.selected {
-    border-color: #0d6efd;
-    background-color: #f8f9fa;
-}
-
-.chart-type-card label {
+.addon-card .form-check-label {
     cursor: pointer;
-    margin: 0;
-    display: block;
+    width: 100%;
+}
+
+.addon-config {
+    background: #f8f9fa;
+    border-left: 4px solid #0066cc;
+    padding: 2rem;
+    border-radius: 4px;
+}
+
+.config-heading {
+    color: #0066cc;
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
 }
 
 .output-option-card {
@@ -322,8 +445,8 @@
 }
 
 .output-option-card:hover {
-    border-color: #0d6efd;
-    box-shadow: 0 2px 8px rgba(13, 110, 253, 0.2);
+    border-color: #0066cc;
+    box-shadow: 0 2px 8px rgba(0, 102, 204, 0.2);
 }
 
 .output-option-card input[type="radio"] {
@@ -331,11 +454,11 @@
 }
 
 .output-option-card input[type="radio"]:checked + label {
-    color: #0d6efd;
+    color: #0066cc;
 }
 
 .output-option-card.selected {
-    border-color: #0d6efd;
+    border-color: #0066cc;
     background-color: #f8f9fa;
 }
 
@@ -349,41 +472,102 @@
 }
 
 .output-option-card input[type="radio"]:checked + label i {
-    color: #0d6efd;
+    color: #0066cc;
+}
+
+.page-header {
+    background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+    color: white;
+    padding: 4rem 0;
+    margin-bottom: 3rem;
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.section-heading {
+    color: #0066cc;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #e9ecef;
 }
 </style>
 
 <script>
-const chartTemplates = {{ templates | tojson }};
-
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('helmGeneratorForm');
-    const chartTypeCards = document.querySelectorAll('.chart-type-card');
-    const chartFields = document.getElementById('chartFields');
-    const outputSection = document.getElementById('outputSection');
-    const submitSection = document.getElementById('submitSection');
-    const githubOptions = document.getElementById('githubOptions');
     const enableIngressCheckbox = document.getElementById('enable_ingress');
+    const ingressTypeField = document.getElementById('ingressTypeField');
     const domainField = document.getElementById('domainField');
-
-    // Chart type selection
-    chartTypeCards.forEach(card => {
-        card.addEventListener('click', function() {
-            const radio = this.querySelector('input[type="radio"]');
-            radio.checked = true;
+    const githubOptions = document.getElementById('githubOptions');
+    
+    // Handle ingress toggle
+    enableIngressCheckbox.addEventListener('change', function() {
+        const domainInput = document.getElementById('domain');
+        const ingressTypeInput = document.getElementById('ingress_type');
+        if (this.checked) {
+            ingressTypeField.style.display = 'block';
+            domainField.style.display = 'block';
+            domainInput.setAttribute('required', 'required');
+            ingressTypeInput.setAttribute('required', 'required');
+        } else {
+            ingressTypeField.style.display = 'none';
+            domainField.style.display = 'none';
+            domainInput.removeAttribute('required');
+            ingressTypeInput.removeAttribute('required');
+        }
+    });
+    
+    // Handle CNPG superuser toggle
+    const cnpgSuperuserCheckbox = document.getElementById('cnpg_enable_superuser');
+    const cnpgSuperuserFields = document.getElementById('cnpgSuperuserFields');
+    
+    if (cnpgSuperuserCheckbox) {
+        cnpgSuperuserCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                cnpgSuperuserFields.style.display = 'block';
+                cnpgSuperuserFields.querySelectorAll('input').forEach(input => {
+                    input.setAttribute('required', 'required');
+                });
+            } else {
+                cnpgSuperuserFields.style.display = 'none';
+                cnpgSuperuserFields.querySelectorAll('input').forEach(input => {
+                    input.removeAttribute('required');
+                });
+            }
+        });
+    }
+    
+    // Handle add-on checkbox toggles
+    document.querySelectorAll('.addon-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const addonKey = this.getAttribute('data-addon');
+            const configSection = document.getElementById(`config_${addonKey}`);
             
-            // Update visual state
-            chartTypeCards.forEach(c => c.classList.remove('selected'));
-            this.classList.add('selected');
-            
-            // Show relevant fields
-            showFieldsForChartType(radio.value);
-            chartFields.style.display = 'block';
-            outputSection.style.display = 'block';
-            submitSection.style.display = 'block';
+            if (configSection) {
+                if (this.checked) {
+                    configSection.style.display = 'block';
+                    // Set inputs as required
+                    configSection.querySelectorAll('input, select').forEach(input => {
+                        if (input.type !== 'checkbox') {
+                            input.setAttribute('required', 'required');
+                        }
+                    });
+                } else {
+                    configSection.style.display = 'none';
+                    // Remove required
+                    configSection.querySelectorAll('input, select').forEach(input => {
+                        input.removeAttribute('required');
+                    });
+                }
+            }
         });
     });
-
+    
     // Output format selection
     document.querySelectorAll('input[name="output_format"]').forEach(radio => {
         radio.addEventListener('change', function() {
@@ -404,19 +588,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-
-    // Ingress toggle
-    enableIngressCheckbox.addEventListener('change', function() {
-        const domainInput = document.getElementById('domain');
-        if (this.checked) {
-            domainField.style.display = 'block';
-            domainInput.setAttribute('required', 'required');
-        } else {
-            domainField.style.display = 'none';
-            domainInput.removeAttribute('required');
-        }
-    });
-
+    
     // Form submission
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -424,39 +596,39 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Form submitted');
         
         const formData = new FormData(form);
-        const chartType = formData.get('chart_type');
         const outputFormat = formData.get('output_format');
         
-        console.log('Chart type:', chartType);
-        console.log('Output format:', outputFormat);
-        
-        // Build values object
-        const values = {
-            chart_type: chartType,
-            output_format: outputFormat,
-            app_name: document.getElementById('app_name').value  // Always include app_name
-        };
-        
-        // Get all field values for this chart type
-        chartTemplates[chartType].fields.forEach(field => {
-            const element = document.getElementById(field);
-            if (element) {
-                if (element.type === 'checkbox') {
-                    values[field] = element.checked;
-                } else {
-                    values[field] = element.value;
-                }
-            }
+        // Collect enabled add-ons
+        const enabledAddons = [];
+        document.querySelectorAll('.addon-checkbox:checked').forEach(checkbox => {
+            enabledAddons.push(checkbox.value);
         });
         
-        // Add GitHub fields if PR selected
-        if (outputFormat === 'github_pr') {
-            values.github_token = formData.get('github_token');
-            values.github_repo = formData.get('github_repo');
-            values.github_branch = formData.get('github_branch');
+        console.log('Enabled add-ons:', enabledAddons);
+        
+        // Build request object
+        const data = {
+            output_format: outputFormat,
+            enabled_addons: enabledAddons
+        };
+        
+        // Collect all form fields
+        for (let [key, value] of formData.entries()) {
+            if (key !== 'output_format') {
+                data[key] = value;
+            }
         }
         
-        console.log('Values:', values);
+        // Handle checkboxes
+        data.enable_ingress = document.getElementById('enable_ingress').checked;
+        if (document.getElementById('nfs_readonly')) {
+            data.nfs_readonly = document.getElementById('nfs_readonly').checked;
+        }
+        if (document.getElementById('cnpg_enable_superuser')) {
+            data.cnpg_enable_superuser = document.getElementById('cnpg_enable_superuser').checked;
+        }
+        
+        console.log('Request data:', data);
         
         // Show loading
         document.getElementById('loadingIndicator').style.display = 'block';
@@ -466,14 +638,13 @@ document.addEventListener('DOMContentLoaded', function() {
         
         try {
             if (outputFormat === 'zip') {
-                // Download ZIP
                 console.log('Fetching ZIP...');
                 const response = await fetch('/api/generate-helm', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(values)
+                    body: JSON.stringify(data)
                 });
                 
                 console.log('Response status:', response.status);
@@ -483,7 +654,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const url = window.URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = `${values.app_name}-helm-chart.zip`;
+                    a.download = `${data.app_name}-helm-chart.zip`;
                     document.body.appendChild(a);
                     a.click();
                     window.URL.revokeObjectURL(url);
@@ -496,14 +667,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     showError(error.error || 'Failed to generate Helm chart');
                 }
             } else {
-                // Create GitHub PR
                 console.log('Creating GitHub PR...');
                 const response = await fetch('/api/generate-helm', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(values)
+                    body: JSON.stringify(data)
                 });
                 
                 console.log('Response status:', response.status);
@@ -525,44 +695,15 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('loadingIndicator').style.display = 'none';
     });
     
-    function showFieldsForChartType(chartType) {
-        const fields = chartTemplates[chartType].fields;
-        
-        // Hide all optional fields and remove required attribute
-        document.querySelectorAll('[data-field]').forEach(field => {
-            const input = field.querySelector('input, select, textarea');
-            if (field.dataset.field !== 'app_name') { // app_name is always required
-                field.style.display = 'none';
-                if (input) {
-                    input.removeAttribute('required');
-                }
-            }
-        });
-        
-        // Show required fields for this chart type and set required attribute
-        fields.forEach(fieldName => {
-            const field = document.querySelector(`[data-field="${fieldName}"]`);
-            if (field) {
-                field.style.display = 'block';
-                const input = field.querySelector('input, select, textarea');
-                // Set required for all fields except enable_ingress checkbox
-                if (input && fieldName !== 'enable_ingress') {
-                    input.setAttribute('required', 'required');
-                }
-            }
-        });
-    }
-    
     function showSuccess(message) {
         document.getElementById('successText').innerHTML = message;
         document.getElementById('successMessage').style.display = 'block';
         setTimeout(() => {
             form.style.display = 'block';
             form.reset();
-            chartFields.style.display = 'none';
-            outputSection.style.display = 'none';
-            submitSection.style.display = 'none';
-            document.querySelectorAll('.chart-type-card').forEach(c => c.classList.remove('selected'));
+            document.querySelectorAll('.addon-config').forEach(section => {
+                section.style.display = 'none';
+            });
             document.getElementById('successMessage').style.display = 'none';
         }, 5000);
     }

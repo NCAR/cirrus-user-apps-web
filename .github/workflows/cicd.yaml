@@ -14,7 +14,8 @@ permissions:
 
 jobs:
   image-build-push:
-    runs-on: cirrus-4x8
+    runs-on: 
+      group: cirrus-4x8
     steps:
       - name: Checkout the repo 
         uses: actions/checkout@v3

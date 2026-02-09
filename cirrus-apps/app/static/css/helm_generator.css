@@ -221,3 +221,17 @@
         font-size: 1.5rem;
     }
 }
+
+.domain-hint {
+    display: block;
+    margin-top: 0.25rem;
+}
+
+.form-control:invalid {
+    border-color: #dc3545;
+}
+
+.invalid-feedback.d-block {
+    color: #dc3545;
+    font-weight: 500;
+}

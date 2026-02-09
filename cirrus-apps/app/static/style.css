@@ -40,7 +40,7 @@ main {
 .top-bar {
     background-color: #ffffff;
     padding: 1rem 0;
-    border-bottom: 3px solid var(--ncar-blue);
+    border-bottom: 1px solid #dee2e6;
 }
 
 .top-bar-logo-link {
@@ -78,7 +78,7 @@ main {
 
 /* ===== NAVBAR (MENU BAR) ===== */
 .navbar {
-    background-color: #d9d9d6;
+    background-color: #ffffff;
     padding: 0;
     border-bottom: 1px solid #c0c0bd;
 }
@@ -88,9 +88,8 @@ main {
 }
 
 .nav-link {
-    color: var(--text-dark);
-    font-weight: 500;
-    font-size: 0.9rem;
+    color: #011837;
+    font-size: 1rem;
     padding: 1rem 1.25rem;
     transition: var(--transition);
     text-transform: none;
@@ -101,7 +100,6 @@ main {
 .nav-link:hover {
     color: var(--ncar-blue);
     background-color: #ffffff;
-    border-bottom-color: var(--ncar-blue);
 }
 
 .nav-link.active {

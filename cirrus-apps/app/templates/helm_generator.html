@@ -65,7 +65,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6" id="ingressTypeField" style="display: none;">
+                    <div class="col-md-4" id="ingressTypeField" style="display: none;">
                         <label for="ingress_type" class="form-label">Access Type *</label>
                         <select class="form-select" id="ingress_type" name="ingress_type">
                             <option value="external">External (nginx-external)</option>
@@ -74,14 +74,24 @@
                         <small class="text-muted">Internal access requires UCAR network/VPN</small>
                     </div>
 
-                    <div class="col-md-6" id="domainField" style="display: none;">
+                    <div class="col-md-4" id="domainField" style="display: none;">
                         <label for="domain" class="form-label">Domain *</label>
                         <input type="text" class="form-control" id="domain" name="domain" 
-                               placeholder="myapp.k8s.ucar.edu">
-                        <small class="text-muted">Your application URL</small>
+                            placeholder="myapp.k8s.ucar.edu" 
+                            pattern=".*\.k8s\.ucar\.edu$"
+                            title="Domain must end with .k8s.ucar.edu">
+                        <small class="text-muted domain-hint">Must end with <strong>.k8s.ucar.edu</strong></small>
+                        <div class="invalid-feedback" id="domainError">
+                            <i class="fas fa-exclamation-circle"></i> Domain must end with <strong>.k8s.ucar.edu</strong>
+                        </div>
                     </div>
-                </div>
-            </section>
+
+                    <div class="col-md-4" id="pathField" style="display: none;">
+                        <label for="webapp_path" class="form-label">URL Path *</label>
+                        <input type="text" class="form-control" id="webapp_path" name="webapp_path" 
+                            value="/" placeholder="/">
+                        <small class="text-muted">Use / for full site, or /api for API endpoints</small>
+                    </div>
 
             <hr class="my-5">
 
@@ -120,23 +130,16 @@
                 
                 <h5 class="mt-4 mb-3">Cluster Settings</h5>
                 <div class="row g-4">
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label for="cnpg_instances" class="form-label">Cluster Instances</label>
                         <input type="number" class="form-control" id="cnpg_instances" name="cnpg_instances" 
-                               value="3" min="1" max="10">
+                            value="3" min="1" max="10">
                         <small class="text-muted">Recommended: 3 for HA</small>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label for="cnpg_storage_size" class="form-label">Storage Size</label>
                         <input type="text" class="form-control" id="cnpg_storage_size" name="cnpg_storage_size" 
-                               value="20Gi" pattern="[0-9]+[KMGT]i">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="cnpg_backup_enabled" class="form-label">Backups</label>
-                        <select class="form-select" id="cnpg_backup_enabled" name="cnpg_backup_enabled">
-                            <option value="false">Disabled</option>
-                            <option value="true">Enabled (S3)</option>
-                        </select>
+                            value="20Gi" pattern="[0-9]+[KMGT]i">
                     </div>
                 </div>
 
@@ -145,48 +148,17 @@
                     <div class="col-md-4">
                         <label for="cnpg_app_owner" class="form-label">App Username</label>
                         <input type="text" class="form-control" id="cnpg_app_owner" name="cnpg_app_owner" 
-                               placeholder="app_user" value="app_user">
+                            placeholder="app_user" value="app_user">
                     </div>
                     <div class="col-md-4">
                         <label for="cnpg_app_secret_path" class="form-label">OpenBao Secret Path</label>
                         <input type="text" class="form-control" id="cnpg_app_secret_path" name="cnpg_app_secret_path" 
-                               placeholder="secret/data/myapp/db">
+                            placeholder="secret/data/myapp/db">
                     </div>
                     <div class="col-md-4">
                         <label for="cnpg_app_password_key" class="form-label">Password Key</label>
                         <input type="text" class="form-control" id="cnpg_app_password_key" name="cnpg_app_password_key" 
-                               placeholder="password" value="password">
-                    </div>
-                </div>
-
-                <div class="col-12 mt-3">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="cnpg_enable_superuser" name="cnpg_enable_superuser">
-                        <label class="form-check-label" for="cnpg_enable_superuser">
-                            <strong>Enable Superuser External Secret</strong>
-                            <p class="small text-muted mb-0">For administrative access to the database</p>
-                        </label>
-                    </div>
-                </div>
-
-                <div id="cnpgSuperuserFields" style="display: none;">
-                    <h5 class="mt-4 mb-3">Superuser Credentials (External Secrets)</h5>
-                    <div class="row g-4">
-                        <div class="col-md-4">
-                            <label for="cnpg_superuser_secret_path" class="form-label">OpenBao Secret Path</label>
-                            <input type="text" class="form-control" id="cnpg_superuser_secret_path" name="cnpg_superuser_secret_path" 
-                                   placeholder="secret/data/myapp/db-superuser">
-                        </div>
-                        <div class="col-md-4">
-                            <label for="cnpg_superuser_username_key" class="form-label">Username Key</label>
-                            <input type="text" class="form-control" id="cnpg_superuser_username_key" name="cnpg_superuser_username_key" 
-                                   placeholder="username" value="username">
-                        </div>
-                        <div class="col-md-4">
-                            <label for="cnpg_superuser_password_key" class="form-label">Password Key</label>
-                            <input type="text" class="form-control" id="cnpg_superuser_password_key" name="cnpg_superuser_password_key" 
-                                   placeholder="password" value="password">
-                        </div>
+                            placeholder="password" value="password">
                     </div>
                 </div>
 
@@ -509,35 +481,45 @@ document.addEventListener('DOMContentLoaded', function() {
     enableIngressCheckbox.addEventListener('change', function() {
         const domainInput = document.getElementById('domain');
         const ingressTypeInput = document.getElementById('ingress_type');
+        const pathInput = document.getElementById('webapp_path');
+        const pathField = document.getElementById('pathField');
+        
         if (this.checked) {
             ingressTypeField.style.display = 'block';
             domainField.style.display = 'block';
+            pathField.style.display = 'block';
             domainInput.setAttribute('required', 'required');
             ingressTypeInput.setAttribute('required', 'required');
+            pathInput.setAttribute('required', 'required');
         } else {
             ingressTypeField.style.display = 'none';
             domainField.style.display = 'none';
+            pathField.style.display = 'none';
             domainInput.removeAttribute('required');
             ingressTypeInput.removeAttribute('required');
+            pathInput.removeAttribute('required');
         }
     });
     
-    // Handle CNPG superuser toggle
-    const cnpgSuperuserCheckbox = document.getElementById('cnpg_enable_superuser');
-    const cnpgSuperuserFields = document.getElementById('cnpgSuperuserFields');
-    
-    if (cnpgSuperuserCheckbox) {
-        cnpgSuperuserCheckbox.addEventListener('change', function() {
-            if (this.checked) {
-                cnpgSuperuserFields.style.display = 'block';
-                cnpgSuperuserFields.querySelectorAll('input').forEach(input => {
-                    input.setAttribute('required', 'required');
-                });
+    // Add domain validation feedback
+    const domainInput = document.getElementById('domain');
+    const domainError = document.getElementById('domainError');
+
+    if (domainInput) {
+        domainInput.addEventListener('input', function() {
+            if (this.value && !this.checkValidity()) {
+                domainError.style.display = 'block';
+                this.classList.add('is-invalid');
             } else {
-                cnpgSuperuserFields.style.display = 'none';
-                cnpgSuperuserFields.querySelectorAll('input').forEach(input => {
-                    input.removeAttribute('required');
-                });
+                domainError.style.display = 'none';
+                this.classList.remove('is-invalid');
+            }
+        });
+        
+        domainInput.addEventListener('blur', function() {
+            if (this.value && !this.checkValidity()) {
+                domainError.style.display = 'block';
+                this.classList.add('is-invalid');
             }
         });
     }

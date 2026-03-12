@@ -14,6 +14,23 @@
                 </p>
             </div>
         </div>
+            {% if metrics %}
+            <div class="row mt-4">
+                <div class="col-lg-6 mx-auto">
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">GitHub Runner Metrics (Last 30 Days)</h5>
+                            <p class="mb-1">
+                                <strong>Total Workflows:</strong> {{ metrics.workflow_count }}
+                            </p>
+                            <p class="mb-0">
+                                <strong>Total Runner Minutes:</strong> {{ metrics.runner_minutes }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
     </div>
 </div>
     
@@ -52,10 +69,12 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
-    // Auto-refresh every 60 seconds
-    setInterval(function() {
-        location.reload();
-    }, 60000);
+// Auto-refresh every 60 seconds
+setInterval(function() {
+    location.reload();
+}, 60000);
 </script>
 {% endblock %}

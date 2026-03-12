@@ -2,6 +2,7 @@ from flask import render_template, request, session
 from app import app
 import yaml
 import json
+from app.github_metrics import get_workflow_runs, last_30_days_runs, calculate_metrics
 import os
 import requests
 from bs4 import BeautifulSoup
@@ -96,7 +97,11 @@ def status():
     
     config['last_check'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S MST')
     
-    return render_template('status.html', config=config)
+    runs = get_workflow_runs()
+    recent_runs = last_30_days_runs(runs)
+    metrics = calculate_metrics(recent_runs)
+
+    return render_template('status.html', config=config, metrics=metrics)
 
 @app.route('/sla')
 def sla():

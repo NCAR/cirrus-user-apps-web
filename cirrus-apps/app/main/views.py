@@ -2,7 +2,7 @@ from flask import render_template, request, session
 from app import app
 import yaml
 import json
-from app.github_metrics import get_workflow_runs, last_30_days_runs, calculate_metrics
+from app.github_metrics import get_workflow_runs, last_30_days_runs, calculate_metrics, REPOS
 import os
 import requests
 from bs4 import BeautifulSoup
@@ -97,8 +97,13 @@ def status():
     
     config['last_check'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S MST')
     
-    runs = get_workflow_runs()
-    recent_runs = last_30_days_runs(runs)
+    all_runs = []
+
+    for repo in REPOS:
+        repo_runs = get_workflow_runs(repo)
+        all_runs.extend(repo_runs)
+
+    recent_runs = last_30_days_runs(all_runs)
     metrics = calculate_metrics(recent_runs)
 
     return render_template('status.html', config=config, metrics=metrics)

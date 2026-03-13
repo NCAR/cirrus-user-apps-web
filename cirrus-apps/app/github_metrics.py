@@ -1,15 +1,28 @@
 import os
+import json
 import requests
 from datetime import datetime, timedelta
 
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
-OWNER = "NCAR"
-REPO = "cirrus-user-apps-web"
+if not GITHUB_TOKEN:
+    raise ValueError("GITHUB_TOKEN environment variable not set")
 
-def get_workflow_runs():
+REPOS = [
+    "CROCODILE-CESM/CrocoDash",
+    "ESCOMP/CAM-SIMA",
+    "ESCOMP/CTSM",
+    "khrpcek-ucar/actions-test",
+    "NCAR/CIRRUS-MILES-CREDIT",
+    "NCAR/MILES-CREDIT",
+    "NCAR/stormspeed",
+    "TURBO-ESM/turbo-stack"
+]
 
-    url = f"https://api.github.com/repos/{OWNER}/{REPO}/actions/runs"
+
+def get_workflow_runs(repo):
+
+    url = f"https://api.github.com/repos/{repo}/actions/runs"
 
     headers = {
         "Authorization": f"Bearer {GITHUB_TOKEN}",
@@ -23,9 +36,10 @@ def get_workflow_runs():
     response = requests.get(url, headers=headers, params=params)
 
     if response.status_code != 200:
+        print(f"Failed to fetch runs for {repo}: {response.status_code}")
         return []
 
-    return response.json()["workflow_runs"]
+    return response.json().get("workflow_runs", [])
 
 
 def last_30_days_runs(runs):
@@ -63,3 +77,25 @@ def calculate_metrics(runs):
         "runner_minutes": round(total_minutes, 2)
     }
 
+
+def main():
+
+    all_runs = []
+
+    for repo in REPOS:
+        print(f"Fetching workflow runs for {repo}")
+        runs = get_workflow_runs(repo)
+        all_runs.extend(runs)
+
+    runs_last_30 = last_30_days_runs(all_runs)
+
+    metrics = calculate_metrics(runs_last_30)
+
+    print("Metrics:", metrics)
+
+    with open("static/runner_metrics.json", "w") as f:
+        json.dump(metrics, f, indent=2)
+
+
+if __name__ == "__main__":
+    main()

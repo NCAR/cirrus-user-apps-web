@@ -5,9 +5,6 @@ from datetime import datetime, timedelta
 
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
-if not GITHUB_TOKEN:
-    raise ValueError("GITHUB_TOKEN environment variable not set")
-
 REPOS = [
     "CROCODILE-CESM/CrocoDash",
     "ESCOMP/CAM-SIMA",
@@ -25,13 +22,15 @@ def get_workflow_runs(repo):
     url = f"https://api.github.com/repos/{repo}/actions/runs"
 
     headers = {
-        "Authorization": f"Bearer {GITHUB_TOKEN}",
-        "Accept": "application/vnd.github+json"
+    "Accept": "application/vnd.github+json"
     }
 
+    if GITHUB_TOKEN:
+        headers["Authorization"] = f"Bearer {GITHUB_TOKEN}"
+
     params = {
-        "per_page": 100
-    }
+            "per_page": 100
+        }
 
     response = requests.get(url, headers=headers, params=params)
 

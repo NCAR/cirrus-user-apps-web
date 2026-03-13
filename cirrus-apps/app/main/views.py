@@ -99,12 +99,20 @@ def status():
     
     all_runs = []
 
-    for repo in REPOS:
-        repo_runs = get_workflow_runs(repo)
-        all_runs.extend(repo_runs)
+    try:
+        for repo in REPOS:
+            repo_runs = get_workflow_runs(repo)
+            all_runs.extend(repo_runs)
 
-    recent_runs = last_30_days_runs(all_runs)
-    metrics = calculate_metrics(recent_runs)
+        recent_runs = last_30_days_runs(all_runs)
+        metrics = calculate_metrics(recent_runs)
+
+    except Exception as e:
+        print("GitHub metrics error:", e)
+        metrics = {
+            "workflow_count": 0,
+            "runner_minutes": 0
+        }
 
     return render_template('status.html', config=config, metrics=metrics)
 

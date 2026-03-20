@@ -20,101 +20,186 @@
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-
     gtag('config', 'G-FFX1XL3CYV');
     </script>
 </head>
 <body>
     {% include 'navbar.html' %}
-    
+
     <main>
         {% block content %}{% endblock %}
     </main>
-    
-    <footer class="footer mt-5">
-        <div class="container">
-            <div class="row py-5">
-                <div class="col-lg-3 mb-4 mb-lg-0">
-                    <h5 class="footer-heading mb-3">CIRRUS</h5>
-                    <div class="footer-links">
-                        <a href="{{ url_for('home') }}" class="d-block mb-2">Home</a>
-                        <a href="{{ url_for('apps') }}" class="d-block mb-2">Applications</a>
-                        <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/01-intro/" target="_blank" class="d-block mb-2">Documentation</a>
-                        <a href="mailto:cirrus-admin@ucar.edu" class="d-block mb-2">Contact</a>
+
+    <!-- Footer -->
+    <footer>
+        <div class="org-footer">
+            <div class="container-lg py-md-3">
+                <div class="row">
+
+                    <!-- CIRRUS links -->
+                    <div class="col-12 col-md py-2">
+                        <div class="accordion" id="accordionCIRRUS">
+                            <div id="cirrusHeader" class="d-flex justify-content-between">
+                                <h3 class="text-light pb-md-2">CIRRUS</h3>
+                                <button class="btn text-light px-2 collapsed d-md-none"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#cirrusCollapseMenu"
+                                        aria-label="CIRRUS Links"
+                                        aria-expanded="false"
+                                        aria-controls="cirrusCollapseMenu">
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                            </div>
+                            <div id="cirrusCollapseMenu" class="collapse d-md-block" aria-labelledby="cirrusHeader">
+                                <ul class="nav flex-column">
+                                    <li class="nav-item"><a class="nav-link" href="{{ url_for('home') }}">Home</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="{{ url_for('getting_started') }}">Getting Started</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="{{ url_for('apps') }}">Applications</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="{{ url_for('architecture') }}">Architecture</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="{{ url_for('sla') }}">SLA</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="{{ url_for('status') }}">Status</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/01-intro/" target="_blank">Documentation</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="mailto:cirrus-admin@ucar.edu">Contact</a></li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="col-lg-3 mb-4 mb-lg-0">
-                    <h5 class="footer-heading mb-3">Resources</h5>
-                    <div class="footer-links">
-                        <a href="https://mlc1-argo.k8s.ucar.edu/" target="_blank" class="d-block mb-2">ML Argo CD</a>
-                        <a href="https://nwc1-argo.k8s.ucar.edu/" target="_blank" class="d-block mb-2">NWSC Argo CD</a>
-                        <a href="https://jupyter.k8s.ucar.edu/" target="_blank" class="d-block mb-2">JupyterHub</a>
-                        <a href="https://hub.k8s.ucar.edu/" target="_blank" class="d-block mb-2">Harbor Registry</a>
-                        <a href="https://grafana.k8s.ucar.edu/" target="_blank" class="d-block mb-2">Grafana</a>
+
+                    <!-- Resources links -->
+                    <div class="col-12 col-md py-2">
+                        <div class="accordion" id="accordionResources">
+                            <div id="resourcesHeader" class="d-flex justify-content-between">
+                                <h3 class="text-light pb-md-2">Resources</h3>
+                                <button class="btn text-light px-2 collapsed d-md-none"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#resourcesCollapseMenu"
+                                        aria-label="Resources"
+                                        aria-expanded="false"
+                                        aria-controls="resourcesCollapseMenu">
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                            </div>
+                            <div id="resourcesCollapseMenu" class="collapse d-md-block" aria-labelledby="resourcesHeader">
+                                <ul class="nav flex-column">
+                                    <li class="nav-item"><a class="nav-link" href="https://mlc1-argo.k8s.ucar.edu/" target="_blank">ML Argo CD</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="https://nwc1-argo.k8s.ucar.edu/" target="_blank">NWSC Argo CD</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="https://jupyter.k8s.ucar.edu/" target="_blank">CIRRUS JupyterHub</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="https://hub.k8s.ucar.edu/" target="_blank">Harbor Registry</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="https://grafana.k8s.ucar.edu/" target="_blank">Grafana</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="https://bao.k8s.ucar.edu/ui/vault/auth?with=oidc" target="_blank">OpenBao</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10905" target="_blank">Report Issue</a></li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="col-lg-3 mb-4 mb-lg-0">
-                    <h5 class="footer-heading mb-3">NSF NCAR</h5>
-                    <div class="footer-links">
-                        <a href="https://ncar.ucar.edu/" target="_blank" class="d-block mb-2">NSF NCAR Homepage</a>
-                        <a href="https://www.cisl.ucar.edu/" target="_blank" class="d-block mb-2">CISL</a>
-                        <a href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10905" target="_blank" class="d-block mb-2">Report Issue</a>
+
+                    <!-- NSF NCAR links -->
+                    <div class="col-12 col-md py-2">
+                        <div class="accordion" id="accordionNCAR">
+                            <div id="ncarHeader" class="d-flex justify-content-between">
+                                <h3 class="text-light pb-md-2">NSF NCAR</h3>
+                                <button class="btn text-light px-2 collapsed d-md-none"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#ncarCollapseMenu"
+                                        aria-label="NCAR Organization"
+                                        aria-expanded="false"
+                                        aria-controls="ncarCollapseMenu">
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                            </div>
+                            <div id="ncarCollapseMenu" class="collapse d-md-block" aria-labelledby="ncarHeader">
+                                <ul class="nav flex-column">
+                                    <li class="nav-item"><a class="nav-link" href="https://ncar.ucar.edu" target="_blank">NSF NCAR Homepage</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="https://www.cisl.ucar.edu" target="_blank">CISL | Computational &amp; Information Systems</a></li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- UCAR + social -->
+                    <div class="col-12 col-md py-2">
+                        <div class="accordion" id="accordionUCAR">
+                            <div id="ucarHeader" class="d-flex justify-content-between">
+                                <h3 class="text-light pb-md-2">UCAR</h3>
+                                <button class="btn px-2 text-light collapsed d-md-none"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#ucarCollapseMenu"
+                                        aria-label="UCAR Organization"
+                                        aria-expanded="false"
+                                        aria-controls="ucarCollapseMenu">
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                            </div>
+                            <div id="ucarCollapseMenu" class="collapse d-md-block" aria-labelledby="ucarHeader">
+                                <ul class="nav flex-column">
+                                    <li class="nav-item"><a class="nav-link" href="https://www.ucar.edu" target="_blank">UCAR Homepage</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="https://www.ucar.edu/who-we-are/governance/member-institutions" target="_blank">Member Institutions</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="social pt-4">
+                            <h4 class="text-light">Follow NCAR|UCAR</h4>
+                            <div class="social-icons text-light">
+                                <a href="https://www.facebook.com/ncar.ucar" aria-label="Follow us on Facebook"><i class="fab fa-facebook-f"></i></a>
+                                <a href="https://twitter.com/NCAR_Science" aria-label="Follow us on Twitter"><i class="fab fa-x-twitter"></i></a>
+                                <a href="https://instagram.com/ncar_ucar" aria-label="Follow us on Instagram"><i class="fab fa-instagram"></i></a>
+                                <a href="https://youtube.com/ncarucar" aria-label="Follow us on YouTube"><i class="fab fa-youtube"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-                
-                <div class="col-lg-3">
-                    <h5 class="footer-heading mb-3">UCAR</h5>
-                    <div class="footer-links">
-                        <a href="https://www.ucar.edu/" target="_blank" class="d-block mb-2">UCAR Homepage</a>
-                        <a href="https://www.ucar.edu/who-we-are/governance/member-institutions" target="_blank" class="d-block mb-2">Member Institutions</a>
+            </div>
+        </div>
+
+        <!-- Legal Footer -->
+        <div class="legal-footer py-3">
+            <div class="container-lg">
+                <div class="row">
+                    <div class="col-12">
+                        <p class="text-light copyright pe-md-2 mb-2">&copy; 2025 UCAR</p>
+                        <ul class="nav flex-column flex-md-row">
+                            <li class="nav-item"><a class="nav-link" href="https://www.ucar.edu/privacy-notice">Privacy</a></li>
+                            <li class="nav-item"><a class="nav-link" href="https://www.ucar.edu/cookie-other-tracking-technologies-notice">Cookies</a></li>
+                            <li class="nav-item"><a class="nav-link" href="https://www.ucar.edu/web-accessibility">Web Accessibility</a></li>
+                            <li class="nav-item"><a class="nav-link" href="https://www.ucar.edu/terms-of-use">Terms of Use</a></li>
+                            <li class="nav-item"><a class="nav-link" href="https://www.ucar.edu/notification-copyright-infringement-digital-millenium-copyright-act">Copyright Issues</a></li>
+                            <li class="nav-item"><a class="nav-link" href="https://nsf.gov">Sponsored by U.S. NSF</a></li>
+                            <li class="nav-item"><a class="nav-link" href="https://www.ucar.edu/who-we-are/ethics">Report Ethics Concern</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-12 text-gray-light mt-2">
+                        <span class="d-block d-md-inline pt-2 pt-md-0"><b>Postal Address:</b></span>
+                        <span>P.O. Box 3000, Boulder, CO 80307-3000</span>
+                        <span class="d-none d-md-inline">&bull;</span>
+                        <span class="d-block d-md-inline pt-2 pt-md-0"><b>Shipping Address:</b></span>
+                        <span>3090 Center Green Drive, Boulder, CO 80301</span>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <div class="legal-footer">
-            <div class="container">
-                <div class="row py-3">
-                    <div class="col-12 text-center">
-                        <p class="legal-footer-text mb-2">
-                            &copy; 2025 UCAR | 
-                            <a href="https://www.ucar.edu/privacy-policy" target="_blank" class="legal-link">Privacy</a> | 
-                            <a href="https://www.ucar.edu/terms-of-use" target="_blank" class="legal-link">Terms of Use</a> | 
-                            Sponsored by 
-                            <a href="https://www.nsf.gov/" target="_blank" class="legal-link">U.S. NSF</a>
-                        </p>
-                        <p class="legal-footer-address mb-0">
-                            Postal Address: P.O. Box 3000, Boulder, CO 80307-3000 • Shipping Address: 3090 Center Green Drive, Boulder, CO 80301
-                        </p>
+
+        <!-- NSF Footer -->
+        <div class="nsf-footer py-3">
+            <div class="container-lg">
+                <div class="row align-items-center">
+                    <div class="col-2 col-md-1 pb-3 pb-md-0 me-md-3">
+                        <img src="{{ url_for('static', filename='NSF_Official_logo.png') }}" alt="NSF Logo" />
                     </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="footer-nsf-section">
-            <div class="container">
-                <div class="row align-items-center py-4">
-                    <div class="col-auto text-center text-md-start mb-3 mb-md-0">
-                        <img src="https://www.cisl.ucar.edu/themes/custom/img/NSF_Official_logo.png" 
-                             alt="NSF Logo" 
-                             class="footer-nsf-logo">
-                    </div>
-                    <div class="col">
-                        <p class="footer-nsf-text mb-0">
-                            This material is based upon work supported by the NSF National Center for Atmospheric Research, 
-                            a major facility sponsored by the U.S. National Science Foundation and managed by the University 
-                            Corporation for Atmospheric Research. Any opinions, findings and conclusions or recommendations 
-                            expressed in this material do not necessarily reflect the views of the 
-                            <a href="https://nsf.gov/" target="_blank" class="footer-nsf-link">U.S. National Science Foundation</a>.
+                    <div class="col-10 col-md-10 flex-md-grow-1">
+                        <p class="mb-0">
+                            This material is based upon work supported by the NSF National Center for Atmospheric Research,
+                            a major facility sponsored by the U.S. National Science Foundation and managed by the University
+                            Corporation for Atmospheric Research. Any opinions, findings and conclusions or recommendations
+                            expressed in this material do not necessarily reflect the views of the
+                            <a href="https://nsf.gov" target="_blank">U.S. National Science Foundation.</a>
                         </p>
                     </div>
                 </div>
             </div>
         </div>
     </footer>
-    
+
     <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     {% block extra_scripts %}{% endblock %}

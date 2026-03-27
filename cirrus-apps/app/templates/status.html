@@ -14,23 +14,38 @@
                 </p>
             </div>
         </div>
-            {% if metrics %}
-            <div class="row mt-4">
-                <div class="col-lg-6 mx-auto">
-                    <div class="card shadow-sm">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">GitHub Runner Metrics (Last 30 Days)</h5>
+        {% if True %}  {# always show the metrics card #}
+        <div class="row mt-4">
+            <div class="col-lg-6 mx-auto">
+                <div class="card shadow-sm">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">GitHub Runner Metrics (Last 30 Days)</h5>
+
+                        <!-- Loading state -->
+                        <div id="metrics-loading" class="text-muted py-2">
+                            <div class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></div>
+                            Please wait while GitHub metrics are loading&hellip;
+                        </div>
+
+                        <!-- Loaded state (hidden until ready) -->
+                        <div id="metrics-data" style="display: none;">
                             <p class="mb-1">
-                                <strong>Total Workflows:</strong> {{ metrics.workflow_count }}
+                                <strong>Total Workflows:</strong> <span id="metric-workflow-count">—</span>
                             </p>
                             <p class="mb-0">
-                                <strong>Total Runner Minutes:</strong> {{ metrics.runner_minutes }}
+                                <strong>Total Runner Minutes:</strong> <span id="metric-runner-minutes">—</span>
                             </p>
+                        </div>
+
+                        <!-- Error state (hidden until needed) -->
+                        <div id="metrics-error" style="display: none;" class="text-danger small">
+                            <i class="fas fa-exclamation-circle"></i> Could not load metrics. They may still be generating.
                         </div>
                     </div>
                 </div>
             </div>
-            {% endif %}
+        </div>
+        {% endif %}
     </div>
 </div>
     
@@ -72,9 +87,37 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-// Auto-refresh every 60 seconds
-setInterval(function() {
-    location.reload();
-}, 60000);
+async function loadMetrics() {
+    try {
+        const response = await fetch("/metrics");
+        const data = await response.json();
+
+        if (response.status === 202 || data.generating) {
+            // Still generating — poll again in 2 seconds
+            setTimeout(loadMetrics, 2000);
+            return;
+        }
+
+        document.getElementById("metric-workflow-count").textContent = data.workflow_count.toLocaleString();
+        document.getElementById("metric-runner-minutes").textContent = data.runner_minutes.toLocaleString();
+        document.getElementById("metrics-loading").style.display = "none";
+        document.getElementById("metrics-data").style.display = "block";
+
+        // If stale, show a note and re-poll in 15s for fresh data
+        if (data.stale) {
+            document.getElementById("metrics-stale").style.display = "block";
+            setTimeout(loadMetrics, 15000);
+        }
+
+    } catch (err) {
+        document.getElementById("metrics-loading").style.display = "none";
+        document.getElementById("metrics-error").style.display = "block";
+    }
+}
+
+loadMetrics();
+
+// Auto-refresh page every 60 seconds
+setInterval(function() { location.reload(); }, 60000);
 </script>
 {% endblock %}

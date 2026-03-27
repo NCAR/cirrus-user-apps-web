@@ -55,6 +55,20 @@
                             <div class="form-text">We'll use this to contact you about your request</div>
                         </div>
                         
+                        <div class="mb-3">
+                            <label for="reporter_username" class="form-label">
+                                Your Jira Username <span class="text-danger">*</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="reporter_username" 
+                                name="reporter_username" 
+                                required
+                                placeholder="Your Jira username (e.g. ncote)"
+                            >
+                        </div>
+
                         <hr class="my-4">
                         
                         <div class="mb-3">
@@ -100,21 +114,6 @@
                                 placeholder="helm-chart"
                             >
                             <div class="form-text">Path to your Helm chart directory</div>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label for="app_url" class="form-label">
-                                Application URL <span class="text-danger">*</span>
-                            </label>
-                            <input 
-                                type="url" 
-                                class="form-control" 
-                                id="app_url" 
-                                name="app_url" 
-                                required
-                                placeholder="https://myapp.k8s.ucar.edu/"
-                            >
-                            <div class="form-text">Desired URL for your application</div>
                         </div>
                         
                         <div class="d-grid">

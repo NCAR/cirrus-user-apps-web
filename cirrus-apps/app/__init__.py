@@ -27,3 +27,5 @@ app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
 from app.main import views
+from app.jira import views
+from app.metrics import views

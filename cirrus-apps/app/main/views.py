@@ -2,7 +2,7 @@ from flask import render_template, request, session
 from app import app
 import yaml
 import json
-from app.github_metrics import get_workflow_runs, last_30_days_runs, calculate_metrics, REPOS
+from ..metrics.github_metrics import get_workflow_runs, last_30_days_runs, calculate_metrics, REPOS
 import os
 import requests
 from bs4 import BeautifulSoup
@@ -37,22 +37,18 @@ def status():
     # Fetch status from each status page
     for page in config['status_pages']:
         try:
-            # Fetch the public status page HTML
             status_url = f"{config['uptime_kuma_url']}/status/{page['slug']}"
             response = requests.get(status_url, timeout=5)
             
             if response.status_code == 200:
-                # Extract the preloadData JSON embedded in the HTML
                 import re
                 match = re.search(r"window\.preloadData = (\{.*?\});", response.text)
                 
                 if match:
-                    # The JSON uses single quotes, need to convert to valid JSON
                     json_str = match.group(1)
                     json_str = json_str.replace("'", '"').replace('null', 'null').replace('True', 'true').replace('False', 'false')
                     preload_data = json.loads(json_str)
                     
-                    # Get monitor info and check status via badge endpoint
                     page['status'] = 'UP'
                     page['monitors'] = []
                     
@@ -61,12 +57,10 @@ def status():
                             monitor_id = monitor.get('id')
                             monitor_name = monitor.get('name')
                             
-                            # Fetch badge to get actual status
                             badge_url = f"{config['uptime_kuma_url']}/api/badge/{monitor_id}/status"
                             badge_response = requests.get(badge_url, timeout=3)
                             
                             if badge_response.status_code == 200:
-                                # Parse SVG to extract status
                                 badge_text = badge_response.text
                                 if '>Up<' in badge_text:
                                     monitor_status = 'UP'
@@ -96,25 +90,9 @@ def status():
             page['status'] = 'UNKNOWN'
     
     config['last_check'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S MST')
-    
-    all_runs = []
 
-    try:
-        for repo in REPOS:
-            repo_runs = get_workflow_runs(repo)
-            all_runs.extend(repo_runs)
-
-        recent_runs = last_30_days_runs(all_runs)
-        metrics = calculate_metrics(recent_runs)
-
-    except Exception as e:
-        print("GitHub metrics error:", e)
-        metrics = {
-            "workflow_count": 0,
-            "runner_minutes": 0
-        }
-
-    return render_template('status.html', config=config, metrics=metrics)
+    # Metrics are now loaded asynchronously via the /metrics endpoint
+    return render_template('status.html', config=config)
 
 @app.route('/sla')
 def sla():

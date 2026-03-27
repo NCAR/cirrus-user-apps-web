@@ -254,7 +254,15 @@ docker push hub.k8s.ucar.edu/your-project/your-app:v1.0</code></pre>
                         <h6 class="alert-heading"><i class="fas fa-info-circle"></i> Submit your request:</h6>
                         <div class="row mt-3">
                             <div class="col-md-6">
-                                <p class="mb-2"><strong>Create Jira ticket</strong></p>
+                                <p class="mb-2"><strong>Webform to create Jira ticket</strong></p>
+                                <p class="small text-muted mb-3">Link to open request app web form</p>
+                                <a href="{{ url_for('request_app') }}" 
+                                   target="_blank" 
+                                   class="btn btn-outline-primary">
+                                    <i class="fas fa-external-link-alt"></i> Open Request App Web Form
+                                </a>
+                                <hr>
+                                <p class="mb-2"><strong>Create ticket in Jira</strong></p>
                                 <p class="small text-muted mb-3">Link to open CIRRUS Jira ticket creation</p>
                                 <a href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10903&customfield_10281=CCPP-108" 
                                    target="_blank" 

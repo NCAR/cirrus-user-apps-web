@@ -8,6 +8,7 @@ metadata:
     group: {{ .Values.webapp.group }}
   annotations:
     cert-manager.io/cluster-issuer: "incommon"
+    #external-dns.alpha.kubernetes.io/target: "128.117.41.130"
 spec:
   ingressClassName: traefik-external
   tls:

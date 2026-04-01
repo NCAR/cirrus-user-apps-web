@@ -11,8 +11,8 @@ webapp:
     container:
         image: hub.k8s.ucar.edu/ncote/cirrus-user-web:2026-04-01.21.34
         port: 5000
-        memory: 1G
-        cpu: 2
+        memory: "1G"
+        cpu: "2"
 env:
     MIMIR_USER: wisdom
     MIMIR_PASS: YnGl1ng@

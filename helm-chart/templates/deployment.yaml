@@ -26,3 +26,18 @@ spec:
             cpu: {{ .Values.webapp.container.cpu }}
         ports:
         - containerPort: {{ .Values.webapp.container.port }}
+        
+        env:
+        - name: MIMIR_USER
+          value: {{ .Values.env.MIMIR_USER | quote }}
+        - name: MIMIR_PASS
+          value: {{ .Values.env.MIMIR_PASS | quote }}
+        - name: MIMIR_URL
+          value: {{ .Values.env.MIMIR_URL | quote }}
+
+        resources:
+          limits:
+          memory: {{ .Values.webapp.container.memory }}
+          cpu: {{ .Values.webapp.container.cpu }}
+        ports:
+        - containerPort: {{ .Values.webapp.container.port }}

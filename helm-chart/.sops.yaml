@@ -1,0 +1,10 @@
+creation_rules:
+  - path_regex: 'values.yaml'
+    encrypted_regex: '^(env)$'
+    age: >- 
+      age1ucetgj7k3whaqf9nulacsqarur6nrgzuyt59apeptu5cphd6ksdsqpy5he,
+      age1dnkv8vy8xkl5afwuwl55ycpquy2uk7ypc5ad87sfug2zffp6jgkqwwzglr,
+      age1wt75fkqsa2ngrhtmr7ws2ve8v9h2463hryj4jk4k7m5khxmc9pgqgqag8x,
+      age1fqw4znyl0zjpw5ta7ll3auxpzg8dme578jgw43a0dtzjhwjn4qlstaez7c,
+      age1xy294eqnexjagmufvph6uyam4yz95h7t5w84rlgffhvl9fqjyeeskxrd5n,
+      age1zpurtdrc4h8pawznkyhhk20t0wxl6wdv82drjxtxk2e9duvy096qxkarfj

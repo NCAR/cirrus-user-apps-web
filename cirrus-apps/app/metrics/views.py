@@ -4,7 +4,7 @@ import threading
 from datetime import datetime, timedelta
 from flask import jsonify
 from app import app
-from .github_metrics import get_workflow_runs, last_30_days_runs, calculate_metrics, REPOS
+from .github_metrics import get_cpu_hours
 
 METRICS_FILE = "static/runner_metrics.json"
 METRICS_MAX_AGE_HOURS = 1
@@ -20,14 +20,13 @@ def metrics_are_stale():
     return file_age > timedelta(hours=METRICS_MAX_AGE_HOURS)
 
 
+    
 def regenerate_metrics():
-    all_runs = []
-    for repo in REPOS:
-        runs = get_workflow_runs(repo)
-        all_runs.extend(runs)
-    runs_last_30 = last_30_days_runs(all_runs)
-    metrics = calculate_metrics(runs_last_30)
-    os.makedirs(os.path.dirname(METRICS_FILE), exist_ok=True)  # ensure directory exists
+    cpu_data = get_cpu_hours()
+    metrics = {
+        "cpu_hours": cpu_data
+    }
+    os.makedirs(os.path.dirname(METRICS_FILE), exist_ok=True)
     with open(METRICS_FILE, "w") as f:
         json.dump(metrics, f, indent=2)
     return metrics

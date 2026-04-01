@@ -30,16 +30,18 @@
                         <!-- Loaded state (hidden until ready) -->
                         <div id="metrics-data" style="display: none;">
                             <p class="mb-1">
-                                <strong>Total Workflows:</strong> <span id="metric-workflow-count">—</span>
+                               <strong>Total CPU Hours:</strong>
+                               <span id="metric-total-hours">—</span>
                             </p>
                             <p class="mb-0">
-                                <strong>Total Runner Minutes:</strong> <span id="metric-runner-minutes">—</span>
+                               <strong>By Cluster:</strong><br>
+                               <span id="metric-cluster-breakdown">—</span>
                             </p>
                         </div>
 
                         <!-- Error state (hidden until needed) -->
                         <div id="metrics-error" style="display: none;" class="text-danger small">
-                            <i class="fas fa-exclamation-circle"></i> Could not load metrics. They may still be generating.
+                            <i class="fas fa-exclamation-circle"></i> Could not load metrics.
                         </div>
                     </div>
                 </div>
@@ -98,17 +100,18 @@ async function loadMetrics() {
             return;
         }
 
-        document.getElementById("metric-workflow-count").textContent = data.workflow_count.toLocaleString();
-        document.getElementById("metric-runner-minutes").textContent = data.runner_minutes.toLocaleString();
+        const cpuData = data.cpu_hours;
+        document.getElementById("metric-total-hours").textContent =
+            cpuData.total_hours.toLocaleString() + " hrs";
+        let displayText = "";
+        for (const [cluster, value] of Object.entries(cpuData.by_cluster)) {
+            displayText += `${cluster}: ${value.toFixed(2)} hrs<br>`;
+        }
+        document.getElementById("metric-cluster-breakdown").innerHTML = displayText;
         document.getElementById("metrics-loading").style.display = "none";
         document.getElementById("metrics-data").style.display = "block";
 
-        // If stale, show a note and re-poll in 15s for fresh data
-        if (data.stale) {
-            document.getElementById("metrics-stale").style.display = "block";
-            setTimeout(loadMetrics, 15000);
-        }
-
+        
     } catch (err) {
         document.getElementById("metrics-loading").style.display = "none";
         document.getElementById("metrics-error").style.display = "block";

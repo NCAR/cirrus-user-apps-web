@@ -1,8 +1,8 @@
-from flask import render_template, request, session
+from flask import render_template, request, session, jsonify 
 from app import app
 import yaml
 import json
-from ..metrics.github_metrics import get_workflow_runs, last_30_days_runs, calculate_metrics, REPOS
+from ..metrics.github_metrics import get_cpu_hours
 import os
 import requests
 from bs4 import BeautifulSoup
@@ -93,6 +93,7 @@ def status():
 
     # Metrics are now loaded asynchronously via the /metrics endpoint
     return render_template('status.html', config=config)
+
 
 @app.route('/sla')
 def sla():

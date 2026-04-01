@@ -1,98 +1,68 @@
 import os
 import json
 import requests
-from datetime import datetime, timedelta
 
-GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
-
-REPOS = [
-    "CROCODILE-CESM/CrocoDash",
-    "ESCOMP/CAM-SIMA",
-    "ESCOMP/CTSM",
-    "khrpcek-ucar/actions-test",
-    "NCAR/CIRRUS-MILES-CREDIT",
-    "NCAR/MILES-CREDIT",
-    "NCAR/stormspeed",
-    "TURBO-ESM/turbo-stack"
-]
+MIMIR_URL = os.getenv(
+    "MIMIR_URL",
+    "https://mimir.k8s.ucar.edu/prometheus/api/v1/query"
+)
 
 
-def get_workflow_runs(repo):
+def get_cpu_hours():
+    """
+    Fetch CPU hours per cluster (GitHub runners only)
+    """
 
-    url = f"https://api.github.com/repos/{repo}/actions/runs"
+    query = """
+    sum by (cluster) (
+      increase(container_cpu_usage_seconds_total{
+        namespace=~"(arc-runners|arc-systems)",
+        container=~"(runner|buildkitd|job)"
+      }[30d])
+    ) / 3600
+    """
 
-    headers = {
-    "Accept": "application/vnd.github+json"
-    }
+    try:
+        response = requests.get(
+            MIMIR_URL,
+            params={"query": query},
+            auth=(os.getenv("MIMIR_USER"), os.getenv("MIMIR_PASS")),
+            headers={"X-Scope-OrgID": "1"},
+            timeout=10,
+        )
 
-    if GITHUB_TOKEN:
-        headers["Authorization"] = f"Bearer {GITHUB_TOKEN}"
+        response.raise_for_status()
+        data = response.json()
 
-    params = {
-            "per_page": 100
+        results = {}
+        total = 0
+
+        for item in data.get("data", {}).get("result", []):
+            cluster = item["metric"].get("cluster", "unknown")
+            value = float(item["value"][1])
+            results[cluster] = round(value, 2)
+            total += value
+
+        return {
+            "total_hours": round(total, 2),
+            "by_cluster": results
         }
 
-    response = requests.get(url, headers=headers, params=params)
-
-    if response.status_code != 200:
-        print(f"Failed to fetch runs for {repo}: {response.status_code}")
-        return []
-
-    return response.json().get("workflow_runs", [])
-
-
-def last_30_days_runs(runs):
-
-    cutoff = datetime.utcnow() - timedelta(days=30)
-
-    filtered = []
-
-    for run in runs:
-        created = datetime.strptime(run["created_at"], "%Y-%m-%dT%H:%M:%SZ")
-
-        if created > cutoff:
-            filtered.append(run)
-
-    return filtered
-
-
-def calculate_metrics(runs):
-
-    workflow_count = len(runs)
-    total_minutes = 0
-
-    for run in runs:
-
-        if run["run_started_at"] and run["updated_at"]:
-
-            start = datetime.strptime(run["run_started_at"], "%Y-%m-%dT%H:%M:%SZ")
-            end = datetime.strptime(run["updated_at"], "%Y-%m-%dT%H:%M:%SZ")
-
-            minutes = (end - start).total_seconds() / 60
-            total_minutes += minutes
-
-    return {
-        "workflow_count": workflow_count,
-        "runner_minutes": round(total_minutes, 2)
-    }
+    except Exception as e:
+        print(f"Error querying Mimir: {e}")
+        return {}
 
 
 def main():
+    cpu_data = get_cpu_hours()
 
-    all_runs = []
-
-    for repo in REPOS:
-        print(f"Fetching workflow runs for {repo}")
-        runs = get_workflow_runs(repo)
-        all_runs.extend(runs)
-
-    runs_last_30 = last_30_days_runs(all_runs)
-
-    metrics = calculate_metrics(runs_last_30)
+    metrics = {
+        "cpu_hours": cpu_data
+    }
 
     print("Metrics:", metrics)
 
-    with open("static/runner_metrics.json", "w") as f:
+    with open("cirrus-apps/app/static/runner_metrics.json", "w") as f:
         json.dump(metrics, f, indent=2)
 
 

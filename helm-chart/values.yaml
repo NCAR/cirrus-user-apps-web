@@ -2,18 +2,18 @@ ingress:
     enabled: true
 replicaCount: 2
 webapp:
-    name: cirrus-website
-    group: cirrus-website
-    path: /
-    tls:
-        fqdn: cirrus.k8s.ucar.edu
-        secretName: cirrus-website-ssl
-    container:
+  name: cirrus-website
+  group: cirrus-website
+  path: /
+  tls:
+    fqdn: cirrus.k8s.ucar.edu
+    secretName: cirrus-website-ssl
+  container:
     image: hub.k8s.ucar.edu/ncote/cirrus-user-web:2026-04-10.21.37
-        port: 5000
-        memory: "1G"
-        cpu: "2"
+    port: 5000
+    memory: "1G"
+    cpu: "2"
 env:
-    MIMIR_USER: wisdom
-    MIMIR_PASS: YnGl1ng@
-    MIMIR_URL: https://mimir.k8s.ucar.edu/prometheus/api/v1/query
+  MIMIR_USER: wisdom
+  MIMIR_PASS: YnGl1ng@
+  MIMIR_URL: https://mimir.k8s.ucar.edu/prometheus/api/v1/query

@@ -28,6 +28,11 @@
   screenshot: era5-dashboard.png
   available: External
 
+- name: Freva
+  url: https://freva.k8s.ucar.edu/
+  screenshot: freva.png
+  available: External
+
 - name: GDEX
   url: https://gdex.ucar.edu/
   screenshot: gdex.png

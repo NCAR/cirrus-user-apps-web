@@ -428,6 +428,10 @@ main {
 }
 
 /* ===== BUTTONS ===== */
+.atlwdg-trigger.atlwdg-TOP {
+    left: 85% !important;
+}
+
 .btn-primary {
     background-color: var(--ncar-blue);
     border-color: var(--ncar-blue);

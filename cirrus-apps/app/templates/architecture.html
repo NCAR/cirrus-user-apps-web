@@ -24,50 +24,123 @@
             <img src="{{ url_for('static', filename='images/CIRRUS-basic-arch.png') }}" 
                                  alt="CIRRUS Basic Architecture"
                                  class="">
-            <hr>
-            <h2>Understanding the CIRRUS Platform</h2>
-            <br>
-            <p>CIRRUS is a cloud-native Kubernetes platform. This means applications designed to run on CIRRUS can run on any Kubernetes cluster—whether on-premises, in the cloud (AWS, GCP, Azure), or on other infrastructure. The platform uses industry-standard tools and practices, ensuring your work is portable and not locked into a specific environment.</p>
+        </section>
 
-            <h3>What is a Container?</h3>
+        <section>
+            <div class="content-panel">
+                <h2 class="section-heading">Understanding the CIRRUS Platform</h2>
+                <p class="lead">CIRRUS is a cloud-native Kubernetes platform. This means workloads designed to run on CIRRUS can run on any Kubernetes cluster, whether on-premises, in the cloud (AWS, GCP, Azure), or on other infrastructure. The platform uses industry-standard tools and practices, ensuring your work is portable and not locked into a specific environment.</p>
+                <hr style="color: #fff">
+                <h2 class="section-heading">How CIRRUS Relates to HPC</h2>
+                <p>CIRRUS is not a replacement for NCAR's HPC systems, it is a complement to them. HPC clusters and their batch schedulers are built for large, finite compute jobs such as model runs and simulations that start, run, and finish. CIRRUS is built for long-running, always-on workloads such as websites, dashboards, APIs, and interactive services that need to stay available around the clock.</p>
 
-            <p>A container is a way to package your application with all the dependencies it needs to run, without including anything extra. It provides only what you need and makes reproducibility easy—your application runs the same way everywhere, whether on your laptop, a colleague's machine, or in production.</p>
+                <p>Many research groups use both. You might run a simulation on HPC and then use CIRRUS to host a dashboard or API that serves the results to collaborators or the public. Because CIRRUS can mount NCAR storage and data, the work you do on HPC and the workloads you run on CIRRUS can share the same underlying datasets.</p>
+            </div>
+        </section>
+        
+            <div class="deployment-step">
+                <div class="step-header">
+                    <h3>What is a Container?</h3>
+                </div>
+                <div class="step-content">
+                    <p>A container is a way to package your application with all the dependencies it needs to run, without including anything extra. It provides only what you need and makes reproducibility easy. Your application runs the same way everywhere, whether on your laptop, a colleague's machine, or in production.</p>
+                </div>
+            </div>
 
-            <h3>Starting with the Basics: Containers and Kubernetes</h3>
+            <div class="deployment-step">
+                <div class="step-header">
+                    <h3>Storing Images in a Container Registry</h3>
+                </div>
+                <div class="step-content">
+                    <p>Once you have a working container image, you store it in a container registry. CIRRUS provides Harbor as a private registry, and you can also use public registries like GHCR (GitHub Container Registry) or Docker Hub.</p>
+                </div>
+            </div>
 
-            <p>Kubernetes is a container orchestration platform that manages containerized applications at scale. Once you have a working container image, you store it in a container registry. CIRRUS provides Harbor as a private registry, and you can also use public registries like GHCR (GitHub Container Registry) or Docker Hub.</p>
+            <div class="deployment-step">
+                <div class="step-header">
+                    <h3>What is Kubernetes?</h3>
+                </div>
+                <div class="step-content">
+                    <p>Kubernetes is a container orchestration platform that manages containerized workloads at scale. It handles deploying, scaling, and operating containers across clusters of hosts.</p>
+                </div>
+            </div>
 
-            <h3>Defining Your Application: Helm Charts</h3>
+            <div class="deployment-step">
+                <div class="step-header">
+                    <h3>Defining Your Workloads with Helm Charts</h3>
+                </div>
+                <div class="step-content">
+                    <p>Once your image is in a registry, it can be referenced in a Helm chart, a package that defines how your workload deploys on Kubernetes, including configuration, resources, and dependencies. Helm charts can be used to deploy resources on any Kubernetes cluster.</p>
+                </div>
+            </div>
 
-            <p>Once your image is in a registry, it can be referenced in a Helm chart—a package that defines how your application deploys on Kubernetes, including configuration, resources, and dependencies.</p>
+            <div class="deployment-step">
+                <div class="step-header">
+                    <h3>Continuous Delivery via Argo CD</h3>
+                </div>
+                <div class="step-content">
+                    <p>Argo CD continuously monitors your Helm charts in Git repositories. When changes are detected, it automatically syncs and deploys your workload to the Kubernetes cluster, implementing true GitOps practices.</p>
+                </div>
+            </div>
 
-            <h3>Automation: CI/CD with GitHub Actions</h3>
+            <div class="deployment-step">
+                <div class="step-header">
+                    <h3>Automation with GitHub Actions</h3>
+                </div>
+                <div class="step-content">
+                    <p>GitHub Actions workflows automate your deployment pipeline. When you push code changes, workflows automatically build a new container image, push it to your container registry, update your Helm chart values to reference the new image, and trigger Argo CD to deploy the updated workload.</p>
 
-            <p>GitHub Actions workflows automate your deployment pipeline. When you push code changes, workflows automatically build a new container image, push it to your container registry, update your Helm chart values to reference the new image, and trigger Argo CD to deploy the updated application.</p>
+                    <p>With CIRRUS, you can connect a GitHub Actions Runner Scale Set to your repository. This provides access to more computational resources including GPUs, allowing your CI/CD workflows to run directly on the Kubernetes cluster with the hardware your builds and tests require.</p>
+                </div>
+            </div>
 
-            <p>With CIRRUS, you can connect a GitHub Actions Runner Scale Set to your repository. This provides access to more computational resources including GPUs, allowing your CI/CD workflows to run directly on the Kubernetes cluster with the hardware your builds and tests require.</p>
+            <div class="deployment-step">
+                <div class="step-header">
+                    <h3>Accessing Your Application: Ingress and TLS</h3>
+                </div>
+                <div class="step-content">
+                    <p>CIRRUS provides two ingress paths: LoxiLB for external traffic using BGP peering to provide publicly accessible endpoints, and NGINX Ingress for internal traffic within the UCAR network.</p>
 
-            <h3>Continuous Deployment: Argo CD</h3>
+                    <p>ExternalDNS automatically creates DNS records in the *.k8s.ucar.edu domain for your services, while cert-manager issues and manages TLS certificates from Let's Encrypt to provide HTTPS endpoints for your web applications.</p>
+                </div>
+            </div>
 
-            <p>Argo CD continuously monitors your Helm charts in Git repositories. When changes are detected, it automatically syncs and deploys your application to the Kubernetes cluster, implementing true GitOps practices.</p>
+            <div class="deployment-step">
+                <div class="step-header">
+                    <h3>Mounting NCAR Storage and Data</h3>
+                </div>
+                <div class="step-content">
+                    <p>Your workloads do not have to start from scratch. CIRRUS can mount NCAR storage systems and data directly into your containers, giving your applications access to existing datasets and shared storage without copying data into the cluster. This lets you bring compute to the data your research already depends on.</p>
+                </div>
+            </div>
 
-            <h3>Accessing Your Application: Ingress and TLS</h3>
+            <div class="deployment-step">
+                <div class="step-header">
+                    <h3>Security: Secrets Management</h3>
+                </div>
+                <div class="step-content">
+                    <p>OpenBao works with the External Secrets Operator to securely store sensitive data like API keys, passwords, and credentials. Secrets are encrypted at rest in OpenBao and securely injected into your containers with encryption in transit, ensuring sensitive information never lives in your Git repository or Helm charts.</p>
+                </div>
+            </div>
 
-            <p>CIRRUS provides two ingress paths: LoxiLB for external traffic using BGP peering to provide publicly accessible endpoints, and NGINX Ingress for internal traffic within the UCAR network.</p>
+            <div class="deployment-step">
+                <div class="step-header">
+                    <h3>Databases: CloudNativePG</h3>
+                </div>
+                <div class="step-content">
+                    <p>If your application needs a database, CIRRUS offers CloudNativePG, a Kubernetes operator that deploys and manages highly available PostgreSQL clusters with automated backups, failover, and scaling.</p>
+                </div>
+            </div>
 
-            <p>ExternalDNS automatically creates DNS records in the *.k8s.ucar.edu domain for your services, while cert-manager issues and manages TLS certificates from Let's Encrypt to provide HTTPS endpoints for your web applications.</p>
-
-            <h3>Security: Secrets Management</h3>
-
-            <p>OpenBao works with the External Secrets Operator to securely store sensitive data like API keys, passwords, and credentials. Secrets are encrypted at rest in OpenBao and securely injected into your containers with encryption in transit, ensuring sensitive information never lives in your Git repository or Helm charts.</p>
-
-            <h3>Databases: CloudNativePG</h3>
-
-            <p>If your application needs a database, CIRRUS offers CloudNativePG—a Kubernetes operator that deploys and manages highly available PostgreSQL clusters with automated backups, failover, and scaling.</p>
-
-            <h3>Observability: Monitoring and Logging</h3>
-
-            <p>CIRRUS provides access to Grafana, which integrates with Prometheus (for metrics) and Loki (for logs) to gather telemetry from your applications. You can create custom dashboards to analyze and monitor application performance, set up alerts, and troubleshoot issues.</p>
+            <div class="deployment-step">
+                <div class="step-header">
+                    <h3>Observability: Monitoring and Logging</h3>
+                </div>
+                <div class="step-content">
+                    <p>CIRRUS provides access to Grafana, which integrates with Prometheus (for metrics) and Loki (for logs) to gather telemetry from your applications. You can create custom dashboards to analyze and monitor application performance, set up alerts, and troubleshoot issues.</p>
+                </div>
+            </div>
+        </section>
     </div>
 </div>
 {% endblock %}

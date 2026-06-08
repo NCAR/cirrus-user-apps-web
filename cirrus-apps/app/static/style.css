@@ -28,7 +28,7 @@ body {
     color: var(--text-dark);
     background-image: url("images/NCAR-Waves.png") !important;
     background-position: 150% 0%;
-    background-repeat: repeat-y;
+    background-repeat: no-repeat;
     background-size: 53%;
     background-color: var(--ncar-gray-light) !important;
 }
@@ -451,6 +451,25 @@ main {
     box-shadow: 0 4px 12px rgba(26, 101, 143, 0.3);
 }
 
+.btn-secondary {
+    background-color: var(--ncar-blue-dark);
+    border-color: var(--ncar-blue-dark);
+    font-weight: 600;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    transition: var(--transition);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+}
+
+.btn-secondary:hover {
+    background-color: var(--ncar-blue-light);
+    border-color: var(--ncar-blue-light);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(26, 101, 143, 0.3);
+}
+
 .btn-outline-primary {
     color: #00357A;
     border-color: #00357A;
@@ -591,6 +610,18 @@ em {
     color: var(--ncar-blue);
 }
 
+.service-icon-home {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
+.service-icon-jhub {
+    width: 96px;
+    height: 48px;
+    object-fit: contain;
+}
+
 .service-card h3 {
     font-size: 1.25rem;
     font-weight: 600;
@@ -627,14 +658,44 @@ em {
     font-weight: bold;
 }
 
+/* ===== HOW IT WORKS SECTION ===== */
+.how-it-works {
+    background-color: transparent;
+}
+
+.step-card {
+    background: var(--ncar-blue-dark);
+    border-radius: 16px;
+    padding: 3rem;
+    height: 100%;
+    border: 1px solid var(--ncar-blue-light);
+}
+
+.step-card h4 {
+    color: #fff;
+}
+
+.step-banner {
+    background: var(--ncar-blue-dark);
+    border-radius: 16px;
+    padding: 2rem 3rem;
+    border: 1px solid var(--ncar-blue-light);
+}
+
+.step-banner p {
+    color: #fff;
+    margin: 0;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
 /* ===== CTA SECTION ===== */
 .cta-section {
-    background: linear-gradient(135deg, #1A658F 0%, #0f4461 100%);
+    background: transparent;
 }
 
 .cta-card {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
+    background: linear-gradient(135deg, #0057C2 50%, #00357A 80%);
     border-radius: 16px;
     padding: 3rem;
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -1064,6 +1125,28 @@ em {
     margin-bottom: 2rem;
 }
 
+.content-panel {
+    background: linear-gradient(135deg, #0057C2 50%, #00357A 80%);
+    border-radius: 0.75rem;
+    padding: 2.5rem;
+    margin-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.content-panel .section-heading,
+.content-panel p {
+    color: #fff;
+}
+
+.content-panel p:last-child {
+    margin-bottom: 0;
+}
+
+.content-panel .section-heading {
+    text-align: center;
+}
+
 /* ReadTheDocs table styling */
 .content-wrapper article table {
     width: 100%;
@@ -1250,6 +1333,18 @@ em {
     background: var(--ncar-blue);
     color: white;
     border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.step-number-two {
+    width: 50px;
+    height: 50px;
+    color: white;
     display: flex;
     align-items: center;
     justify-content: center;

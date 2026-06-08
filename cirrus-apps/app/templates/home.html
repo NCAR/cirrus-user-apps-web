@@ -12,11 +12,11 @@
                     <img src="{{ url_for('static', filename='images/CIRRUS_Logo_NCARBlue.png') }}" 
                          alt="CIRRUS Logo" 
                          class="hero-logo mb-4">
-                    <h1 class="hero-title">Host Your Research Application Without the Hassle</h1>
+                    <h1 class="hero-title">Deploy and Scale Your Research</h1>
                     <p class="hero-description">
                         CIRRUS lets you deploy websites, dashboards, and APIs for your research without 
-                        managing servers, certificates, or infrastructure. Submit your code, and we'll 
-                        handle the rest - keeping it running 24/7 with automatic updates.
+                        managing servers, certificates, or infrastructure. Submit your code, and CIRRUS 
+                        handles the rest.
                     </p>
                     <div class="hero-actions">
                         <a href="{{ url_for('getting_started') }}" class="btn btn-primary btn-lg me-3">
@@ -164,6 +164,7 @@
 
 <section class="how-it-works py-5">
     <div class="container">
+        <div class="cta-card">
         <div class="row text-center mb-5">
             <div class="col-lg-8 mx-auto">
                 <h2 class="section-title">How It Works</h2>
@@ -174,7 +175,7 @@
         <div class="row g-4">
             <div class="col-md-6 col-lg-3">
                 <div class="step-card">
-                    <div class="step-number">1</div>
+                    <div class="step-number-two">1</div>
                     <h4>Package Your Code</h4>
                     <p>Put your application in a Docker container (we have templates and examples)</p>
                 </div>
@@ -182,7 +183,7 @@
             
             <div class="col-md-6 col-lg-3">
                 <div class="step-card">
-                    <div class="step-number">2</div>
+                    <div class="step-number-two">2</div>
                     <h4>Push to GitHub</h4>
                     <p>Upload your code and configuration to a GitHub repository</p>
                 </div>
@@ -190,7 +191,7 @@
             
             <div class="col-md-6 col-lg-3">
                 <div class="step-card">
-                    <div class="step-number">3</div>
+                    <div class="step-number-two">3</div>
                     <h4>Request Deployment</h4>
                     <p>Fill out a simple form with your repo details and desired URL</p>
                 </div>
@@ -198,19 +199,28 @@
             
             <div class="col-md-6 col-lg-3">
                 <div class="step-card">
-                    <div class="step-number">4</div>
+                    <div class="step-number-two">4</div>
                     <h4>We Deploy It</h4>
                     <p>CIRRUS team reviews and deploys - usually within a day or two</p>
                 </div>
             </div>
         </div>
-        
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="step-banner">
+                    <p>Once your application is connected to CIRRUS, all subsequent updates are handled through git. Update your container image and reference it in the Helm chart, and CIRRUS automatically updates to match the git repository.</p>
+                </div>
+            </div>
+        </div>
+
         <div class="row mt-5">
             <div class="col-lg-8 mx-auto text-center">
-                <a href="{{ url_for('getting_started') }}" class="btn btn-primary btn-lg">
+                <a href="{{ url_for('getting_started') }}" class="btn btn-secondary btn-lg">
                     View Detailed Guide <i class="fas fa-arrow-right ms-2"></i>
                 </a>
             </div>
+        </div>
         </div>
     </div>
 </section>
@@ -228,7 +238,7 @@
             <div class="col-lg-6">
                 <div class="service-card">
                     <div class="service-header">
-                        <i class="fas fa-book service-icon"></i>
+                        <img src="{{ url_for('static', filename='logos/jupyterhub.png') }}" alt="JupyterHub" class="service-icon-jhub">
                         <h3>JupyterHub</h3>
                     </div>
                     <p>Launch Jupyter notebooks in your browser for interactive data analysis. Pre-configured with scientific Python packages and scalable compute resources.</p>
@@ -241,7 +251,7 @@
             <div class="col-lg-6">
                 <div class="service-card">
                     <div class="service-header">
-                        <i class="fas fa-database service-icon"></i>
+                        <img src="{{ url_for('static', filename='logos/harbor.png') }}" alt="Harbor" class="service-icon-home">
                         <h3>Harbor Container Registry</h3>
                     </div>
                     <p>Store your Docker container images securely. Private repositories for your team or public ones to share with the community.</p>
@@ -254,7 +264,7 @@
             <div class="col-lg-6">
                 <div class="service-card">
                     <div class="service-header">
-                        <i class="fas fa-rocket service-icon"></i>
+                        <img src="{{ url_for('static', filename='logos/github.png') }}" alt="GitHub Actions" class="service-icon-home">
                         <h3>GitHub Actions Runners</h3>
                     </div>
                     <p>Run automated tests and builds with more power than GitHub's free runners. GPU access available for ML/AI workflows.</p>
@@ -269,7 +279,7 @@
             <div class="col-lg-6">
                 <div class="service-card">
                     <div class="service-header">
-                        <i class="fas fa-lock service-icon"></i>
+                    <img src="{{ url_for('static', filename='logos/openbao.png') }}" alt="OpenBao" class="service-icon-home">
                         <h3>OpenBao Secret Storage</h3>
                     </div>
                     <p>Securely store API keys, passwords, and credentials. Your secrets are encrypted and never stored in your code.</p>
@@ -293,6 +303,9 @@
                         <div class="col-md-8">
                             <h2 class="mb-3">Ready to Deploy Your Research Application?</h2>
                             <p class="mb-0">Get started with our step-by-step guide, explore example applications, or submit a deployment request today.</p>
+                            <a href="{{ url_for('getting_started') }}" class="btn btn-secondary btn-lg me-3">
+                                <i class="fas fa-rocket me-2"></i>Get Started
+                            </a>
                         </div>
                     </div>
                 </div>

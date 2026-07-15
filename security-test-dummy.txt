@@ -1,0 +1,5 @@
+This is a dummy file used to trigger the Security Settings Test GitHub Actions
+workflow on pull requests. It contains no meaningful content and can be deleted
+after the security workflow behavior has been verified.
+
+Created: 2026-07-15

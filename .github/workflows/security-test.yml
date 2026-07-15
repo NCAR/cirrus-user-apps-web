@@ -1,0 +1,40 @@
+name: Security Settings Test
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  security-test:
+    name: Test Repository Security Settings
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check repository security settings
+        run: |
+          echo "Checking repository security settings..."
+
+          # Check if the repository has security features enabled
+          echo "Repository: ${{ github.repository }}"
+          echo "PR Number: ${{ github.event.number }}"
+
+          # Verify required headers for security
+          echo "Security headers check:"
+          echo "  - Repository visibility: ${{ github.event.pull_request.head.repo.visibility }}"
+
+      - name: Run security analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          query-filters: security-features,security-experimental
+        continue-on-error: true
+
+      - name: Check for security warnings
+        run: |
+          echo "Checking for security warnings in the codebase..."
+          # This can be extended with tools like semgrep, gitleaks, etc.

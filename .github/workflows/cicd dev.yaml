@@ -1,0 +1,55 @@
+name: CIRRUS Web CICD Pipeline
+
+on: 
+  workflow_dispatch:
+  push:
+    paths:
+      - cirrus-apps/**
+      - Dockerfile
+    branches:
+      - dev
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  image-build-push:
+    runs-on: 
+      group: cirrus-4x8
+    steps:
+      - name: Checkout the repo 
+        uses: actions/checkout@v3
+        with:
+          ref: dev
+      - name: Get current date
+        id: date
+        run: echo "date=$(date +'%Y-%m-%d.%H.%M')" >> $GITHUB_OUTPUT
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+            platforms: linux/amd64
+            driver: remote
+            endpoint: tcp://buildkitd.arc-systems.svc:1234
+      - name: registry login
+        uses: docker/login-action@v3
+        with:
+          registry: hub.k8s.ucar.edu
+          username: robot$ncote+cirrus-web
+          password: ${{ secrets.HARBOR_ROBOT_PW  }}
+      - name: Build
+        uses: docker/build-push-action@v6
+        with:
+            push: true
+            no-cache: true
+            tags:  hub.k8s.ucar.edu/ncote/cirrus-user-web-dev:${{ steps.date.outputs.date }}
+            file: Dockerfile
+      - name: Update Helm values.yaml
+        run: |
+          sed -i "/cirrus-user-web/ c\    image: hub.k8s.ucar.edu/ncote/cirrus-user-web-dev:${{ steps.date.outputs.date }}" dev-helm-chart/values.yaml
+      - name: Push changes to GitHub
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git add dev-helm-chart/values.yaml
+          git commit -a -m "Update Helm chart via GH Actions"
+          git push origin dev

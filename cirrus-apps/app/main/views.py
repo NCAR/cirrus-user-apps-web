@@ -20,6 +20,10 @@ def architecture():
 def getting_started():
     return render_template('getting-started.html')
 
+@app.route('/services')
+def services():
+    return render_template('services.html')
+
 @app.route('/apps')
 def apps():
     apps_file = os.path.join(app.root_path, 'apps.yaml')

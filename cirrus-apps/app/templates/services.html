@@ -1,0 +1,910 @@
+{% extends "base.html" %}
+
+{% block title %}Services | NSF NCAR CIRRUS{% endblock %}
+{% block og_title %}Services | NSF NCAR CIRRUS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto text-center">
+                <h1 class="page-title">CIRRUS Services</h1>
+                <p class="page-description">
+                    Every application starts with the same core platform. These services let you add databases, secrets, workflows, and more when your application needs them.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="content-wrapper">
+
+        <section>
+            <div class="content-panel">
+                <h2 class="section-heading">The Core Platform</h2>
+                <p class="lead">Every application on CIRRUS is built from the same three pieces: container images stored in a registry, a Helm chart that describes how it runs, and a Git repository that Argo CD watches and keeps in sync with the cluster.</p>
+                <p>The services below are different. None of them are required, and most applications only use a few. Each one is available when your application needs it: a PostgreSQL database, secure credential storage, batch workflows, serverless functions, multi-node MPI jobs, and more. Pick a service to see what it does, and how to add it to your application.</p>
+            </div>
+        </section>
+
+        <section class="services-browser">
+            <div class="row g-4">
+
+                <!-- Sidebar navigation -->
+                <div class="col-lg-3">
+                    <div class="services-nav nav flex-column nav-pills" id="servicesTab" role="tablist" aria-orientation="vertical">
+
+                        <span class="services-nav-group">Deploy &amp; Release</span>
+                        <button class="nav-link active" id="argocd-tab" data-bs-toggle="pill" data-bs-target="#svc-argocd" type="button" role="tab" aria-controls="svc-argocd" aria-selected="true">Argo CD</button>
+                        <button class="nav-link" id="registry-tab" data-bs-toggle="pill" data-bs-target="#svc-registry" type="button" role="tab" aria-controls="svc-registry" aria-selected="false">Container Registry</button>
+                        <button class="nav-link" id="rollouts-tab" data-bs-toggle="pill" data-bs-target="#svc-rollouts" type="button" role="tab" aria-controls="svc-rollouts" aria-selected="false">Argo Rollouts</button>
+
+                        <span class="services-nav-group">Networking</span>
+                        <button class="nav-link" id="ingress-tab" data-bs-toggle="pill" data-bs-target="#svc-ingress" type="button" role="tab" aria-controls="svc-ingress" aria-selected="false">Web Access (Ingress)</button>
+
+                        <span class="services-nav-group">Data &amp; Storage</span>
+                        <button class="nav-link" id="cnpg-tab" data-bs-toggle="pill" data-bs-target="#svc-cnpg" type="button" role="tab" aria-controls="svc-cnpg" aria-selected="false">CloudNativePG</button>
+                        <button class="nav-link" id="storage-tab" data-bs-toggle="pill" data-bs-target="#svc-storage" type="button" role="tab" aria-controls="svc-storage" aria-selected="false">Persistent Storage</button>
+                        <button class="nav-link" id="objectstorage-tab" data-bs-toggle="pill" data-bs-target="#svc-objectstorage" type="button" role="tab" aria-controls="svc-objectstorage" aria-selected="false">Object Storage (S3)</button>
+
+                        <span class="services-nav-group">Secrets &amp; Security</span>
+                        <button class="nav-link" id="openbao-tab" data-bs-toggle="pill" data-bs-target="#svc-openbao" type="button" role="tab" aria-controls="svc-openbao" aria-selected="false">OpenBao</button>
+
+                        <span class="services-nav-group">Compute &amp; Automation</span>
+                        <button class="nav-link" id="workflows-tab" data-bs-toggle="pill" data-bs-target="#svc-workflows" type="button" role="tab" aria-controls="svc-workflows" aria-selected="false">Argo Workflows</button>
+                        <button class="nav-link" id="fission-tab" data-bs-toggle="pill" data-bs-target="#svc-fission" type="button" role="tab" aria-controls="svc-fission" aria-selected="false">Fission (FaaS)</button>
+                        <button class="nav-link" id="mpi-tab" data-bs-toggle="pill" data-bs-target="#svc-mpi" type="button" role="tab" aria-controls="svc-mpi" aria-selected="false">MPI Operator</button>
+                        <button class="nav-link" id="runners-tab" data-bs-toggle="pill" data-bs-target="#svc-runners" type="button" role="tab" aria-controls="svc-runners" aria-selected="false">GitHub Actions Runners</button>
+
+                        <span class="services-nav-group">AI &amp; Interactive</span>
+                        <button class="nav-link" id="openwebui-tab" data-bs-toggle="pill" data-bs-target="#svc-openwebui" type="button" role="tab" aria-controls="svc-openwebui" aria-selected="false">Open WebUI</button>
+                        <button class="nav-link" id="jupyterhub-tab" data-bs-toggle="pill" data-bs-target="#svc-jupyterhub" type="button" role="tab" aria-controls="svc-jupyterhub" aria-selected="false">JupyterHub</button>
+
+                        <span class="services-nav-group">Observability</span>
+                        <button class="nav-link" id="grafana-tab" data-bs-toggle="pill" data-bs-target="#svc-grafana" type="button" role="tab" aria-controls="svc-grafana" aria-selected="false">Grafana</button>
+                        <button class="nav-link" id="alerting-tab" data-bs-toggle="pill" data-bs-target="#svc-alerting" type="button" role="tab" aria-controls="svc-alerting" aria-selected="false">Custom Alerting</button>
+                    </div>
+                </div>
+
+                <!-- Service content -->
+                <div class="col-lg-9">
+                    <div class="tab-content services-content" id="servicesTabContent">
+
+                        <!-- Argo CD -->
+                        <div class="tab-pane fade show active service-pane" id="svc-argocd" role="tabpanel" aria-labelledby="argocd-tab">
+                            <div class="service-pane-header">
+                                <img src="{{ url_for('static', filename='logos/argo.png') }}" alt="Argo CD">
+                                <div>
+                                    <h3>Argo CD</h3>
+                                    <span class="badge service-badge-core">Used by every application</span>
+                                </div>
+                            </div>
+                            <p>Argo CD is the GitOps engine at the heart of CIRRUS. It continuously watches your Git repository and keeps what is running on the cluster in sync with the Helm chart you have committed. There is no deploy button and no kubectl access required: pushing to Git is how you deploy.</p>
+
+                            <h4>How it works for your application</h4>
+                            <p>During onboarding the CIRRUS team registers your application with three pieces of information:</p>
+                            <ul>
+                                <li><strong>Git repository URL</strong> &mdash; where your code and Helm chart live</li>
+                                <li><strong>Branch</strong> &mdash; the branch to deploy from (e.g. <code>main</code>)</li>
+                                <li><strong>Chart path</strong> &mdash; the folder containing your Helm chart</li>
+                            </ul>
+                            <p>From then on, any change merged to that branch is automatically synced to the cluster. You can log in to the Argo CD UI to watch syncs, view application health, and inspect the live state of your resources.</p>
+
+                            <div class="service-access">
+                                <h4><i class="fas fa-key"></i> Access</h4>
+                                <p>Your application is deployed and kept in sync without you needing any access. A CIRRUS admin registers your repository and Argo CD takes it from there. You only need access if you want to log in to the UI yourself to watch syncs, check application health, or read your workload's logs. Open a Jira ticket and we will give you access to your application's resources in Argo CD.</p>
+                            </div>
+
+                            <div class="service-actions">
+                                <a href="https://mlc1-argo.k8s.ucar.edu/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-external-link-alt"></i> ML Argo CD</a>
+                                <a href="https://nwc1-argo.k8s.ucar.edu/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-external-link-alt"></i> NWSC Argo CD</a>
+                                <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/03-deploying-applications/additions/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-book"></i> Onboarding &amp; Argo CD Docs</a>
+                            </div>
+                        </div>
+
+                        <!-- Container Registry -->
+                        <div class="tab-pane fade service-pane" id="svc-registry" role="tabpanel" aria-labelledby="registry-tab">
+                            <div class="service-pane-header">
+                                <span class="service-pane-icon"><i class="fas fa-cubes"></i></span>
+                                <div>
+                                    <h3>Container Registry</h3>
+                                    <span class="badge service-badge-core">Used by every application</span>
+                                </div>
+                            </div>
+                            <p>Every application on CIRRUS runs from a container image, and the cluster needs a registry to pull that image from. Which registry is up to you: public registries like GitHub Container Registry (GHCR), Docker Hub, and Quay all work out of the box. If your image is already published to one of them, there is nothing more to set up.</p>
+
+                            <h4><img src="{{ url_for('static', filename='logos/harbor.png') }}" alt=""> Harbor</h4>
+                            <p>CIRRUS also runs Harbor, a private container registry hosted on the cluster itself. Projects in Harbor are private to your team by default, but can be made public to share images with the general public. And because Harbor sits local to the cluster, image pulls never leave the data center. Deployments and pod restarts are noticeably faster, especially for large images.</p>
+
+                            <h4>Pushing your images</h4>
+                            <pre><code>docker login hub.k8s.ucar.edu
+docker build -t hub.k8s.ucar.edu/your-project/your-app:v1.0 .
+docker push hub.k8s.ucar.edu/your-project/your-app:v1.0</code></pre>
+
+                            <h4>Beyond the basics</h4>
+                            <ul>
+                                <li><strong>Robot accounts</strong> let CI/CD pipelines push images without using your personal credentials.</li>
+                                <li><strong>Vulnerability scanning</strong> runs on pushed images so you can see known CVEs before deploying.</li>
+                            </ul>
+
+                            <div class="service-access">
+                                <h4><i class="fas fa-key"></i> Access</h4>
+                                <p>Harbor is entirely optional. Your workload can pull its image from Docker Hub, GHCR, or any public registry without it, so reach for Harbor only if you would rather host images on-cluster. It is open to any UCAR employee by default: sign in with your SSO credentials and you can browse and pull from existing projects right away. To create your own project and manage who can push to it, open a Jira ticket and the CIRRUS team will set it up.</p>
+                            </div>
+
+                            <div class="service-actions">
+                                <a href="https://hub.k8s.ucar.edu/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-external-link-alt"></i> Open Harbor</a>
+                                <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/04-container-registry/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-book"></i> Registry Docs</a>
+                            </div>
+                        </div>
+
+                        <!-- Argo Rollouts -->
+                        <div class="tab-pane fade service-pane" id="svc-rollouts" role="tabpanel" aria-labelledby="rollouts-tab">
+                            <div class="service-pane-header">
+                                <img src="{{ url_for('static', filename='logos/argo.png') }}" alt="Argo Rollouts">
+                                <div>
+                                    <h3>Argo Rollouts</h3>
+                                    <span class="badge service-badge-addon">Optional add-on</span>
+                                </div>
+                            </div>
+                            <p>Argo Rollouts adds progressive delivery to your deployments. Instead of replacing every pod at once when you ship a new version, a rollout can shift traffic gradually: send 25% of users to the new version, pause, check that nothing broke, and continue, with automatic rollback if things go wrong.</p>
+
+                            <h4>When to use it</h4>
+                            <p>Most applications are fine with a standard Kubernetes Deployment. Reach for Rollouts when your application has real users who would notice a bad release: public-facing dashboards, APIs that other groups depend on, or services where you want to validate a new version on live traffic before committing to it.</p>
+
+                            <h4>Adding it to your app</h4>
+                            <p>In your Helm chart, a Rollout replaces your Deployment and adds a release strategy:</p>
+                            <pre><code>apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+spec:
+  # ...same pod template as a Deployment...
+  strategy:
+    canary:
+      steps:
+        - setWeight: 25
+        - pause: {duration: 10m}
+        - setWeight: 50
+        - pause: {duration: 10m}</code></pre>
+
+                            <div class="service-actions">
+                                <a href="https://argoproj.github.io/rollouts/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-book"></i> Argo Rollouts Docs</a>
+                            </div>
+                        </div>
+
+                        <!-- Web Access (Ingress) -->
+                        <div class="tab-pane fade service-pane" id="svc-ingress" role="tabpanel" aria-labelledby="ingress-tab">
+                            <div class="service-pane-header">
+                            <img src="{{ url_for('static', filename='logos/traefik.png') }}" alt="Traefik">
+                                <div>
+                                    <h3>Web Access (Ingress)</h3>
+                                    <span class="badge service-badge-addon">Optional add-on</span>
+                                </div>
+                            </div>
+                            <p>By default your application runs inside the cluster and is not reachable from a browser. To give it a URL, add an <code>Ingress</code> to your Helm chart. CIRRUS uses Traefik as its ingress controller, which routes incoming requests to your application and gives it an <code>https://&lt;your-app&gt;.k8s.ucar.edu</code> address.</p>
+
+                            <h4>Internal vs. external access</h4>
+                            <p>Which audience can reach your application is set by the ingress class you choose:</p>
+                            <ul>
+                                <li><strong><code>traefik-internal</code></strong> &mdash; reachable only from within the UCAR network or VPN. The right choice for internal tools and dashboards.</li>
+                                <li><strong><code>traefik-external</code></strong> &mdash; reachable from the public internet. Use this for applications that need to serve users outside UCAR.</li>
+                            </ul>
+
+                            <h4>TLS and DNS are automatic</h4>
+                            <p>You do not configure certificates or DNS yourself. Once your Ingress exists, ExternalDNS creates the matching DNS record under <code>*.k8s.ucar.edu</code>, and cert-manager issues and renews a Let's Encrypt TLS certificate so your application is served over HTTPS. Defining the Ingress is all it takes.</p>
+
+                            <h4>Adding it to your app</h4>
+                            <pre><code>apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-app
+spec:
+  ingressClassName: traefik-external   # or traefik-internal
+  rules:
+    - host: my-app.k8s.ucar.edu
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: my-app
+                port:
+                  number: 80</code></pre>
+
+                            <div class="service-actions">
+                                <a href="https://doc.traefik.io/traefik/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-book"></i> Traefik Docs</a>
+                            </div>
+                        </div>
+
+                        <!-- CloudNativePG -->
+                        <div class="tab-pane fade service-pane" id="svc-cnpg" role="tabpanel" aria-labelledby="cnpg-tab">
+                            <div class="service-pane-header">
+                                <img src="{{ url_for('static', filename='logos/cnpg.png') }}" alt="CloudNativePG">
+                                <div>
+                                    <h3>CloudNativePG</h3>
+                                    <span class="badge service-badge-addon">Optional add-on</span>
+                                </div>
+                            </div>
+                            <p>CloudNativePG (CNPG) is a Kubernetes operator that runs production-grade PostgreSQL clusters inside CIRRUS. Instead of managing your own database server, you describe the cluster you want in YAML and the operator handles replication, failover, and backups.</p>
+
+                            <h4>When to use it</h4>
+                            <p>Any application that needs a relational database: storing user submissions, caching processed results, backing a web framework like Django or Flask with SQLAlchemy. Because the database runs next to your application in the cluster, there are no external connection or firewall hoops.</p>
+
+                            <h4>Adding a database to your app</h4>
+                            <p>Add a <code>Cluster</code> resource to your Helm chart templates:</p>
+                            <pre><code>apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: my-app-db
+spec:
+  instances: 2
+  storage:
+    size: 5Gi</code></pre>
+                            <p>CNPG automatically creates a Kubernetes Secret named <code>my-app-db-app</code> containing the connection credentials. Reference it from your application's environment instead of hard-coding anything:</p>
+                            <pre><code>env:
+  - name: DATABASE_URI
+    valueFrom:
+      secretKeyRef:
+        name: my-app-db-app
+        key: uri</code></pre>
+
+                            <div class="service-actions">
+                                <a href="https://cloudnative-pg.io/documentation/current/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-book"></i> CloudNativePG Docs</a>
+                            </div>
+                        </div>
+
+                        <!-- Persistent Storage -->
+                        <div class="tab-pane fade service-pane" id="svc-storage" role="tabpanel" aria-labelledby="storage-tab">
+                            <div class="service-pane-header">
+                                <img src="{{ url_for('static', filename='logos/ceph.png') }}" alt="Ceph">
+                                <div>
+                                    <h3>Persistent Storage</h3>
+                                    <span class="badge service-badge-addon">Optional add-on</span>
+                                </div>
+                            </div>
+                            <p>Containers start with an empty disk and lose whatever they wrote when they stop. To keep files around, ask the cluster for a volume: anything written to one survives pod restarts, redeployments, and node failures. CIRRUS backs these volumes with Ceph, a distributed storage system, and offers them in two flavors &mdash; a disk for a single pod, or a shared filesystem many pods can mount at once. For data you would rather reach by key than mount as a directory, see <a href="#svc-objectstorage">Object Storage</a>, which is also Ceph-backed.</p>
+
+                            <h4>Requesting a volume</h4>
+                            <p>Add a <code>PersistentVolumeClaim</code> to your Helm chart and pick the storage class that matches how the volume will be used:</p>
+                            <ul>
+                                <li><strong><code>ceph-kubepv</code> (Ceph RBD)</strong> &mdash; block storage with <code>ReadWriteOnce</code> access. One pod mounts it read-write at a time, making it the right choice for databases, caches, and any single-pod application state. CloudNativePG database clusters use this class for their storage.</li>
+                                <li><strong><code>cephfs</code> (CephFS)</strong> &mdash; a shared filesystem with <code>ReadWriteMany</code> access. Multiple pods can read and write the same volume simultaneously, which fits shared scratch space, datasets read by several replicas, or pipelines where one job writes files that another consumes.</li>
+                            </ul>
+                            <pre><code>apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-app-data
+spec:
+  storageClassName: ceph-kubepv   # or cephfs for shared access
+  accessModes:
+    - ReadWriteOnce               # ReadWriteMany with cephfs
+  resources:
+    requests:
+      storage: 10Gi</code></pre>
+                            <p>Mount the claim as a volume in your pod spec and your application sees an ordinary directory.</p>
+
+                            <h4>Sizing and backups</h4>
+                            <p>A claim's size is what you reserve, so ask for what your data needs plus headroom rather than the largest number you can imagine. Volumes are replicated by Ceph, which protects you from hardware failure &mdash; it does not protect you from your own application deleting or corrupting its data. If a volume holds something you cannot regenerate, plan a backup: CloudNativePG can back a database up on a schedule, and other workloads commonly copy snapshots to <a href="#svc-objectstorage">object storage</a>.</p>
+
+                            <div class="service-access">
+                                <h4><i class="fas fa-key"></i> Access</h4>
+                                <p>No request needed. Volumes are provisioned automatically from the claim in your Helm chart the first time your application deploys. If you need an unusually large volume, mention it in your onboarding ticket so we can check capacity.</p>
+                            </div>
+
+                            <div class="service-actions">
+                                <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/03-deploying-applications/additions/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-book"></i> Persistent Volume Docs</a>
+                            </div>
+                        </div>
+
+                        <!-- Object Storage -->
+                        <div class="tab-pane fade service-pane" id="svc-objectstorage" role="tabpanel" aria-labelledby="objectstorage-tab">
+                            <div class="service-pane-header">
+                                <img src="{{ url_for('static', filename='logos/ceph.png') }}" alt="Ceph">
+                                <div>
+                                    <h3>Object Storage (S3)</h3>
+                                    <span class="badge service-badge-addon">Optional add-on</span>
+                                </div>
+                            </div>
+                            <p>CIRRUS runs S3-compatible object storage through the Ceph Rados Gateway at <code>https://s3.k8s.ucar.edu:5443</code>, replicated between the ML and NWSC sites for high availability. Instead of mounting a filesystem, you put and get objects by key over HTTP &mdash; which means the same bucket is reachable from your workload in the cluster, from a batch job, from a notebook, and from your laptop.</p>
+
+                            <h4>When to use it</h4>
+                            <p>Reach for object storage when your data is a collection of whole files rather than something an application needs to read and write in place: model artifacts and checkpoints, processed datasets, backups, or files your application serves and fetches by key. Choose a <a href="#svc-storage">persistent volume</a> instead when a process needs an ordinary directory &mdash; a database's data files, for instance, or anything that appends to a file in place.</p>
+
+                            <h4>Using it</h4>
+                            <p>Any S3 tool or library works by pointing it at the CIRRUS endpoint:</p>
+                            <pre><code># aws cli
+aws --endpoint-url https://s3.k8s.ucar.edu:5443 s3 ls s3://your-bucket/
+
+# s5cmd (recommended, much faster)
+s5cmd --endpoint-url https://s3.k8s.ucar.edu:5443 ls s3://your-bucket/</code></pre>
+                            <p>Python applications can use <code>boto3</code> with the same endpoint.</p>
+
+                            <h4>Credentials</h4>
+                            <p>There are two ways to authenticate against the gateway:</p>
+                            <ul>
+                                <li><strong>Issued S3 keys</strong> &mdash; a dedicated access key and secret key that the CIRRUS team creates for you. This is the right choice for an application: the credentials belong to the workload rather than to a person, and they can be stored in OpenBao and injected as a Kubernetes Secret.</li>
+                                <li><strong>Your UCAR LDAP credentials</strong> &mdash; the gateway also accepts an LDAP token in place of an access key, which is handy for interactive use and quick testing without waiting on a key to be issued. Encode your username and password into the token that Rados Gateway expects and use the result as the access key ID:</li>
+                            </ul>
+                            <pre><code>echo -n '{"RGW_TOKEN":{"version":1,"type":"ldap","id":"&lt;username&gt;","key":"&lt;password&gt;"}}' \
+  | base64 -w0
+
+export AWS_ACCESS_KEY_ID="&lt;the base64 string&gt;"
+export AWS_SECRET_ACCESS_KEY="unused"   # not checked for LDAP tokens
+
+aws --endpoint-url https://s3.k8s.ucar.edu:5443 s3 ls</code></pre>
+                            <p>The token carries your password in a reversible encoding, so treat it exactly like the password itself: keep it out of shell history, scripts, and Git. For anything long-lived, use issued S3 keys instead.</p>
+
+                            <div class="service-access">
+                                <h4><i class="fas fa-key"></i> Access</h4>
+                                <p>For issued keys, open a Jira ticket or email the team and we will provide your keys and a bucket. If you would rather authenticate with your UCAR LDAP credentials, no request is needed &mdash; see Credentials above.</p>
+                            </div>
+
+                            <div class="service-actions">
+                                <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/11-storage/s3/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-book"></i> S3 Storage Docs</a>
+                                <a href="mailto:cirrus-admin@ucar.edu" class="btn btn-sm btn-outline-primary"><i class="fas fa-envelope"></i> Request S3 Credentials</a>
+                            </div>
+                        </div>
+
+                        <!-- OpenBao -->
+                        <div class="tab-pane fade service-pane" id="svc-openbao" role="tabpanel" aria-labelledby="openbao-tab">
+                            <div class="service-pane-header">
+                                <img src="{{ url_for('static', filename='logos/openbao.png') }}" alt="OpenBao">
+                                <div>
+                                    <h3>OpenBao Secret Manager</h3>
+                                    <span class="badge service-badge-addon">Optional add-on</span>
+                                </div>
+                            </div>
+                            <p>OpenBao stores sensitive values such as API keys, passwords, and tokens, encrypted and outside of your Git repository. The External Secrets Operator then injects those values into your application as native Kubernetes Secrets, so nothing sensitive ever appears in your code or Helm chart.</p>
+
+                            <h4>When to use it</h4>
+                            <p>Whenever your application needs a credential: a token for an external API, a password for a service you connect to, or any value you would not want visible in a public repository.</p>
+
+                            <h4>Adding secrets to your app</h4>
+                            <p>First, log in to OpenBao with your UCAR credentials and store your secret under your user path. Then reference it from your Helm chart with an <code>ExternalSecret</code>:</p>
+                            <pre><code>apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: myapp-secrets
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: openbao-backend
+    kind: SecretStore
+  target:
+    name: myapp-secrets
+  data:
+    - secretKey: my-secret-value
+      remoteRef:
+        key: your-email@ucar.edu/your-secrets
+        property: my-secret-key</code></pre>
+                            <p>The resulting Kubernetes Secret can be mounted or exposed as environment variables like any other.</p>
+
+                            <div class="service-access">
+                                <h4><i class="fas fa-key"></i> Access</h4>
+                                <p>You only need OpenBao if your workload needs to store or inject secrets. Using it requires a Jira ticket, even for personal access. Once your request is set up, you get a secret engine keyed to your email address, for example <code>ncote@ucar.edu/</code>, that you reach by signing in with your UCAR SSO credentials. If your team needs to share secrets, we can set up a shared secret engine for the group as well; just mention it in your ticket.</p>
+                            </div>
+
+                            <div class="service-actions">
+                                <a href="https://bao.k8s.ucar.edu/ui/vault/auth?with=oidc" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-external-link-alt"></i> Open OpenBao</a>
+                                <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/07-secret-manager/openbao/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-book"></i> Secret Manager Docs</a>
+                            </div>
+                        </div>
+
+                        <!-- Argo Workflows -->
+                        <div class="tab-pane fade service-pane" id="svc-workflows" role="tabpanel" aria-labelledby="workflows-tab">
+                            <div class="service-pane-header">
+                                <img src="{{ url_for('static', filename='logos/argo.png') }}" alt="Argo Workflows">
+                                <div>
+                                    <h3>Argo Workflows</h3>
+                                    <span class="badge service-badge-addon">Optional add-on</span>
+                                </div>
+                            </div>
+                            <p>Argo Workflows runs multi-step jobs on Kubernetes, where each step is a container. Steps can run in sequence or in parallel, pass artifacts between each other, and run on a schedule. That makes it a natural fit for data processing pipelines that complement an always-on application.</p>
+
+                            <h4>When to use it</h4>
+                            <ul>
+                                <li>Scheduled data ingest: fetch, process, and load new observations every night</li>
+                                <li>Processing pipelines with parallel fan-out across many files or regions</li>
+                                <li>Batch jobs that produce the data your CIRRUS dashboard or API serves</li>
+                            </ul>
+
+                            <h4>What a workflow looks like</h4>
+                            <pre><code>apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: process-data-
+spec:
+  entrypoint: process
+  templates:
+    - name: process
+      container:
+        image: hub.k8s.ucar.edu/your-project/processor:v1.0
+        command: ["python", "process.py"]</code></pre>
+
+                            <div class="service-actions">
+                                <a href="https://argo-workflows.readthedocs.io/en/latest/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-book"></i> Argo Workflows Docs</a>
+                            </div>
+                        </div>
+
+                        <!-- Fission -->
+                        <div class="tab-pane fade service-pane" id="svc-fission" role="tabpanel" aria-labelledby="fission-tab">
+                            <div class="service-pane-header">
+                                <img src="{{ url_for('static', filename='logos/fission.jpg') }}" alt="Fission">
+                                <div>
+                                    <h3>Fission</h3>
+                                    <span class="badge service-badge-addon">Optional add-on</span>
+                                </div>
+                            </div>
+                            <p>Fission is the functions-as-a-service (FaaS) provider on CIRRUS. You write a single function &mdash; Python, Go, Node.js, Ruby, PHP, Bash, Java, or a plain binary &mdash; and Fission runs it on demand when an HTTP request arrives, keeping a small pool of warm pods ready so calls do not wait on a cold start. There is no Dockerfile or Helm chart to write for the simple case.</p>
+
+                            <h4>When to use it</h4>
+                            <p>Fission is the lightest-weight way to put code on CIRRUS. It fits small, single-purpose endpoints: a webhook receiver, a lightweight data lookup API, or a glue function that connects two systems. If your code is one function rather than an application, Fission saves you the full containerize-and-chart workflow.</p>
+
+                            <h4>The four pieces</h4>
+                            <ul>
+                                <li><strong>Environment</strong> &mdash; the language runtime your functions plug into. You need one per language, and every function in that language shares it. Environments hold warm pods against your namespace quota, so create them only for languages you actually use.</li>
+                                <li><strong>Package</strong> &mdash; the deployment archive (a zip of your source) plus its build status. Created for you when you deploy from <code>--src</code>.</li>
+                                <li><strong>Function</strong> &mdash; binds a package to an entrypoint, such as <code>myfunc.main</code>.</li>
+                                <li><strong>Route (HTTPTrigger)</strong> &mdash; exposes the function on the shared FaaS gateway at <code>fn.k8s.ucar.edu</code>.</li>
+                            </ul>
+
+                            <h4>Deploying a function</h4>
+                            <p>Create the environment once per language, then the function, then a route:</p>
+                            <pre><code># once per language, per namespace
+fission env create --name python --poolsize=1 \
+  --image ghcr.io/fission/python-env \
+  --builder ghcr.io/fission/python-builder \
+  -n &lt;your-namespace&gt;
+
+# a single-file function
+fission fn create --name hello --env python --code hello.py -n &lt;your-namespace&gt;
+
+# expose it at https://fn.k8s.ucar.edu/&lt;username&gt;/hello
+fission route create --function hello --name hello --url /&lt;username&gt;/hello \
+  --route-provider gateway --gateway traefik/traefik-gateway \
+  --route-host=fn.k8s.ucar.edu -n &lt;your-namespace&gt;</code></pre>
+
+                            <div class="service-warning">
+                                <h4><i class="fas fa-exclamation-triangle"></i> URL paths are shared</h4>
+                                <p>Every route lives on the same <code>fn.k8s.ucar.edu</code> host, and paths are first-come, first-served across all users and namespaces. Prefix your paths with something you own &mdash; your username, team, or project &mdash; for example <code>/&lt;username&gt;/hello</code>. If the path is already claimed, the existing route keeps working and yours shows <code>READY False</code> in <code>fission route list</code>. That is the usual meaning of a route stuck at <code>False</code> with no other errors: delete it and pick a different path.</p>
+                            </div>
+
+                            <h4>Functions with dependencies</h4>
+                            <p>For a few simple pip packages, ship a <code>requirements.txt</code> alongside your module and let Fission's builder do the work. Build status lives on the <em>package</em>, not the function, so watch <code>fission pkg list</code> until <code>BUILD_STATUS</code> reaches <code>succeeded</code>:</p>
+                            <pre><code>zip -r src.zip myfunc.py requirements.txt
+fission fn create --name myfunc --env python --src src.zip \
+  --entrypoint myfunc.main -n &lt;your-namespace&gt;
+fission pkg list -n &lt;your-namespace&gt;</code></pre>
+                            <p>For anything heavier &mdash; scientific stacks, conda, a shared internal library &mdash; build your own runtime image instead. Extend the Fission runtime (<code>FROM ghcr.io/fission/python-env</code>), bake the dependencies in, push it to Harbor, and point the environment at that image with no builder configured. Your deployment zip then stays tiny and each deploy is reproducible.</p>
+
+                            <h4>Managing functions with GitOps</h4>
+                            <p>The <code>fission</code> CLI is the fastest way to get a first function working, but every Fission object can also be written as YAML and reconciled by Argo CD, which is the recommended path for anything you intend to keep running. Each command has a one-to-one manifest equivalent: <code>Environment</code>, <code>Package</code>, <code>Function</code>, and <code>HTTPTrigger</code>. Commit those manifests, add a GitHub Actions workflow that builds your image and archive and pins the image tag, archive URL, and checksum into the manifests, then open a ticket to have the repository onboarded as an Argo CD source. From then on a push deploys your function.</p>
+                            <p>Two details matter when you go this route:</p>
+                            <ul>
+                                <li><strong>Bump an annotation on every release.</strong> Warm pool pods cache their specialization, so if new code ships but the <code>Function</code> spec is byte-for-byte identical, warm pods keep serving the old code. Writing the archive checksum into an annotation such as <code>cirrus.ucar.edu/code-checksum</code> forces the spec to change and invalidates that cache.</li>
+                                <li><strong>Point packages at an immutable archive.</strong> Use a GitHub release <em>asset</em> URL, not a <code>/archive/</code> auto-generated zip &mdash; those are not byte-stable and will break the checksum.</li>
+                            </ul>
+                            <p>Once a repository is onboarded, Git becomes the only way to change these objects: <code>fission</code> and <code>kubectl</code> commands that modify them hold only until the next sync. Read-only commands are unaffected.</p>
+
+                            <div class="service-access">
+                                <h4><i class="fas fa-key"></i> Access</h4>
+                                <p>Functions are created and managed entirely through the Kubernetes API, so there is no GUI. Open a Jira ticket or email the CIRRUS team to request FaaS access; you will be given a namespace and, if you do not have it already, access to the Kubernetes API server. You will also need the <a href="https://fission.io/docs/installation/#install-fission-cli" target="_blank">Fission CLI</a> and <code>kubectl</code> installed locally.</p>
+                            </div>
+
+                            <div class="service-actions">
+                                <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/12-faas/faas/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-book"></i> CIRRUS FaaS Docs</a>
+                                <a href="https://fission.io/docs/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-book"></i> Fission Docs</a>
+                                <a href="mailto:cirrus-admin@ucar.edu" class="btn btn-sm btn-outline-primary"><i class="fas fa-envelope"></i> Request FaaS Access</a>
+                            </div>
+                        </div>
+
+                        <!-- MPI Operator -->
+                        <div class="tab-pane fade service-pane" id="svc-mpi" role="tabpanel" aria-labelledby="mpi-tab">
+                            <div class="service-pane-header">
+                                <img src="{{ url_for('static', filename='logos/mpi.png') }}" alt="MPI">
+                                <div>
+                                    <h3>MPI Operator</h3>
+                                    <span class="badge service-badge-addon">Optional add-on</span>
+                                </div>
+                            </div>
+                            <p>CIRRUS runs the Kubeflow MPI Operator, which lets you run MPI (Message Passing Interface) jobs on the cluster the way you would on an HPC system. You submit a single <code>MPIJob</code> resource and the operator creates the launcher and worker pods, distributes SSH keys between them, and manages the job through to completion &mdash; no manual pod, service, or MPI runtime wiring.</p>
+
+                            <h4>When to use it</h4>
+                            <ul>
+                                <li>Multi-node scientific codes that already use MPI</li>
+                                <li>Multi-GPU distributed training with Horovod, PyTorch DDP, or <code>torchrun</code></li>
+                                <li>Benchmarks and test suites that need several nodes' worth of CPU or GPU at once</li>
+                            </ul>
+
+                            <h4>How an MPIJob is put together</h4>
+                            <ul>
+                                <li><strong>Launcher</strong> &mdash; one pod that runs <code>mpirun</code> and produces the job's output</li>
+                                <li><strong>Worker</strong> &mdash; the pods that do the computation; they run <code>sshd</code> and wait for the launcher</li>
+                                <li><strong><code>slotsPerWorker</code></strong> &mdash; MPI ranks per worker pod, usually matched to the CPU or GPU count you request</li>
+                                <li><strong><code>cleanPodPolicy</code></strong> &mdash; set it to <code>Running</code> to keep pods around after the job finishes so you can inspect them</li>
+                            </ul>
+                            <pre><code>apiVersion: kubeflow.org/v2beta1
+kind: MPIJob
+metadata:
+  name: pi
+spec:
+  slotsPerWorker: 1
+  mpiReplicaSpecs:
+    Launcher:
+      replicas: 1
+      template:
+        spec:
+          containers:
+            - name: mpi-launcher
+              image: docker.io/mpioperator/mpi-pi:openmpi
+              command: ["mpirun"]
+              args: ["-n", "2", "/home/mpiuser/pi"]
+    Worker:
+      replicas: 2
+      template:
+        spec:
+          containers:
+            - name: mpi-worker
+              image: docker.io/mpioperator/mpi-pi:openmpi
+              command: ["/usr/sbin/sshd", "-De", "-f", "/home/mpiuser/.sshd_config"]</code></pre>
+                            <p>Launcher and worker use the same MPI-enabled image. Both need MPI installed, and workers must start an SSH daemon in the foreground &mdash; that is how the launcher reaches them.</p>
+
+                            <h4>SSH between launcher and workers</h4>
+                            <p>The operator generates SSH keys and mounts them at <code>sshAuthMountPath</code> (usually <code>/root/.ssh</code>). Most images also need <code>ssh_config</code> and <code>sshd_config</code> supplied as ConfigMaps and mounted into the launcher and workers, with <code>StrictHostKeyChecking no</code> on the launcher side and <code>StrictModes no</code> on the worker side. SSH is the most common source of failures: a connection timeout means the worker's <code>sshd</code> is not running, and <code>Permission denied (publickey)</code> means the keys are not mounted where the image expects them.</p>
+
+                            <h4>Running and monitoring a job</h4>
+                            <pre><code>kubectl apply -f myjob.yaml
+kubectl get mpijob my-mpi-job -w
+
+# mpirun output lands in the launcher
+kubectl logs -l training.kubeflow.org/job-name=my-mpi-job -c mpi-launcher
+
+kubectl delete mpijob my-mpi-job</code></pre>
+
+                            <h4>Multi-GPU and multi-node</h4>
+                            <ul>
+                                <li>Request GPUs per worker with <code>resources.limits."nvidia.com/gpu"</code> and set <code>slotsPerWorker</code> to match, so you get one rank per GPU.</li>
+                                <li>For PyTorch, run <code>torchrun</code> under <code>mpirun</code> and pass the replica count through an environment variable so it matches your worker <code>replicas</code>.</li>
+                                <li>Mount a <code>cephfs</code> volume (<code>ReadWriteMany</code>) for datasets and checkpoints that every rank needs to read or write.</li>
+                                <li>Jobs stuck in <code>Pending</code> almost always mean the requested CPU, memory, or GPU is not available &mdash; check <code>kubectl describe pod</code> before changing anything else.</li>
+                            </ul>
+
+                            <h4>Submitting jobs from CI</h4>
+                            <p>MPIJobs are just Kubernetes resources, so a GitHub Actions workflow running on a CIRRUS runner can submit one, poll <code>status.conditions</code> for <code>Succeeded</code> or <code>Failed</code>, pull the launcher logs, and delete the job. That gives you multi-node regression tests on real cluster hardware. The runner's service account needs permission to create and watch <code>mpijobs</code> plus read pods and pod logs; the same pattern works from any pod in your namespace with that RBAC.</p>
+
+                            <div class="service-access">
+                                <h4><i class="fas fa-key"></i> Access</h4>
+                                <p>Running MPI jobs needs a namespace and <code>kubectl</code> access to it, since jobs are submitted through the Kubernetes API. Open a Jira ticket to request access, and mention the scale you are aiming for &mdash; how many nodes and GPUs &mdash; so we can make sure the quota fits.</p>
+                            </div>
+
+                            <div class="service-actions">
+                                <a href="https://github.com/kubeflow/mpi-operator" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fab fa-github"></i> MPI Operator on GitHub</a>
+                                <a href="https://www.kubeflow.org/docs/components/trainer/legacy-v1/user-guides/mpi/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-book"></i> Kubeflow MPI Docs</a>
+                                <a href="mailto:cirrus-admin@ucar.edu" class="btn btn-sm btn-outline-primary"><i class="fas fa-envelope"></i> Request Access</a>
+                            </div>
+                        </div>
+
+                        <!-- GitHub Actions Runners -->
+                        <div class="tab-pane fade service-pane" id="svc-runners" role="tabpanel" aria-labelledby="runners-tab">
+                            <div class="service-pane-header">
+                                <img src="{{ url_for('static', filename='logos/github.png') }}" alt="GitHub Actions">
+                                <div>
+                                    <h3>GitHub Actions Runners</h3>
+                                    <span class="badge service-badge-addon">Optional add-on</span>
+                                </div>
+                            </div>
+                            <p>CIRRUS hosts GitHub Actions runner scale sets, so your CI/CD workflows can run on cluster hardware instead of GitHub's shared runners. That means more CPU, more memory, and GPU access for workflows that need it. Runners scale up when jobs arrive and back down when they finish.</p>
+
+                            <h4>When to use it</h4>
+                            <ul>
+                                <li>Container builds that are too slow or too large for GitHub-hosted runners</li>
+                                <li>ML and scientific computing workflows that need GPUs in CI</li>
+                                <li>Test suites that benefit from running close to CIRRUS services</li>
+                            </ul>
+                            <p>Organizational runners are available to repositories in the NCAR GitHub organization without needing a Personal Access Token. Dedicated scale sets can also be connected to your own repository.</p>
+
+                            <div class="service-access">
+                                <h4><i class="fas fa-key"></i> Access</h4>
+                                <p>Open a Jira ticket to request a scale set for your repository. We can connect an organizational scale set to a repository in the NCAR GitHub organization, or set up a dedicated scale set tied to your own repository.</p>
+                            </div>
+
+                            <div class="service-actions">
+                                <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/05-github-actions/scale-sets/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-book"></i> Runner Scale Set Docs</a>
+                            </div>
+                        </div>
+
+                        <!-- Open WebUI -->
+                        <div class="tab-pane fade service-pane" id="svc-openwebui" role="tabpanel" aria-labelledby="openwebui-tab">
+                            <div class="service-pane-header">
+                                <img src="{{ url_for('static', filename='logos/open-webui.png') }}" alt="Open WebUI">
+                                <div>
+                                    <h3>Open WebUI</h3>
+                                    <span class="badge service-badge-addon">Optional add-on</span>
+                                </div>
+                            </div>
+                            <p>Open WebUI is a self-hosted chat interface for large language models, running entirely on CIRRUS hardware. Conversations and data stay within NCAR infrastructure rather than going to a commercial AI provider, which matters when working with unpublished research or sensitive material.</p>
+
+                            <h4>When to use it</h4>
+                            <ul>
+                                <li>Chat with open-weight models hosted on CIRRUS GPUs</li>
+                                <li>Experiment with retrieval-augmented generation over your own documents</li>
+                                <li>Prototype LLM-assisted tools without sending data off-premises</li>
+                            </ul>
+                            <div class="service-access">
+                                <h4><i class="fas fa-key"></i> Access</h4>
+                                <p>Open WebUI requires approval before you can use it. Sign in once at <a href="https://llm.k8s.ucar.edu/" target="_blank">llm.k8s.ucar.edu</a> with your UCAR SSO credentials (Entra ID). That first login adds you to the pending list. The CIRRUS team then approves your account, after which you can log in normally. If approval is taking a while, or if your group is interested in hosting models for a project, open a Jira ticket or reach out.</p>
+                            </div>
+
+                            <div class="service-actions">
+                                <a href="https://llm.k8s.ucar.edu/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-external-link-alt"></i> Open Open WebUI</a>
+                                <a href="https://docs.openwebui.com/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-book"></i> Open WebUI Docs</a>
+                                <a href="mailto:cirrus-admin@ucar.edu" class="btn btn-sm btn-outline-primary"><i class="fas fa-envelope"></i> Request Access</a>
+                            </div>
+                        </div>
+
+                        <!-- JupyterHub -->
+                        <div class="tab-pane fade service-pane" id="svc-jupyterhub" role="tabpanel" aria-labelledby="jupyterhub-tab">
+                            <div class="service-pane-header">
+                                <img src="{{ url_for('static', filename='logos/jupyterhub.png') }}" alt="JupyterHub">
+                                <div>
+                                    <h3>JupyterHub</h3>
+                                    <span class="badge service-badge-addon">Optional add-on</span>
+                                </div>
+                            </div>
+                            <p>The CIRRUS JupyterHub gives you Jupyter notebooks in the browser, backed by CIRRUS compute. Log in, pick a server profile, and start analyzing. There are options for GPU-backed servers and custom conda environments.</p>
+
+                            <h4>When to use it</h4>
+                            <ul>
+                                <li>Interactive data analysis and visualization without installing anything locally</li>
+                                <li>GPU notebooks for ML experimentation</li>
+                                <li>Scaling analysis with Dask workers running in the cluster</li>
+                            </ul>
+
+                            <div class="service-access">
+                                <h4><i class="fas fa-key"></i> Access</h4>
+                                <p>JupyterHub is open to anyone with a UCAR account. Just go to the hub and sign in with your UCAR SSO credentials, pick a server profile, and you are in.</p>
+                            </div>
+
+                            <div class="service-actions">
+                                <a href="https://jupyter.k8s.ucar.edu/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-external-link-alt"></i> Launch JupyterHub</a>
+                                <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/06-jupyter-on-cirrus/jupyterhub/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-book"></i> JupyterHub Docs</a>
+                            </div>
+                        </div>
+
+                        <!-- Grafana -->
+                        <div class="tab-pane fade service-pane" id="svc-grafana" role="tabpanel" aria-labelledby="grafana-tab">
+                            <div class="service-pane-header">
+                                <img src="{{ url_for('static', filename='logos/grafana.png') }}" alt="Grafana">
+                                <div>
+                                    <h3>Grafana, Prometheus &amp; Loki</h3>
+                                    <span class="badge service-badge-addon">Optional add-on</span>
+                                </div>
+                            </div>
+                            <p>CIRRUS runs a full observability stack: Prometheus collects metrics from your application, Loki collects its logs, and Grafana brings both together in dashboards you can build and share. Your application's logs are collected automatically, with no agent or configuration required on your side.</p>
+
+                            <h4>When to use it</h4>
+                            <ul>
+                                <li>Troubleshoot a misbehaving application by searching its logs in one place</li>
+                                <li>Build a dashboard showing your application's traffic, errors, and resource usage</li>
+                                <li>Set up alerts so you hear about problems before your users do</li>
+                            </ul>
+
+                            <h4>Scraping your application's metrics</h4>
+                            <p>Container-level metrics &mdash; CPU, memory, network &mdash; are collected for every workload with no setup on your part. To see what is happening <em>inside</em> your application, expose your own metrics in Prometheus format, conventionally on <code>/metrics</code>: <code>prometheus_client</code> for Python, <code>prom-client</code> for Node.js, Micrometer for Java, <code>client_golang</code> for Go. Many official images already ship an exporter that just needs enabling in their configuration.</p>
+                            <p>Then give your Service a named metrics port and add a <code>ServiceMonitor</code> so Prometheus knows where to scrape. The <code>release: kube-prometheus-stack</code> label is what lets the monitoring stack discover the monitor &mdash; without it, nothing is scraped:</p>
+                            <pre><code>apiVersion: v1
+kind: Service
+metadata:
+  name: my-app
+spec:
+  selector:
+    app: my-app
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+    - name: metrics          # the named port the monitor refers to
+      port: 9090
+      targetPort: 9090
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: my-app-metrics
+  labels:
+    release: kube-prometheus-stack   # required for discovery
+spec:
+  selector:
+    matchLabels:
+      app: my-app
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 30s</code></pre>
+                            <p>A <code>PodMonitor</code> works the same way if you would rather scrape pods directly and skip the Service. Once your metrics are being collected they are queryable in Grafana and can drive <a href="#svc-alerting">custom alerts</a>.</p>
+
+                            <div class="service-access">
+                                <h4><i class="fas fa-key"></i> Access</h4>
+                                <p>Open a Jira ticket to get access to Grafana for your applications. Your logs and metrics are collected automatically whether or not you ever log in, so you only need access if you want to view them or build dashboards. Grafana uses role-based access control, so permissions are scoped to your team's dashboards and data. Once access is set up, you sign in with your UCAR SSO credentials.</p>
+                            </div>
+
+                            <div class="service-actions">
+                                <a href="https://grafana.k8s.ucar.edu/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-external-link-alt"></i> Open Grafana</a>
+                                <a href="https://grafana.com/docs/grafana/latest/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-book"></i> Grafana Docs</a>
+                            </div>
+                        </div>
+
+                        <!-- Custom Alerting -->
+                        <div class="tab-pane fade service-pane" id="svc-alerting" role="tabpanel" aria-labelledby="alerting-tab">
+                            <div class="service-pane-header">
+                                <img src="{{ url_for('static', filename='logos/prometheus.png') }}" alt="Prometheus">
+                                <div>
+                                    <h3>Custom Alerting</h3>
+                                    <span class="badge service-badge-addon">Optional add-on</span>
+                                </div>
+                            </div>
+                            <p>Dashboards tell you what is happening when you go looking. Alerting tells you without being asked. Prometheus evaluates conditions you write against the metrics it collects, and Alertmanager delivers the notification &mdash; to email, Slack, PagerDuty, Microsoft Teams, or any webhook. Both the conditions and the routing live in your own Helm chart, so alerting is reviewed and versioned in Git like the rest of your application.</p>
+
+                            <h4>Before you start</h4>
+                            <p>You need metrics to alert on and a chart to put the alerts in:</p>
+                            <ul>
+                                <li>Container-level metrics are always available, so alerts on pods being down or memory usage need nothing extra. Alerting on your application's own numbers first requires <a href="#svc-grafana">a monitor that scrapes them</a>.</li>
+                                <li>A Helm chart synced by Argo CD, since that is what deploys the two manifests below.</li>
+                            </ul>
+
+                            <h4>Two manifests</h4>
+                            <p>Add both to your existing chart's <code>templates/</code> directory &mdash; they are ordinary resources, not a separate chart:</p>
+                            <ul>
+                                <li><strong><code>PrometheusRule</code></strong> &mdash; the conditions. What to watch and when it counts as a problem.</li>
+                                <li><strong><code>AlertmanagerConfig</code></strong> &mdash; the routing. Which alerts it handles, who gets notified, and how often.</li>
+                            </ul>
+                            <p>Both need the <code>release: kube-prometheus-stack</code> label to be discovered. It is the most common reason a correct-looking alert never does anything.</p>
+
+                            <h4>Defining the conditions</h4>
+                            <pre><code>apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: my-app-alerts
+  labels:
+    release: kube-prometheus-stack   # required for discovery
+spec:
+  groups:
+    - name: my-app.rules
+      interval: 30s
+      rules:
+        - alert: PodDown
+          expr: up{namespace="my-namespace"} == 0
+          for: 5m
+          labels:
+            severity: critical
+            namespace: my-namespace   # what the route below matches on
+          annotations:
+            summary: "Pod is down in my-namespace"
+            description: "A pod has been down for more than 5 minutes."</code></pre>
+                            <ul>
+                                <li><strong><code>expr</code></strong> &mdash; a PromQL expression; the alert is pending whenever it returns anything</li>
+                                <li><strong><code>for</code></strong> &mdash; how long the condition must hold before it actually fires, which is what keeps a brief blip from paging you</li>
+                                <li><strong><code>labels</code></strong> &mdash; used for routing and grouping. The <code>namespace</code> label is what your Alertmanager route selects on, so keep it on every rule.</li>
+                                <li><strong><code>annotations</code></strong> &mdash; the human-readable text that ends up in the notification</li>
+                            </ul>
+
+                            <h4>Routing the notification</h4>
+                            <pre><code>apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: my-app-alerting
+  labels:
+    alertmanagerConfig: my-app
+    namespace: my-namespace
+    release: kube-prometheus-stack
+spec:
+  route:
+    receiver: my-app-notifications
+    groupBy:
+      - alertname
+    groupWait: 10s        # wait this long to batch a new alert group
+    groupInterval: 1m     # then this long between updates to that group
+    repeatInterval: 60m   # and this long before re-notifying a firing alert
+    matchers:
+      - name: namespace
+        value: my-namespace
+        matchType: "="
+  receivers:
+    - name: my-app-notifications
+      emailConfigs:
+        - to: team@ucar.edu
+          from: alertmanager@k8s.ucar.edu
+          smarthost: vdir.ucar.edu:25</code></pre>
+                            <p>The <code>matchers</code> decide which alerts this config is responsible for &mdash; matching on your own namespace is the usual choice and keeps you from picking up other applications' alerts. To notify somewhere other than email, swap <code>emailConfigs</code> for the receiver you want (<code>slackConfigs</code>, <code>pagerdutyConfigs</code>, <code>webhookConfigs</code>, <code>opsgenieConfigs</code>, <code>msteamsConfigs</code>); the route above stays as it is. A Slack receiver needs a webhook URL, which belongs in <a href="#svc-openbao">OpenBao</a> rather than in your <code>values.yaml</code>.</p>
+
+                            <h4>Deploying</h4>
+                            <p>Commit and push. Argo CD syncs the manifests like any other change, and Prometheus picks up the new rule within a minute or two. Check Argo CD for sync errors if nothing seems to happen.</p>
+
+                            <div class="service-warning">
+                                <h4><i class="fas fa-exclamation-triangle"></i> Test with an always-firing alert first</h4>
+                                <p>Alertmanager is not exposed to users on CIRRUS: there is no UI to open and no logs you can read, so a silent notification pipeline gives you nothing to debug. Prove the pipeline works before you rely on it. Add a throwaway rule whose expression is always true, confirm the notification arrives and reads the way you want, then delete the rule and redeploy.</p>
+                                <pre><code>- alert: TestAlert
+  expr: vector(1)
+  for: 1m
+  labels:
+    severity: warning
+    namespace: my-namespace
+  annotations:
+    summary: "Test alert - always firing"
+    description: "Verifying notification delivery. Remove once confirmed."</code></pre>
+                            </div>
+
+                            <h4>When something is wrong</h4>
+                            <ul>
+                                <li><strong>Nothing arrives at all</strong> &mdash; check that the alert's <code>namespace</code> label matches what the route's <code>matchers</code> select, that both manifests carry the <code>release</code> label, and that <code>repeatInterval</code> is not simply suppressing a repeat of an alert you already received. For email, the SMTP smarthost has to be reachable from the cluster.</li>
+                                <li><strong>The alert never fires</strong> &mdash; run the PromQL by hand in Grafana against the Prometheus data source. If it returns nothing there, it will never fire. Also confirm the <code>for</code> duration has actually elapsed.</li>
+                                <li><strong>Your own metrics are missing</strong> &mdash; the monitor's <code>selector.matchLabels</code> has to match the labels on your Service or pods, and the named metrics port has to exist on the Service.</li>
+                            </ul>
+
+                            <div class="service-access">
+                                <h4><i class="fas fa-key"></i> Access</h4>
+                                <p>Nothing to request. The manifests live in your chart and Argo CD applies them, so if you can deploy, you can alert. Grafana access is worth having to check your PromQL before you commit it. If your test alert never arrives and the checks above come up clean, open a Jira ticket &mdash; we can see the Alertmanager side and you cannot.</p>
+                            </div>
+
+                            <div class="service-actions">
+                                <a href="https://github.com/NCAR/cirrus-examples/tree/main/helm/alerts-helm" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fab fa-github"></i> Copyable Alert Templates</a>
+                                <a href="https://prometheus.io/docs/alerting/latest/configuration/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-book"></i> Alertmanager Receivers</a>
+                                <a href="https://prometheus.io/docs/prometheus/latest/querying/basics/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-book"></i> PromQL Basics</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-5">
+
+        <section class="mb-3">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="resource-card">
+                        <h5><i class="fas fa-rocket"></i> New to CIRRUS?</h5>
+                        <p>Start with the core platform: containerize your application, write a Helm chart, and request onboarding.</p>
+                        <a href="{{ url_for('getting_started') }}" class="btn btn-sm btn-outline-primary">Getting Started Guide</a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="resource-card">
+                        <h5><i class="fas fa-question-circle"></i> Not sure what you need?</h5>
+                        <p>The CIRRUS team can help you figure out which services fit your application.</p>
+                        <a href="mailto:cirrus-admin@ucar.edu" class="btn btn-sm btn-outline-primary">Contact CIRRUS Admins</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+(function () {
+    // Opens a service pane from a #svc-... hash, so services can be linked to
+    // directly and cross-references between panes work like ordinary links.
+    function showService(hash) {
+        if (!hash || hash.indexOf('#svc-') !== 0) return;
+        var trigger = document.querySelector('#servicesTab [data-bs-target="' + hash + '"]');
+        if (!trigger) return;
+        bootstrap.Tab.getOrCreateInstance(trigger).show();
+        document.querySelector('.services-browser').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    showService(window.location.hash);
+    window.addEventListener('hashchange', function () { showService(window.location.hash); });
+
+    // Keep the address bar on the visible service so the page can be shared.
+    document.querySelectorAll('#servicesTab [data-bs-toggle="pill"]').forEach(function (btn) {
+        btn.addEventListener('shown.bs.tab', function (event) {
+            history.replaceState(null, '', event.target.dataset.bsTarget);
+        });
+    });
+})();
+</script>
+{% endblock %}

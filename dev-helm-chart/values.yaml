@@ -9,7 +9,7 @@ webapp:
     fqdn: cirrus-dev.k8s.ucar.edu
     secretName: cirrus-dev-website-ssl
   container:
-    image: hub.k8s.ucar.edu/ncote/cirrus-user-web-dev:2026-06-08.19.04
+    image: hub.k8s.ucar.edu/ncote/cirrus-user-web-dev:2026-08-05.15.45
     port: 5000
     memory: "1G"
     cpu: "2"

@@ -53,14 +53,14 @@
     
 <div class="container">
     <div class="content-wrapper">
-        <div class="row g-3 mt-2">
+        <div class="row status-grid row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-7 g-3 mt-2">
             {% for page in config.status_pages %}
-            <div class="col-md-6 col-lg-4 col-xl-3">
+            <div class="col">
                 <div class="card h-100 status-card status-card-{{ page.status|lower }}">
                     <div class="card-body text-center">
                         {% if page.logo_url %}
-                        <div class="service-logo mb-3">
-                            <img src="{{ page.logo_url }}" alt="{{ page.name }} logo" class="img-fluid" style="max-height: 60px;">
+                        <div class="service-logo mb-2">
+                            <img src="{{ page.logo_url }}" alt="{{ page.name }} logo" class="img-fluid">
                         </div>
                         {% endif %}
                         <h5 class="card-title">{{ page.name }}</h5>
@@ -89,13 +89,6 @@
                 <!-- Loaded state (hidden until ready) -->
                 <div id="cluster-status-data" style="display: none;">
                     <div id="cluster-status-cards"></div>
-                    <p class="text-muted small mb-0">
-                        All figures cover the whole cluster, platform components
-                        included &mdash; they run the storage, networking and GPU
-                        plumbing that user workloads depend on.
-                        &mdash; means the metric has no data on that cluster
-                        (for example, no GPUs or no persistent volumes).
-                    </p>
                 </div>
 
                 <!-- Error state (hidden until needed) -->

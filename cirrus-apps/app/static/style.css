@@ -1246,6 +1246,45 @@ em {
     min-height: 60px;
 }
 
+/* ===== SERVICE STATUS GRID ===== */
+/* Seven monitored services, and Bootstrap's row-cols-* utilities stop at 6.
+   One extra step lets all seven sit on a single row from xl up; below that the
+   grid steps down to 4 / 3 / 2 rather than squeezing. */
+@media (min-width: 1200px) {
+    .row-cols-xl-7 > * {
+        flex: 0 0 auto;
+        width: 14.2857142857%;
+    }
+}
+
+/* The .row rule above zeroes --bs-gutter-y, which kills the vertical gap from
+   g-3 whenever this grid wraps. Restore both gutters for this grid only. */
+.status-grid {
+    --bs-gutter-x: 1rem;
+    --bs-gutter-y: 1rem;
+}
+
+/* Narrower cards need tighter internals: a 7-up card is roughly 145px wide. */
+.status-grid .card-body {
+    padding: 0.9rem 0.5rem;
+}
+
+.status-grid .card-title {
+    font-size: 0.85rem;
+    line-height: 1.3;
+    margin-bottom: 0.5rem;
+    overflow-wrap: break-word;
+    hyphens: auto;
+}
+
+.status-grid .service-logo {
+    min-height: 44px;
+}
+
+.status-grid .service-logo img {
+    max-height: 40px;
+}
+
 /* ===== CLUSTER STATUS DASHBOARD ===== */
 /* Mirrors the SAM system status dashboard (sam.hpc.ucar.edu/status/derecho)
    so the K8s and HPC status pages read as one family. */

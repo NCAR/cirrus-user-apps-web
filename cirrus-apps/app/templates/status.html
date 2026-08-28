@@ -92,7 +92,7 @@
                     <p class="text-muted small mb-0">
                         Utilization and allocation cover the whole cluster, platform
                         components included, since those consume real capacity.
-                        Pod and namespace counts show the user-namespace share beneath them.
+                        Pod and namespace counts note the user-namespace share beneath them.
                         &mdash; means the metric has no data on that cluster
                         (for example, no GPUs or no persistent volumes).
                     </p>
@@ -265,18 +265,17 @@ function clusterCard(cluster, generatedAt) {
     }
 
     // --- Workload statistics ---
-    // Headline counts are whole-cluster; the sub-line splits out user namespaces.
-    // A present total with an absent user count means genuinely zero user pods,
-    // not missing data — the total proves kube-state-metrics answered.
+    // Headline counts are whole-cluster; the sub-line names the user-namespace
+    // share only. A present total with an absent user count means genuinely zero
+    // user pods, not missing data — the total proves kube-state-metrics answered.
     const workload = [
         ["Running Pods", "pods_running", "pods_running_user", "in user namespaces"],
         ["Pending Pods", "pods_pending", "pods_pending_user", "in user namespaces"],
-        ["Namespaces", "namespaces", "namespaces_user", "user"],
+        ["Namespaces", "namespaces", "namespaces_user", "user namespaces"],
     ].map(([label, key, userKey, suffix]) => {
         let sub = "";
         if (has(m, userKey)) {
             sub = `${m[userKey].toLocaleString()} ${suffix}`;
-            if (has(m, key)) sub += ` &middot; ${(m[key] - m[userKey]).toLocaleString()} platform`;
         } else if (has(m, key)) {
             sub = `none ${suffix}`;
         }

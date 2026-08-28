@@ -1246,6 +1246,61 @@ em {
     min-height: 60px;
 }
 
+/* ===== CLUSTER STATUS DASHBOARD ===== */
+/* Mirrors the SAM system status dashboard (sam.hpc.ucar.edu/status/derecho)
+   so the K8s and HPC status pages read as one family. */
+.cluster-card .card-header {
+    background-color: var(--ncar-gray-light);
+    border-bottom: 1px solid #dee2e6;
+}
+
+.cluster-card .card-header h5 {
+    margin-bottom: 0;
+    color: var(--text-dark);
+}
+
+.cluster-section-heading {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.metric-card {
+    background: #f8f9fa;
+    border-left: 4px solid var(--ncar-blue);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    height: calc(100% - 1rem);
+}
+
+.metric-card h6 {
+    color: var(--ncar-gray);
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.metric-card .value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--text-dark);
+}
+
+.progress-large {
+    height: 20px;
+}
+
+.cluster-table {
+    font-size: 0.9rem;
+}
+
+.last-updated {
+    color: var(--ncar-gray);
+    font-size: 0.875rem;
+    font-weight: 400;
+}
+
 /* ===== GETTING STARTED PAGE STYLES ===== */
 .section-heading {
     font-size: 2rem;

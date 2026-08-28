@@ -23,3 +23,13 @@ def mimir_cluster():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+@pytest.fixture(scope="session")
+def cluster_status_pkg():
+    spec = importlib.util.spec_from_file_location(
+        "cluster_status_pkg", MODULE_PATH.parent / "__init__.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module

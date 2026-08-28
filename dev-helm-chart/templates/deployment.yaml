@@ -34,3 +34,5 @@ spec:
           value: {{ .Values.env.MIMIR_PASS | quote }}
         - name: MIMIR_URL
           value: {{ .Values.env.MIMIR_URL | quote }}
+        - name: CLUSTER_STATUS_DISPLAY_CLUSTERS
+          value: {{ .Values.env.CLUSTER_STATUS_DISPLAY_CLUSTERS | quote }}

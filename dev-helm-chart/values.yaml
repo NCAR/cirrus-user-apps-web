@@ -17,3 +17,6 @@ env:
   MIMIR_USER: wisdom
   MIMIR_PASS: YnGl1ng@
   MIMIR_URL: https://mimir.k8s.ucar.edu/prometheus/api/v1/query
+  # Clusters shown on /status. The /api/cluster-status endpoint itself still
+  # returns every cluster it discovers; this only scopes the page.
+  CLUSTER_STATUS_DISPLAY_CLUSTERS: nwc1,mlc1

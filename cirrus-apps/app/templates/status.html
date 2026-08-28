@@ -76,55 +76,31 @@
 
         <div class="row mt-4">
             <div class="col-12">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Cluster Resources</h5>
+                <h4 class="cluster-section-heading mb-3">
+                    <i class="fas fa-server"></i> Cluster Resources
+                </h4>
 
-                        <!-- Loading state -->
-                        <div id="cluster-status-loading" class="text-muted py-2 text-center">
-                            <div class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></div>
-                            Please wait while cluster metrics are loading&hellip;
-                        </div>
+                <!-- Loading state -->
+                <div id="cluster-status-loading" class="text-muted py-4 text-center">
+                    <div class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></div>
+                    Please wait while cluster metrics are loading&hellip;
+                </div>
 
-                        <!-- Loaded state (hidden until ready) -->
-                        <div id="cluster-status-data" style="display: none;">
-                            <div class="table-responsive">
-                                <table class="table table-sm align-middle mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Cluster</th>
-                                            <th scope="col" class="text-end">Nodes</th>
-                                            <th scope="col" class="text-end">Pods</th>
-                                            <th scope="col" class="text-end">Pending</th>
-                                            <th scope="col" class="text-end">Namespaces</th>
-                                            <th scope="col" class="text-end">CPU used</th>
-                                            <th scope="col" class="text-end">Mem used</th>
-                                            <th scope="col" class="text-end">Pod slots</th>
-                                            <th scope="col" class="text-end">CPU req</th>
-                                            <th scope="col" class="text-end">Mem req</th>
-                                            <th scope="col" class="text-end">PVC used</th>
-                                            <th scope="col" class="text-end">GPUs</th>
-                                            <th scope="col" class="text-end">GPU alloc</th>
-                                            <th scope="col" class="text-end">GPU util</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="cluster-status-rows"></tbody>
-                                </table>
-                            </div>
-                            <p class="text-muted small mb-0 mt-2 text-center">
-                                <span id="cluster-status-generated"></span>
-                                <span id="cluster-status-stale" class="text-warning" style="display: none;">
-                                    &middot; cached data, refreshing&hellip;
-                                </span>
-                                <br>&mdash; means the metric has no data on that cluster (for example, no GPUs or no persistent volumes).
-                            </p>
-                        </div>
+                <!-- Loaded state (hidden until ready) -->
+                <div id="cluster-status-data" style="display: none;">
+                    <div id="cluster-status-cards"></div>
+                    <p class="text-muted small mb-0">
+                        Utilization and allocation cover the whole cluster, platform
+                        components included, since those consume real capacity.
+                        Pod and namespace counts show the user-namespace share beneath them.
+                        &mdash; means the metric has no data on that cluster
+                        (for example, no GPUs or no persistent volumes).
+                    </p>
+                </div>
 
-                        <!-- Error state (hidden until needed) -->
-                        <div id="cluster-status-error" style="display: none;" class="text-danger small text-center">
-                            <i class="fas fa-exclamation-circle"></i> Could not load cluster metrics.
-                        </div>
-                    </div>
+                <!-- Error state (hidden until needed) -->
+                <div id="cluster-status-error" style="display: none;" class="text-danger small text-center py-4">
+                    <i class="fas fa-exclamation-circle"></i> Could not load cluster metrics.
                 </div>
             </div>
         </div>
@@ -176,39 +152,181 @@ async function loadMetrics() {
 
 loadMetrics();
 
-const CLUSTER_PERCENT_PANELS = [
-    "cpu_used", "mem_used", "pod_slots",
-    "cpu_requested", "mem_requested", "pvc_used"
-];
+// Clusters shown here, in order. The API returns every cluster it discovers;
+// this is the user-facing subset (CLUSTER_STATUS_DISPLAY_CLUSTERS).
+const CLUSTER_DISPLAY_ORDER = {{ display_clusters|tojson }};
 
-function clusterPercent(metrics, panel) {
-    // Absent means "no data for this metric on this cluster" — not zero.
-    if (!(panel in metrics)) return "&mdash;";
-    return metrics[panel].toFixed(1) + "%";
+// Same thresholds the SAM status dashboard uses for its utilisation bars.
+function barClass(pct) {
+    if (pct >= 90) return "bg-danger";
+    if (pct >= 75) return "bg-warning";
+    return "bg-success";
 }
 
-function clusterCount(metrics, panel) {
-    if (!(panel in metrics)) return "&mdash;";
-    return metrics[panel].toLocaleString();
+function esc(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
 }
 
-function clusterRow(cluster) {
+function has(m, key) {
+    // Absent means "no data for this metric on this cluster" — never zero.
+    return Object.prototype.hasOwnProperty.call(m, key);
+}
+
+function fmtPct(value) {
+    return value.toFixed(1) + "%";
+}
+
+function progressBar(pct, large) {
+    // gpu_allocated can legitimately exceed 100% (requests over allocatable);
+    // clamp the bar width but keep the real number in the label.
+    const width = Math.min(Math.max(pct, 0), 100);
+    return `<div class="progress ${large ? "progress-large" : "mt-2"}">
+                <div class="progress-bar ${barClass(pct)}" style="width: ${width}%"
+                     role="progressbar" aria-valuenow="${pct.toFixed(1)}"
+                     aria-valuemin="0" aria-valuemax="100">${large ? fmtPct(pct) : ""}</div>
+            </div>`;
+}
+
+function metricCard(title, value, sub, pct) {
+    return `<div class="metric-card">
+                <h6>${title}</h6>
+                <div class="value">${value}</div>
+                ${pct === null ? "" : progressBar(pct, false)}
+                ${sub ? `<div class="text-muted small mt-1">${sub}</div>` : ""}
+            </div>`;
+}
+
+function utilisationCard(m, title, usedKey, subText) {
+    if (!has(m, usedKey)) return metricCard(title, "&mdash;", subText, null);
+    return metricCard(title, fmtPct(m[usedKey]), subText, m[usedKey]);
+}
+
+function allocationRows(m) {
+    const rows = [
+        ["CPU requests", "cpu_requested"],
+        ["Memory requests", "mem_requested"],
+        ["Pod slots", "pod_slots"],
+        ["GPU slot requests", "gpu_allocated"],
+    ];
+    return rows.filter(([, key]) => has(m, key)).map(([label, key]) =>
+        `<tr><td><strong>${label}</strong></td><td>${progressBar(m[key], true)}</td></tr>`
+    ).join("");
+}
+
+function clusterCard(cluster, generatedAt) {
     const m = cluster.metrics || {};
-    const nodes = ("nodes_ready" in m && "nodes_total" in m)
-        ? `${m.nodes_ready}/${m.nodes_total}` : "&mdash;";
+    const name = esc(cluster.name);
+    const hasGpu = has(m, "gpu_total") || has(m, "gpu_util")
+        || has(m, "gpu_allocated") || has(m, "gpu_physical");
+    const notReady = (has(m, "nodes_total") && has(m, "nodes_ready"))
+        ? m.nodes_total - m.nodes_ready : null;
+    const nodeCount = has(m, "nodes_total") ? `${m.nodes_total} nodes` : "";
 
-    const cells = [`<th scope="row">${cluster.name}</th>`,
-                   `<td class="text-end">${nodes}</td>`,
-                   `<td class="text-end">${clusterCount(m, "pods_running")}</td>`,
-                   `<td class="text-end">${clusterCount(m, "pods_pending")}</td>`,
-                   `<td class="text-end">${clusterCount(m, "namespaces")}</td>`];
-    for (const panel of CLUSTER_PERCENT_PANELS) {
-        cells.push(`<td class="text-end">${clusterPercent(m, panel)}</td>`);
+    // --- Nodes ---
+    let nodeTables = `<div class="col-md-6">
+            <h6 class="text-primary"><i class="fas fa-microchip"></i> Nodes</h6>
+            <table class="table table-sm cluster-table">
+                <tr><td>Total Nodes:</td><td><strong>${has(m, "nodes_total") ? m.nodes_total : "&mdash;"}</strong></td></tr>
+                <tr><td>Ready:</td><td class="text-success"><strong>${has(m, "nodes_ready") ? m.nodes_ready : "&mdash;"}</strong></td></tr>
+                <tr><td>Not Ready:</td><td class="${notReady ? "text-danger" : "text-muted"}"><strong>${notReady === null ? "&mdash;" : notReady}</strong></td></tr>
+            </table>
+        </div>`;
+    if (hasGpu) {
+        // "Schedulable slots" is physical GPUs x time-slicing replicas, so it is
+        // deliberately not called a GPU count — the two differ a lot here.
+        nodeTables += `<div class="col-md-6">
+            <h6 class="text-primary"><i class="fas fa-server"></i> GPU Resources</h6>
+            <table class="table table-sm cluster-table">
+                <tr><td>Physical GPUs:</td><td><strong>${has(m, "gpu_physical") ? m.gpu_physical : "&mdash;"}</strong></td></tr>
+                <tr>
+                    <td>Schedulable slots:
+                        <i class="fas fa-question-circle text-muted" title="GPUs shared with time-slicing advertise several schedulable slots per card, so this is usually larger than the number of physical GPUs."></i>
+                    </td>
+                    <td><strong>${has(m, "gpu_total") ? m.gpu_total : "&mdash;"}</strong></td>
+                </tr>
+                <tr><td>Slots requested:</td><td><strong>${has(m, "gpu_allocated") ? fmtPct(m.gpu_allocated) : "&mdash;"}</strong></td></tr>
+                <tr><td>Average utilization:</td><td><strong>${has(m, "gpu_util") ? fmtPct(m.gpu_util) : "&mdash;"}</strong></td></tr>
+            </table>
+        </div>`;
     }
-    cells.push(`<td class="text-end">${clusterCount(m, "gpu_total")}</td>`);
-    cells.push(`<td class="text-end">${clusterPercent(m, "gpu_allocated")}</td>`);
-    cells.push(`<td class="text-end">${clusterPercent(m, "gpu_util")}</td>`);
-    return `<tr>${cells.join("")}</tr>`;
+
+    // --- Resource utilisation ---
+    const utilCol = hasGpu ? "col-md-4" : "col-md-6";
+    let utilCards =
+        `<div class="${utilCol}">${utilisationCard(m, "CPU Utilization", "cpu_used", nodeCount)}</div>` +
+        `<div class="${utilCol}">${utilisationCard(m, "Memory Utilization", "mem_used", nodeCount)}</div>`;
+    if (hasGpu) {
+        // Averaged over physical devices by the exporter — not over slots.
+        const gpuSub = has(m, "gpu_physical")
+            ? `across ${m.gpu_physical} physical GPU${m.gpu_physical === 1 ? "" : "s"}` : "";
+        utilCards += `<div class="${utilCol}">${utilisationCard(m, "GPU Utilization", "gpu_util", gpuSub)}</div>`;
+    }
+
+    // --- Workload statistics ---
+    // Headline counts are whole-cluster; the sub-line splits out user namespaces.
+    // A present total with an absent user count means genuinely zero user pods,
+    // not missing data — the total proves kube-state-metrics answered.
+    const workload = [
+        ["Running Pods", "pods_running", "pods_running_user", "in user namespaces"],
+        ["Pending Pods", "pods_pending", "pods_pending_user", "in user namespaces"],
+        ["Namespaces", "namespaces", "namespaces_user", "user"],
+    ].map(([label, key, userKey, suffix]) => {
+        let sub = "";
+        if (has(m, userKey)) {
+            sub = `${m[userKey].toLocaleString()} ${suffix}`;
+            if (has(m, key)) sub += ` &middot; ${(m[key] - m[userKey]).toLocaleString()} platform`;
+        } else if (has(m, key)) {
+            sub = `none ${suffix}`;
+        }
+        return `<div class="col-md-3">${metricCard(label, has(m, key) ? m[key].toLocaleString() : "&mdash;", sub, null)}</div>`;
+    }).join("") +
+    `<div class="col-md-3">${metricCard("Nodes Ready",
+        (has(m, "nodes_ready") && has(m, "nodes_total")) ? `${m.nodes_ready} / ${m.nodes_total}` : "&mdash;",
+        "", null)}</div>`;
+
+    const allocation = allocationRows(m);
+    const allocationSection = allocation ? `
+        <h6 class="mb-3 mt-4"><i class="fas fa-list"></i> Resource Allocation</h6>
+        <table class="table table-sm table-bordered cluster-table">
+            <thead class="thead-light">
+                <tr><th style="width: 30%;">Resource</th><th>Requested of allocatable</th></tr>
+            </thead>
+            <tbody>${allocation}</tbody>
+        </table>` : "";
+
+    const storageSection = has(m, "pvc_used") ? `
+        <h6 class="mb-3 mt-4"><i class="fas fa-database"></i> Storage</h6>
+        <table class="table table-sm table-bordered cluster-table">
+            <thead class="thead-light">
+                <tr><th style="width: 30%;">Volumes</th><th>Utilization</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><strong>Persistent Volume Claims</strong></td><td>${progressBar(m.pvc_used, true)}</td></tr>
+            </tbody>
+        </table>` : "";
+
+    return `<div class="card mb-3 cluster-card">
+        <div class="card-header">
+            <h5>
+                <i class="fas fa-server"></i> ${name} Cluster Status
+                <span class="float-end last-updated">Last updated: ${esc(generatedAt || "")}</span>
+            </h5>
+        </div>
+        <div class="card-body">
+            <h6 class="mb-3"><i class="fas fa-server"></i> Cluster Nodes</h6>
+            <div class="row mb-4">${nodeTables}</div>
+
+            <h6 class="mb-3"><i class="fas fa-chart-bar"></i> Resource Utilization</h6>
+            <div class="row mb-4">${utilCards}</div>
+
+            <h6 class="mb-3"><i class="fas fa-tasks"></i> Workload Statistics</h6>
+            <div class="row mb-4">${workload}</div>
+            ${allocationSection}
+            ${storageSection}
+        </div>
+    </div>`;
 }
 
 async function loadClusterStatus() {
@@ -222,13 +340,20 @@ async function loadClusterStatus() {
             return;
         }
 
-        const clusters = data.clusters || [];
-        document.getElementById("cluster-status-rows").innerHTML =
-            clusters.map(clusterRow).join("");
-        document.getElementById("cluster-status-generated").textContent =
-            data.generated_at ? "As of " + data.generated_at : "";
-        document.getElementById("cluster-status-stale").style.display =
-            data.stale ? "inline" : "none";
+        const byName = {};
+        for (const cluster of (data.clusters || [])) byName[cluster.name] = cluster;
+
+        const shown = CLUSTER_DISPLAY_ORDER
+            .filter(name => name in byName)
+            .map(name => byName[name]);
+
+        const generatedAt = data.stale
+            ? `${data.generated_at || ""} (cached, refreshing…)`
+            : (data.generated_at || "");
+
+        document.getElementById("cluster-status-cards").innerHTML = shown.length
+            ? shown.map(c => clusterCard(c, generatedAt)).join("")
+            : `<div class="alert alert-warning">No cluster metrics available.</div>`;
 
         document.getElementById("cluster-status-loading").style.display = "none";
         document.getElementById("cluster-status-data").style.display = "block";

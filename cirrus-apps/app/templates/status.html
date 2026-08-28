@@ -73,6 +73,62 @@
             {% endfor %}
         </div>
         
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Cluster Resources</h5>
+
+                        <!-- Loading state -->
+                        <div id="cluster-status-loading" class="text-muted py-2 text-center">
+                            <div class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></div>
+                            Please wait while cluster metrics are loading&hellip;
+                        </div>
+
+                        <!-- Loaded state (hidden until ready) -->
+                        <div id="cluster-status-data" style="display: none;">
+                            <div class="table-responsive">
+                                <table class="table table-sm align-middle mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Cluster</th>
+                                            <th scope="col" class="text-end">Nodes</th>
+                                            <th scope="col" class="text-end">Pods</th>
+                                            <th scope="col" class="text-end">Pending</th>
+                                            <th scope="col" class="text-end">Namespaces</th>
+                                            <th scope="col" class="text-end">CPU used</th>
+                                            <th scope="col" class="text-end">Mem used</th>
+                                            <th scope="col" class="text-end">Pod slots</th>
+                                            <th scope="col" class="text-end">CPU req</th>
+                                            <th scope="col" class="text-end">Mem req</th>
+                                            <th scope="col" class="text-end">PVC used</th>
+                                            <th scope="col" class="text-end">GPUs</th>
+                                            <th scope="col" class="text-end">GPU alloc</th>
+                                            <th scope="col" class="text-end">GPU util</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="cluster-status-rows"></tbody>
+                                </table>
+                            </div>
+                            <p class="text-muted small mb-0 mt-2 text-center">
+                                <span id="cluster-status-generated"></span>
+                                <span id="cluster-status-stale" class="text-warning" style="display: none;">
+                                    &middot; cached data, refreshing&hellip;
+                                </span>
+                                <br>&mdash; means the metric has no data on that cluster (for example, no GPUs or no persistent volumes).
+                            </p>
+                        </div>
+
+                        <!-- Error state (hidden until needed) -->
+                        <div id="cluster-status-error" style="display: none;" class="text-danger small text-center">
+                            <i class="fas fa-exclamation-circle"></i> Could not load cluster metrics.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row mt-4">
             <div class="col-12 text-center">
                 <small class="text-muted">Last checked: {{ config.last_check }}</small>
@@ -119,6 +175,71 @@ async function loadMetrics() {
 }
 
 loadMetrics();
+
+const CLUSTER_PERCENT_PANELS = [
+    "cpu_used", "mem_used", "pod_slots",
+    "cpu_requested", "mem_requested", "pvc_used"
+];
+
+function clusterPercent(metrics, panel) {
+    // Absent means "no data for this metric on this cluster" — not zero.
+    if (!(panel in metrics)) return "&mdash;";
+    return metrics[panel].toFixed(1) + "%";
+}
+
+function clusterCount(metrics, panel) {
+    if (!(panel in metrics)) return "&mdash;";
+    return metrics[panel].toLocaleString();
+}
+
+function clusterRow(cluster) {
+    const m = cluster.metrics || {};
+    const nodes = ("nodes_ready" in m && "nodes_total" in m)
+        ? `${m.nodes_ready}/${m.nodes_total}` : "&mdash;";
+
+    const cells = [`<th scope="row">${cluster.name}</th>`,
+                   `<td class="text-end">${nodes}</td>`,
+                   `<td class="text-end">${clusterCount(m, "pods_running")}</td>`,
+                   `<td class="text-end">${clusterCount(m, "pods_pending")}</td>`,
+                   `<td class="text-end">${clusterCount(m, "namespaces")}</td>`];
+    for (const panel of CLUSTER_PERCENT_PANELS) {
+        cells.push(`<td class="text-end">${clusterPercent(m, panel)}</td>`);
+    }
+    cells.push(`<td class="text-end">${clusterCount(m, "gpu_total")}</td>`);
+    cells.push(`<td class="text-end">${clusterPercent(m, "gpu_allocated")}</td>`);
+    cells.push(`<td class="text-end">${clusterPercent(m, "gpu_util")}</td>`);
+    return `<tr>${cells.join("")}</tr>`;
+}
+
+async function loadClusterStatus() {
+    try {
+        const response = await fetch("/api/cluster-status");
+        const data = await response.json();
+
+        if (response.status === 202 || data.generating) {
+            // Cache is still being built — poll again in 2 seconds.
+            setTimeout(loadClusterStatus, 2000);
+            return;
+        }
+
+        const clusters = data.clusters || [];
+        document.getElementById("cluster-status-rows").innerHTML =
+            clusters.map(clusterRow).join("");
+        document.getElementById("cluster-status-generated").textContent =
+            data.generated_at ? "As of " + data.generated_at : "";
+        document.getElementById("cluster-status-stale").style.display =
+            data.stale ? "inline" : "none";
+
+        document.getElementById("cluster-status-loading").style.display = "none";
+        document.getElementById("cluster-status-data").style.display = "block";
+
+    } catch (err) {
+        document.getElementById("cluster-status-loading").style.display = "none";
+        document.getElementById("cluster-status-error").style.display = "block";
+    }
+}
+
+loadClusterStatus();
 
 // Auto-refresh page every 60 seconds
 setInterval(function() { location.reload(); }, 60000);

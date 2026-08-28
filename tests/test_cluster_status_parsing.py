@@ -36,9 +36,10 @@ NWC1 = _response([
     ("pods_running", "415"),
     ("pods_pending", "29"),
     ("namespaces", "43"),
-    ("pods_running_user", "287"),
-    ("pods_pending_user", "24"),
-    ("namespaces_user", "31"),
+    ("cpu_cores_used", "47.318"),
+    ("cpu_cores_total", "640"),
+    ("mem_bytes_used", "1979120929996.8"),
+    ("mem_bytes_total", "4508876898304"),
 ])
 
 # mlc3 has no GPUs (series absent) and no PVCs (0/0 -> NaN).
@@ -57,7 +58,7 @@ MLC3 = _response([
 ])
 
 
-def test_full_cluster_parses_all_fourteen_panels(mimir_cluster):
+def test_a_fully_populated_cluster_parses_every_panel(mimir_cluster):
     metrics = mimir_cluster.parse_cluster_metrics(NWC1)
     assert set(metrics) == set(mimir_cluster.PANEL_QUERIES)
 
@@ -158,76 +159,28 @@ def test_physical_gpu_count_is_omitted_on_gpuless_clusters(mimir_cluster):
     assert "gpu_physical" not in mimir_cluster.parse_cluster_metrics(MLC3)
 
 
-def test_user_scoped_counts_are_separate_from_cluster_totals(mimir_cluster):
-    metrics = mimir_cluster.parse_cluster_metrics(NWC1)
-    assert (metrics["pods_running"], metrics["pods_running_user"]) == (415, 287)
-    assert (metrics["namespaces"], metrics["namespaces_user"]) == (43, 31)
-    assert isinstance(metrics["pods_running_user"], int)
+
+def test_absolute_capacity_figures_back_the_percentages(mimir_cluster):
+    payload = _response([
+        ("cpu_cores_used", "47.318"), ("cpu_cores_total", "640"),
+        ("mem_bytes_used", "1979120929996.8"), ("mem_bytes_total", "4508876898304"),
+    ])
+    metrics = mimir_cluster.parse_cluster_metrics(payload)
+    # Cores in use keeps its fraction; counts and byte totals round to int.
+    assert metrics["cpu_cores_used"] == 47.32
+    assert metrics["cpu_cores_total"] == 640
+    assert isinstance(metrics["mem_bytes_total"], int)
+    assert metrics["mem_bytes_total"] == 4508876898304
 
 
-def test_platform_namespace_regex_is_excluded_from_user_queries(mimir_cluster):
-    query = mimir_cluster.build_union_query("nwc1")
-    # The user-scoped counts filter; the capacity metrics deliberately do not.
-    assert 'namespace!~' in query
-    assert query.count('namespace!~') == 3
-    for platform in ("kube-.*", "argocd", "prometheus", "nvidia-device-plugin"):
-        assert platform in query
-    # Requests/allocatable stay whole-cluster: system pods consume real capacity.
-    cpu_req = mimir_cluster.PANEL_QUERIES["cpu_requested"]
-    assert "namespace" not in cpu_req
+def test_capacity_queries_are_self_consistent(mimir_cluster):
+    # used and total both come from node_cpu_seconds_total, so the ratio can't
+    # drift the way mixing node metrics with kube allocatable would.
+    assert "node_cpu_seconds_total" in mimir_cluster.PANEL_QUERIES["cpu_cores_used"]
+    assert "node_cpu_seconds_total" in mimir_cluster.PANEL_QUERIES["cpu_cores_total"]
+    assert "node_memory_MemTotal_bytes" in mimir_cluster.PANEL_QUERIES["mem_bytes_total"]
 
 
-def test_platform_namespace_list_is_overridable(mimir_cluster, monkeypatch):
-    monkeypatch.setenv("CLUSTER_STATUS_PLATFORM_NAMESPACES", "kube-system|ops")
-    assert mimir_cluster.platform_namespaces_re() == "kube-system|ops"
-
-
-def test_platform_namespace_override_cannot_break_out_of_the_string_literal(mimir_cluster, monkeypatch):
-    monkeypatch.setenv("CLUSTER_STATUS_PLATFORM_NAMESPACES", 'kube-.*"} or up{')
-    assert '"' not in mimir_cluster.platform_namespaces_re()
-
-
-def test_absent_user_counts_are_omitted(mimir_cluster):
-    # A cluster running only platform workloads returns no series for these.
-    metrics = mimir_cluster.parse_cluster_metrics(MLC3)
-    assert "pods_running_user" not in metrics
-    assert metrics["pods_running"] == 82
-
-
-# Namespace census taken from nwc1 and mlc1 on 2026-08-28. The listing was
-# alphabetically truncated, so this is a subset — but every name here is real.
-CONFIRMED_PLATFORM = [
-    "kube-system", "harbor", "openbao", "ingress-nginx", "traefik",
-    "prometheus", "promtail", "kyverno", "velero", "opencost",
-    "npd", "nvidia-device-plugin", "ondemand", "mpi-operator", "s3gateway",
-]
-CONFIRMED_USER = [
-    "freva", "jupyterhub", "khrpcek", "mesonet", "musicbox", "negins",
-    "pearse", "pg-testing", "rda", "sage", "sam-queries", "visr", "varsha",
-    "ragflow", "ppeviewer", "sage-code-assist", "sage-esgf-data-node",
-    "ood-ncote", "ood-varshareddy",
-    # GitHub Actions runners are user work — /metrics already bills their CPU
-    # hours that way, so the two views must not disagree.
-    "arc-runners", "arc-systems",
-]
-
-
-def _platform_matcher(mimir_cluster):
-    import re
-    # Prometheus anchors regexes fully; mirror that here.
-    return re.compile("^(?:%s)$" % mimir_cluster.platform_namespaces_re()).match
-
-
-def test_real_platform_namespaces_are_classified_as_platform(mimir_cluster, monkeypatch):
-    monkeypatch.delenv("CLUSTER_STATUS_PLATFORM_NAMESPACES", raising=False)
-    matches = _platform_matcher(mimir_cluster)
-    assert [ns for ns in CONFIRMED_PLATFORM if not matches(ns)] == []
-
-
-def test_real_user_namespaces_are_not_swallowed_by_the_platform_regex(mimir_cluster, monkeypatch):
-    # The failure that matters: a wildcard eating a real user's namespace and
-    # silently under-reporting user activity. ood-<user> in particular must
-    # survive — those are the OOD sessions the consumer app exists to show.
-    monkeypatch.delenv("CLUSTER_STATUS_PLATFORM_NAMESPACES", raising=False)
-    matches = _platform_matcher(mimir_cluster)
-    assert [ns for ns in CONFIRMED_USER if matches(ns)] == []
+def test_no_namespace_filtering_remains(mimir_cluster):
+    # Platform pods count: they run the plumbing user workloads depend on.
+    assert "namespace!~" not in mimir_cluster.build_union_query("nwc1")

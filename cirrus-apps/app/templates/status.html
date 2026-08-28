@@ -90,9 +90,9 @@
                 <div id="cluster-status-data" style="display: none;">
                     <div id="cluster-status-cards"></div>
                     <p class="text-muted small mb-0">
-                        Utilization and allocation cover the whole cluster, platform
-                        components included, since those consume real capacity.
-                        Pod and namespace counts note the user-namespace share beneath them.
+                        All figures cover the whole cluster, platform components
+                        included &mdash; they run the storage, networking and GPU
+                        plumbing that user workloads depend on.
                         &mdash; means the metric has no data on that cluster
                         (for example, no GPUs or no persistent volumes).
                     </p>
@@ -189,6 +189,66 @@ function progressBar(pct, large) {
             </div>`;
 }
 
+function fmtBytes(bytes) {
+    const TiB = 1024 ** 4;
+    return bytes >= TiB ? (bytes / TiB).toFixed(1) + " TiB"
+                        : Math.round(bytes / 1024 ** 3) + " GiB";
+}
+
+function fmtCores(cores) {
+    return cores >= 100 ? Math.round(cores).toLocaleString() : cores.toFixed(1);
+}
+
+// Sum a metric across the clusters that report it. Null when none do, so the
+// tile is dropped rather than showing a total built from nothing.
+function sumAcross(clusters, key) {
+    const values = clusters.filter(c => has(c.metrics || {}, key)).map(c => c.metrics[key]);
+    return values.length ? values.reduce((a, b) => a + b, 0) : null;
+}
+
+function summaryTile(title, value, sub, pct) {
+    return `<div class="col-6 col-md-4 col-lg-2">${metricCard(title, value, sub, pct)}</div>`;
+}
+
+function summaryStrip(clusters) {
+    const tiles = [];
+    const coresUsed = sumAcross(clusters, "cpu_cores_used");
+    const coresTotal = sumAcross(clusters, "cpu_cores_total");
+    if (coresUsed !== null && coresTotal) {
+        tiles.push(summaryTile("Cores in Use", fmtCores(coresUsed),
+            `of ${coresTotal.toLocaleString()} cores`, 100 * coresUsed / coresTotal));
+    }
+    const memUsed = sumAcross(clusters, "mem_bytes_used");
+    const memTotal = sumAcross(clusters, "mem_bytes_total");
+    if (memUsed !== null && memTotal) {
+        tiles.push(summaryTile("Memory in Use", fmtBytes(memUsed),
+            `of ${fmtBytes(memTotal)}`, 100 * memUsed / memTotal));
+    }
+    const pods = sumAcross(clusters, "pods_running");
+    if (pods !== null) tiles.push(summaryTile("Pods Running", pods.toLocaleString(), "across all namespaces", null));
+
+    const ns = sumAcross(clusters, "namespaces");
+    if (ns !== null) tiles.push(summaryTile("Namespaces", ns.toLocaleString(), "projects and services", null));
+
+    const gpus = sumAcross(clusters, "gpu_physical");
+    if (gpus !== null) {
+        const slots = sumAcross(clusters, "gpu_total");
+        tiles.push(summaryTile("GPUs", gpus.toLocaleString(),
+            slots ? `${slots.toLocaleString()} schedulable slots` : "", null));
+    }
+    const ready = sumAcross(clusters, "nodes_ready");
+    const total = sumAcross(clusters, "nodes_total");
+    if (ready !== null && total !== null) {
+        tiles.push(summaryTile("Nodes Ready", `${ready} / ${total}`, "across all clusters", null));
+    }
+    if (!tiles.length) return "";
+
+    const names = clusters.map(c => esc(c.name)).join(" and ");
+    return `<h6 class="mb-1"><i class="fas fa-chart-line"></i> In Use Right Now</h6>
+        <p class="text-muted small mb-3">Combined across ${names}.</p>
+        <div class="row mb-4">${tiles.join("")}</div>`;
+}
+
 function metricCard(title, value, sub, pct) {
     return `<div class="metric-card">
                 <h6>${title}</h6>
@@ -265,22 +325,16 @@ function clusterCard(cluster, generatedAt) {
     }
 
     // --- Workload statistics ---
-    // Headline counts are whole-cluster; the sub-line names the user-namespace
-    // share only. A present total with an absent user count means genuinely zero
-    // user pods, not missing data — the total proves kube-state-metrics answered.
+    // Whole-cluster totals. Platform pods are counted too: they run the storage,
+    // networking and GPU plumbing every user workload sits on, so splitting them
+    // out understated what the cluster is actually doing.
     const workload = [
-        ["Running Pods", "pods_running", "pods_running_user", "in user namespaces"],
-        ["Pending Pods", "pods_pending", "pods_pending_user", "in user namespaces"],
-        ["Namespaces", "namespaces", "namespaces_user", "user namespaces"],
-    ].map(([label, key, userKey, suffix]) => {
-        let sub = "";
-        if (has(m, userKey)) {
-            sub = `${m[userKey].toLocaleString()} ${suffix}`;
-        } else if (has(m, key)) {
-            sub = `none ${suffix}`;
-        }
-        return `<div class="col-md-3">${metricCard(label, has(m, key) ? m[key].toLocaleString() : "&mdash;", sub, null)}</div>`;
-    }).join("") +
+        ["Running Pods", "pods_running"],
+        ["Pending Pods", "pods_pending"],
+        ["Namespaces", "namespaces"],
+    ].map(([label, key]) =>
+        `<div class="col-md-3">${metricCard(label, has(m, key) ? m[key].toLocaleString() : "&mdash;", "", null)}</div>`
+    ).join("") +
     `<div class="col-md-3">${metricCard("Nodes Ready",
         (has(m, "nodes_ready") && has(m, "nodes_total")) ? `${m.nodes_ready} / ${m.nodes_total}` : "&mdash;",
         "", null)}</div>`;
@@ -351,7 +405,7 @@ async function loadClusterStatus() {
             : (data.generated_at || "");
 
         document.getElementById("cluster-status-cards").innerHTML = shown.length
-            ? shown.map(c => clusterCard(c, generatedAt)).join("")
+            ? summaryStrip(shown) + shown.map(c => clusterCard(c, generatedAt)).join("")
             : `<div class="alert alert-warning">No cluster metrics available.</div>`;
 
         document.getElementById("cluster-status-loading").style.display = "none";

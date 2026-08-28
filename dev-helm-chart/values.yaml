@@ -20,3 +20,6 @@ env:
   # Clusters shown on /status. The /api/cluster-status endpoint itself still
   # returns every cluster it discovers; this only scopes the page.
   CLUSTER_STATUS_DISPLAY_CLUSTERS: nwc1,mlc1
+  # How often Mimir is re-queried. The page itself reloads more often than
+  # this and just re-serves the cache in between.
+  CLUSTER_STATUS_MAX_AGE_SECONDS: "300"

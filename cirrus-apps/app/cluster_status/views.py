@@ -10,9 +10,10 @@ from .mimir_cluster import get_cluster_status
 
 # Per-pod cache (replicaCount is 2, so this is not shared — that's fine).
 CLUSTER_STATUS_FILE = os.getenv("CLUSTER_STATUS_FILE", "static/cluster_status.json")
-# 60s, not the 1 hour /metrics uses: these queries are fast (~1.8s for all
-# clusters) and this sits inside the Grafana dashboard's own 1m refresh.
-CLUSTER_STATUS_MAX_AGE_SECONDS = int(os.getenv("CLUSTER_STATUS_MAX_AGE_SECONDS", "60"))
+# 5 minutes, matching the SAM status dashboard's stated cadence. Not the 1 hour
+# /metrics uses (its GitHub queries are slow), and no longer 60s — cluster
+# totals don't move meaningfully inside a minute, and this cuts Mimir load 5x.
+CLUSTER_STATUS_MAX_AGE_SECONDS = int(os.getenv("CLUSTER_STATUS_MAX_AGE_SECONDS", "300"))
 
 _cluster_status_generating = False
 _cluster_status_lock = threading.Lock()

@@ -36,3 +36,5 @@ spec:
           value: {{ .Values.env.MIMIR_URL | quote }}
         - name: CLUSTER_STATUS_DISPLAY_CLUSTERS
           value: {{ .Values.env.CLUSTER_STATUS_DISPLAY_CLUSTERS | quote }}
+        - name: CLUSTER_STATUS_MAX_AGE_SECONDS
+          value: {{ .Values.env.CLUSTER_STATUS_MAX_AGE_SECONDS | quote }}

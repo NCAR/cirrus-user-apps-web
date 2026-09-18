@@ -320,12 +320,15 @@ aws --endpoint-url https://s3.k8s.ucar.edu:5443 s3 ls s3://your-bucket/
 # s5cmd (recommended, much faster)
 s5cmd --endpoint-url https://s3.k8s.ucar.edu:5443 ls s3://your-bucket/</code></pre>
                             <p>Python applications can use <code>boto3</code> with the same endpoint.</p>
+                            <p>Once you have keys, you can create your own buckets &mdash; no request needed:</p>
+                            <pre><code>s5cmd --endpoint-url https://s3.k8s.ucar.edu:5443 mb s3://your-bucket
+aws --endpoint-url https://s3.k8s.ucar.edu:5443 s3 mb s3://your-bucket</code></pre>
 
                             <h4>Credentials</h4>
                             <p>There are two ways to authenticate against the gateway:</p>
                             <ul>
-                                <li><strong>Issued S3 keys</strong> &mdash; a dedicated access key and secret key that the CIRRUS team creates for you. This is the right choice for an application: the credentials belong to the workload rather than to a person, and they can be stored in OpenBao and injected as a Kubernetes Secret.</li>
-                                <li><strong>Your UCAR LDAP credentials</strong> &mdash; the gateway also accepts an LDAP token in place of an access key, which is handy for interactive use and quick testing without waiting on a key to be issued. Encode your username and password into the token that Rados Gateway expects and use the result as the access key ID:</li>
+                                <li><strong>Self-service S3 keys</strong> &mdash; generate your own access key and secret key at <a href="https://cs3.k8s.ucar.edu/" target="_blank">cs3.k8s.ucar.edu</a> using your UCAR SSO credentials. This is the right choice for an application: the credentials belong to the workload rather than to a person, and they can be stored in OpenBao and injected as a Kubernetes Secret.</li>
+                                <li><strong>Your UCAR LDAP credentials</strong> &mdash; the gateway also accepts an LDAP token in place of an access key, which is handy for interactive use and quick testing without generating a dedicated key. Encode your username and password into the token that Rados Gateway expects and use the result as the access key ID:</li>
                             </ul>
                             <pre><code>echo -n '{"RGW_TOKEN":{"version":1,"type":"ldap","id":"&lt;username&gt;","key":"&lt;password&gt;"}}' \
   | base64 -w0
@@ -334,16 +337,17 @@ export AWS_ACCESS_KEY_ID="&lt;the base64 string&gt;"
 export AWS_SECRET_ACCESS_KEY="unused"   # not checked for LDAP tokens
 
 aws --endpoint-url https://s3.k8s.ucar.edu:5443 s3 ls</code></pre>
-                            <p>The token carries your password in a reversible encoding, so treat it exactly like the password itself: keep it out of shell history, scripts, and Git. For anything long-lived, use issued S3 keys instead.</p>
+                            <p>The token carries your password in a reversible encoding, so treat it exactly like the password itself: keep it out of shell history, scripts, and Git. For anything long-lived, use self-service S3 keys instead.</p>
 
                             <div class="service-access">
                                 <h4><i class="fas fa-key"></i> Access</h4>
-                                <p>For issued keys, open a Jira ticket or email the team and we will provide your keys and a bucket. If you would rather authenticate with your UCAR LDAP credentials, no request is needed &mdash; see Credentials above.</p>
+                                <p>Both keys and buckets are self-service &mdash; no ticket needed. Sign in to <a href="https://cs3.k8s.ucar.edu/" target="_blank">cs3.k8s.ucar.edu</a> with your UCAR SSO credentials to generate an access key and secret key, then create your own bucket with any S3 client (see Using it above). If you would rather authenticate with your UCAR LDAP credentials instead, see Credentials above. For anything else, open a Jira ticket or email the team.</p>
                             </div>
 
                             <div class="service-actions">
+                                <a href="https://cs3.k8s.ucar.edu/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-key"></i> Manage S3 Keys</a>
                                 <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/11-storage/s3/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-book"></i> S3 Storage Docs</a>
-                                <a href="mailto:cirrus-admin@ucar.edu" class="btn btn-sm btn-outline-primary"><i class="fas fa-envelope"></i> Request S3 Credentials</a>
+                                <a href="mailto:cirrus-admin@ucar.edu" class="btn btn-sm btn-outline-primary"><i class="fas fa-envelope"></i> Contact the Team</a>
                             </div>
                         </div>
 
@@ -682,18 +686,22 @@ kubectl delete mpijob my-mpi-job</code></pre>
                                     <span class="badge service-badge-addon">Optional add-on</span>
                                 </div>
                             </div>
-                            <p>The CIRRUS BinderHub creates Jupyter Lab sessions from git repositories. </p>
+                            <p>The CIRRUS BinderHub turns a git repository into a running Jupyter Lab session. Point it at a repo and <a href="https://repo2docker.readthedocs.io/" target="_blank">repo2docker</a> reads the environment files you already keep there &mdash; <code>environment.yml</code>, <code>requirements.txt</code>, <code>Dockerfile</code> &mdash; builds a container image, and launches it in the browser. No login, no local install, and no setup steps for whoever follows your link.</p>
 
                             <h4>When to use it</h4>
                             <ul>
-                                <li>Quick interactive data analysis and visualization from a git repository</li>
-                                <li>Developing content for a full JupyterHub experience</li>
-                                <li>Small scale public tutorials</li>
+                                <li><strong>Share a runnable example.</strong> Anyone with the link gets your notebooks in a working environment, so a repo that reproduces a figure or a result stays reproducible for readers.</li>
+                                <li><strong>Add launch buttons to documentation.</strong> JupyterBook, MyST, and similar tools can point their &ldquo;launch&rdquo; buttons at this BinderHub, letting readers run a page's code without leaving the docs.</li>
+                                <li><strong>Run small public tutorials and workshops.</strong> Attendees skip environment setup entirely; everyone starts from the same image.</li>
+                                <li><strong>Test that a repository's environment actually builds.</strong> A clean repo2docker build is a good check before handing the repo to collaborators or to a JupyterHub image.</li>
                             </ul>
+
+                            <h4>When to use JupyterHub instead</h4>
+                            <p>Sessions are capped at 1 CPU core and 2 GB of RAM, they are temporary, and nothing you write is saved when a session ends. For heavier analysis, GPU-backed notebooks, Dask workers, or work you need to keep, use <a href="#svc-jupyterhub">JupyterHub</a> instead.</p>
 
                             <div class="service-access">
                                 <h4><i class="fas fa-key"></i> Access</h4>
-                                <p>Binder is open to anyone. Sessions are restricted to 1 CPU core and 2 GB of RAM.</p>
+                                <p>Binder is open to anyone &mdash; no UCAR account and no login required. Because sessions are public and unauthenticated, only use repositories and data you are comfortable making public.</p>
                             </div>
 
                             <div class="service-actions">

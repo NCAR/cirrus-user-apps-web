@@ -1,3 +1,8 @@
+- name: Binder
+  url: https://binder.k8s.ucar.edu/
+  screenshot: binder.png
+  available: External
+
 - name: CESM LENS2 Dashboard
   url: https://cesm-lens2-dashboard.k8s.ucar.edu/
   screenshot: lens2-dashboard.png

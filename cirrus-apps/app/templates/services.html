@@ -238,6 +238,11 @@ spec:
                             <h4>Prerequisites</h4>
                             <p>You need <a href="https://kubernetes.io/docs/tasks/tools/#kubectl" target="_blank"><code>kubectl</code></a> installed locally, plus the <a href="https://azure.github.io/kubelogin/install.html" target="_blank">Azure <code>kubelogin</code></a> plugin, which drives the Entra ID OIDC login <code>kubectl</code> triggers when it needs to authenticate.</p>
 
+                            <div class="service-warning">
+                                <h4><i class="fas fa-exclamation-triangle"></i> Requires the UCAR network or VPN</h4>
+                                <p>The kubeconfig is only reachable while connected to the UCAR network or VPN. Connect before fetching it, or the request will just hang or fail to resolve.</p>
+                            </div>
+
                             <h4>Getting your kubeconfig</h4>
                             <p>Fetch the file with <code>curl</code> or <code>wget</code> rather than opening the link in a browser &mdash; a browser tab just renders the YAML instead of saving it, which leaves you copy-pasting it into a file by hand. <code>kubectl</code> reads <code>~/.kube/config</code> by default, so that is the simplest place to put it if you do not already have a config there:</p>
                             <pre><code>curl -o ~/.kube/config https://s3.k8s.ucar.edu:5443/cirrus-config/kubeconfig

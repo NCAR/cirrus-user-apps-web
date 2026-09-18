@@ -37,6 +37,17 @@ main {
     min-height: calc(100vh - 200px);
 }
 
+/* ===== INLINE CODE ===== */
+code:not(pre code) {
+    color: var(--text-dark);
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 0.15rem 0.4rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
 .row {
     --bs-gutter-x: 1.5rem;
     --bs-gutter-y: 0;

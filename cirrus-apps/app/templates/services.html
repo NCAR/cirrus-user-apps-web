@@ -234,10 +234,19 @@ spec:
 
                             <h4>How it works</h4>
                             <p>Capsule groups the namespaces you are given into a <em>tenant</em> and enforces that your identity can only see and act on resources inside it, using OIDC to authenticate you as yourself rather than a static token. Everyone uses the same kubeconfig, which just points at the cluster and the OIDC login flow &mdash; what you can actually do once logged in depends entirely on whether a tenant has been created for you.</p>
-                            <pre><code>curl -o kubeconfig https://s3.k8s.ucar.edu:5443/cirrus-config/kubeconfig
-export KUBECONFIG=$PWD/kubeconfig
+
+                            <h4>Prerequisites</h4>
+                            <p>You need <a href="https://kubernetes.io/docs/tasks/tools/#kubectl" target="_blank"><code>kubectl</code></a> installed locally, plus the <a href="https://azure.github.io/kubelogin/install.html" target="_blank">Azure <code>kubelogin</code></a> plugin, which drives the Entra ID OIDC login <code>kubectl</code> triggers when it needs to authenticate.</p>
+
+                            <h4>Getting your kubeconfig</h4>
+                            <p>Fetch the file with <code>curl</code> or <code>wget</code> rather than opening the link in a browser &mdash; a browser tab just renders the YAML instead of saving it, which leaves you copy-pasting it into a file by hand. <code>kubectl</code> reads <code>~/.kube/config</code> by default, so that is the simplest place to put it if you do not already have a config there:</p>
+                            <pre><code>curl -o ~/.kube/config https://s3.k8s.ucar.edu:5443/cirrus-config/kubeconfig
 kubectl get pods -n your-namespace</code></pre>
-                            <p>The first <code>kubectl</code> command opens a browser login through Entra ID. Downloading and using the kubeconfig is harmless even before your access request is approved: it will prompt you to log in, but without a Capsule tenant behind your account, every request after that is rejected. There is nothing to request to get the file itself &mdash; only to get it to actually authorize anything.</p>
+                            <p>Already have a <code>~/.kube/config</code> for another cluster? Save the CIRRUS file elsewhere and point <code>kubectl</code> at it with the <code>KUBECONFIG</code> environment variable instead of overwriting it:</p>
+                            <pre><code>curl -o ~/.kube/cirrus-config https://s3.k8s.ucar.edu:5443/cirrus-config/kubeconfig
+export KUBECONFIG=~/.kube/cirrus-config
+kubectl get pods -n your-namespace</code></pre>
+                            <p>The first <code>kubectl</code> command against the cluster opens a browser login through Entra ID, handled by <code>kubelogin</code>. Downloading and using the file is harmless even before your access request is approved: login will succeed, but without a Capsule tenant behind your account every request after that is rejected.</p>
 
                             <div class="service-access">
                                 <h4><i class="fas fa-key"></i> Access</h4>
@@ -245,7 +254,7 @@ kubectl get pods -n your-namespace</code></pre>
                             </div>
 
                             <div class="service-actions">
-                                <a href="https://s3.k8s.ucar.edu:5443/cirrus-config/kubeconfig" class="btn btn-sm btn-outline-primary"><i class="fas fa-download"></i> Download kubeconfig</a>
+                                <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/10-kubectl/kubectl/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-book"></i> kubectl Setup Docs</a>
                                 <a href="https://projectcapsule.dev/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-book"></i> Capsule Docs</a>
                                 <a href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10903" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-ticket-alt"></i> Request Access via Jira</a>
                             </div>

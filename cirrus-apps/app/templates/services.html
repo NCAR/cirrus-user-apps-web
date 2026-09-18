@@ -60,6 +60,7 @@
                         <span class="services-nav-group">AI &amp; Interactive</span>
                         <button class="nav-link" id="openwebui-tab" data-bs-toggle="pill" data-bs-target="#svc-openwebui" type="button" role="tab" aria-controls="svc-openwebui" aria-selected="false">Open WebUI</button>
                         <button class="nav-link" id="jupyterhub-tab" data-bs-toggle="pill" data-bs-target="#svc-jupyterhub" type="button" role="tab" aria-controls="svc-jupyterhub" aria-selected="false">JupyterHub</button>
+                        <button class="nav-link" id="binder-tab" data-bs-toggle="pill" data-bs-target="#svc-binder" type="button" role="tab" aria-controls="svc-binder" aria-selected="false">Binder</button>
 
                         <span class="services-nav-group">Observability</span>
                         <button class="nav-link" id="grafana-tab" data-bs-toggle="pill" data-bs-target="#svc-grafana" type="button" role="tab" aria-controls="svc-grafana" aria-selected="false">Grafana</button>
@@ -669,6 +670,35 @@ kubectl delete mpijob my-mpi-job</code></pre>
                             <div class="service-actions">
                                 <a href="https://jupyter.k8s.ucar.edu/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-external-link-alt"></i> Launch JupyterHub</a>
                                 <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/06-jupyter-on-cirrus/jupyterhub/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-book"></i> JupyterHub Docs</a>
+                            </div>
+                        </div>
+
+                        <!-- Binder -->
+                        <div class="tab-pane fade service-pane" id="svc-binder" role="tabpanel" aria-labelledby="binder-tab">
+                            <div class="service-pane-header">
+                                <img src="{{ url_for('static', filename='logos/binder.png') }}" alt="BinderHub">
+                                <div>
+                                    <h3>Binder</h3>
+                                    <span class="badge service-badge-addon">Optional add-on</span>
+                                </div>
+                            </div>
+                            <p>The CIRRUS BinderHub creates Jupyter Lab sessions from git repositories. </p>
+
+                            <h4>When to use it</h4>
+                            <ul>
+                                <li>Quick interactive data analysis and visualization from a git repository</li>
+                                <li>Developing content for a full JupyterHub experience</li>
+                                <li>Small scale public tutorials</li>
+                            </ul>
+
+                            <div class="service-access">
+                                <h4><i class="fas fa-key"></i> Access</h4>
+                                <p>Binder is open to anyone. Sessions are restricted to 1 CPU core and 2 GB of RAM.</p>
+                            </div>
+
+                            <div class="service-actions">
+                                <a href="https://binder.k8s.ucar.edu/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-external-link-alt"></i> Launch Binder</a>
+                                <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/06-jupyter-on-cirrus/binder/" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-book"></i> Binder Docs</a>
                             </div>
                         </div>
 

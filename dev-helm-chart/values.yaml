@@ -23,3 +23,20 @@ env:
   # How often Mimir is re-queried. The page itself reloads more often than
   # this and just re-serves the cache in between.
   CLUSTER_STATUS_MAX_AGE_SECONDS: "300"
+# CIRRUS MCP server (https://github.com/NCAR/cirrus-mcp), served at https://<webapp.tls.fqdn>/mcp
+# on the same Ingress and TLS certificate as the website.
+mcp:
+  enabled: true
+  name: cirrus-dev-mcp
+  replicaCount: 2
+  path: /mcp                              # the server serves its endpoint at /mcp itself; no rewrite
+  networkPolicy: true                     # deny all egress; the server needs no network at runtime
+  container:
+    image: hub.k8s.ucar.edu/ncote/cirrus-mcp:0.1.0
+    port: 8000
+    requests:
+      memory: 256Mi
+      cpu: 250m
+    limits:
+      memory: 1Gi                         # helm renders are capped at 512 MB each, 2 at a time
+      cpu: "1"

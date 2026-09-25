@@ -1,0 +1,15 @@
+{{- if .Values.mcp.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.mcp.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    group: {{ .Values.webapp.group }}
+spec:
+  ports:
+  - port: {{ .Values.mcp.container.port }}
+    targetPort: http
+  selector:
+    app: {{ .Values.mcp.name }}
+{{- end }}

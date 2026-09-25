@@ -26,4 +26,13 @@ spec:
             name: {{ .Values.webapp.name }}
             port:
               number: {{ .Values.webapp.container.port }}
+      {{- if .Values.mcp.enabled }}
+      - path: {{ .Values.mcp.path }}
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Values.mcp.name }}
+            port:
+              number: {{ .Values.mcp.container.port }}
+      {{- end }}
 {{- end }}

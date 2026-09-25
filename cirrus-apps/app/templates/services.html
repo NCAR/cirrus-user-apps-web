@@ -193,7 +193,7 @@ spec:
                             </ul>
 
                             <h4>TLS and DNS are automatic</h4>
-                            <p>You do not configure certificates or DNS yourself. Once your Ingress exists, ExternalDNS creates the matching DNS record under <code>*.k8s.ucar.edu</code>, and cert-manager issues and renews a Let's Encrypt TLS certificate so your application is served over HTTPS. Defining the Ingress is all it takes.</p>
+                            <p>You do not configure certificates or DNS yourself. Once your Ingress exists, ExternalDNS creates the matching DNS record under <code>*.k8s.ucar.edu</code>, and cert-manager requests and renews an InCommon TLS certificate from CertiNext over ACME so your application is served over HTTPS. Defining the Ingress is all it takes.</p>
 
                             <h4>Adding it to your app</h4>
                             <pre><code>apiVersion: networking.k8s.io/v1

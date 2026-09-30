@@ -99,7 +99,7 @@
                     <h3>Accessing Your Application: Ingress and TLS</h3>
                 </div>
                 <div class="step-content">
-                    <p>CIRRUS provides two ingress paths: LoxiLB for external traffic using BGP peering to provide publicly accessible endpoints, and NGINX Ingress for internal traffic within the UCAR network.</p>
+                    <p>CIRRUS uses Traefik as its ingress controller, with two ingress classes: <code>traefik-external</code> for applications reachable from the public internet, and <code>traefik-internal</code> for applications reachable only within the UCAR network. External endpoints get publicly accessible IP addresses from LoxiLB, which advertises them over BGP peering.</p>
 
                     <p>ExternalDNS automatically creates DNS records in the *.k8s.ucar.edu domain for your services, while cert-manager requests and renews InCommon TLS certificates from CertiNext over ACME to provide HTTPS endpoints for your web applications.</p>
                 </div>

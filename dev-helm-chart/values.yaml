@@ -32,7 +32,7 @@ mcp:
   path: /mcp                              # the server serves its endpoint at /mcp itself; no rewrite
   networkPolicy: true                     # deny all egress; the server needs no network at runtime
   container:
-    image: hub.k8s.ucar.edu/ncote/cirrus-mcp:0.1.0
+    image: hub.k8s.ucar.edu/ncote/cirrus-mcp:0.1.1
     port: 8000
     requests:
       memory: 256Mi

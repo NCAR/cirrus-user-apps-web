@@ -10,7 +10,7 @@ metadata:
     cert-manager.io/cluster-issuer: "incommon"
     #external-dns.alpha.kubernetes.io/target: "128.117.41.130"
 spec:
-  ingressClassName: traefik-external
+  ingressClassName: {{ .Values.ingress.className }}
   tls:
     - hosts:
       - {{ .Values.webapp.tls.fqdn }}
@@ -26,4 +26,13 @@ spec:
             name: {{ .Values.webapp.name }}
             port:
               number: {{ .Values.webapp.container.port }}
+      {{- if .Values.mcp.enabled }}
+      - path: {{ .Values.mcp.path }}
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Values.mcp.name }}
+            port:
+              number: {{ .Values.mcp.container.port }}
+      {{- end }}
 {{- end }}

@@ -1,0 +1,15 @@
+# Dev overrides, layered on top of values.yaml by the Argo dev Application.
+# Only put values here that differ from prod.
+ingress:
+    className: traefik-internal
+webapp:
+  name: cirrus-dev-website
+  group: cirrus-dev-website
+  tls:
+    fqdn: cirrus-dev.k8s.ucar.edu
+    secretName: cirrus-dev-website-ssl
+  container:
+    image: hub.k8s.ucar.edu/ncote/cirrus-user-web-dev:2026-09-30.20.58
+mcp:
+  enabled: true
+  name: cirrus-dev-mcp

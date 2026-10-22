@@ -31,10 +31,10 @@
                     <h3>Containerize Your Application</h3>
                 </div>
                 <div class="step-content">
-                    <p>Package your application as a Docker container. This makes it portable and ensures it runs consistently across environments.</p>
-                    
+                    <p>Package your application as an OCI container image. This makes it portable and ensures it runs consistently across environments. Any OCI-compliant image works. Docker is one way to build one, but tools like Podman or Buildah produce the same result.</p>
+
                     <div class="code-example">
-                        <p><strong>Example Dockerfile for a Python Flask app:</strong></p>
+                        <p><strong>Example Containerfile (Dockerfile) for a Python Flask app:</strong></p>
                         <pre><code>FROM python:3.11-slim
 
 WORKDIR /app
@@ -171,6 +171,32 @@ docker push hub.k8s.ucar.edu/your-project/your-app:v1.0</code></pre>
         </section>
 
         <hr class="my-5">
+
+        <!-- Access -->
+        <section class="mb-5">
+            <h2 class="section-heading">Access</h2>
+            
+            <div class="access-overview mt-4">
+                <div class="access-point">
+                    <i class="fas fa-rocket"></i>
+                    <p><strong>Deploying needs no access at all.</strong> Argo CD deploys your workload straight from Git. A CIRRUS admin adds your repository once, and from then on every change you push is synced to the cluster automatically.</p>
+                </div>
+                <div class="access-point">
+                    <i class="fas fa-eye"></i>
+                    <p><strong>Access is for looking under the hood, not for running.</strong> Request it only when you want to do something yourself: watch your app in the Argo CD UI, read its logs through Argo CD or <code>kubectl</code>, push images to Harbor, view metrics in Grafana, or inject secrets with OpenBao. Each one is optional and independent.</p>
+                </div>
+                <div class="access-point">
+                    <i class="fas fa-id-badge"></i>
+                    <p><strong>When you do want it, it is simple.</strong> You sign in with your existing UCAR SSO credentials through Entra ID. Kubernetes and Argo CD access is scoped to just where your resources live, ands is set up through a quick Jira ticket.</p>
+                </div>
+
+                <div class="service-actions">
+                    <a href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10903&summary=Access%20Request:" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-ticket-alt"></i> Request Access via Jira</a>
+                    <a href="mailto:cirrus-admin@ucar.edu" class="btn btn-sm btn-outline-primary"><i class="fas fa-envelope"></i> Email the CIRRUS Team</a>
+                </div>
+                <p class="small text-muted mt-3 mb-0">Each service on the <a href="{{ url_for('services') }}">Services</a> page has its own note on exactly what access it offers and how to request it.</p>
+            </div>
+        </section>
 
         <!-- Next Steps -->
         <section class="mb-5">

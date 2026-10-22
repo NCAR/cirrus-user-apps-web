@@ -3,6 +3,7 @@ from app import app
 import yaml
 import json
 from ..metrics.github_metrics import get_cpu_hours
+from ..cluster_status import display_clusters
 import os
 import requests
 from bs4 import BeautifulSoup
@@ -19,6 +20,10 @@ def architecture():
 @app.route('/getting-started')
 def getting_started():
     return render_template('getting-started.html')
+
+@app.route('/services')
+def services():
+    return render_template('services.html')
 
 @app.route('/apps')
 def apps():
@@ -92,7 +97,8 @@ def status():
     config['last_check'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S MST')
 
     # Metrics are now loaded asynchronously via the /metrics endpoint
-    return render_template('status.html', config=config)
+    return render_template('status.html', config=config,
+                           display_clusters=display_clusters())
 
 
 @app.route('/sla')

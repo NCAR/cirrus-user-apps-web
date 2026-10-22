@@ -1,0 +1,74 @@
+{{- if .Values.mcp.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.mcp.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.mcp.name }}
+    group: {{ .Values.webapp.group }}
+spec:
+  replicas: {{ .Values.mcp.replicaCount }}
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: {{ .Values.mcp.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.mcp.name }}
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: {{ .Values.mcp.name }}
+        image: {{ .Values.mcp.container.image }}
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            memory: {{ .Values.mcp.container.requests.memory }}
+            cpu: {{ .Values.mcp.container.requests.cpu }}
+          limits:
+            memory: {{ .Values.mcp.container.limits.memory }}
+            cpu: {{ .Values.mcp.container.limits.cpu | quote }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.mcp.container.port }}
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop: ["ALL"]
+        env:
+        - name: CIRRUS_MCP_PORT
+          value: {{ .Values.mcp.container.port | quote }}
+        - name: CIRRUS_MCP_PUBLIC_URL
+          value: "https://{{ .Values.webapp.tls.fqdn }}{{ .Values.mcp.path }}"
+        # DNS-rebinding protection; requests with any other Host header get HTTP 421.
+        - name: CIRRUS_MCP_ALLOWED_HOSTS
+          value: {{ .Values.webapp.tls.fqdn | quote }}
+        readinessProbe:
+          httpGet:
+            path: /mcp/healthz
+            port: http
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /mcp/healthz
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 20
+        volumeMounts:
+        # helm template renders caller charts here
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: tmp
+        emptyDir:
+          sizeLimit: 256Mi
+{{- end }}

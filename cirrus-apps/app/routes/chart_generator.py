@@ -394,7 +394,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: "incommon"
 spec:
-  ingressClassName: nginx-{{{{ .Values.ingress.access }}}}
+  ingressClassName: traefik-{{{{ .Values.ingress.access }}}}
   tls:
   - hosts:
     - {{{{ .Values.webapp.tls.fqdn }}}}
@@ -795,7 +795,7 @@ ingress:
   access: internal  # or 'external'
 ```
 
-The ingress class is automatically set to `nginx-external` or `nginx-internal`.
+The ingress class is automatically set to `traefik-external` or `traefik-internal`.
 
 """
     
@@ -1143,8 +1143,8 @@ ingress:
   enabled: true
   access: {access_type}  # Switch between 'external' or 'internal'
   
-  # external: Public internet access (nginx-external)
-  # internal: UCAR network/VPN only (nginx-internal)
+  # external: Public internet access (traefik-external)
+  # internal: UCAR network/VPN only (traefik-internal)
 
 webapp:
   tls:
@@ -1158,7 +1158,7 @@ ingress:
   access: internal  # Change to 'internal' or 'external'
 ```
 
-The chart automatically uses `nginx-external` or `nginx-internal` based on this value.
+The chart automatically uses `traefik-external` or `traefik-internal` based on this value.
 """
     else:
         readme += """```yaml

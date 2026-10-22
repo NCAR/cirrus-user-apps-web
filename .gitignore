@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Created at runtime by the Flask app
+.flask_secret
+flask_session/
+cirrus-apps/static/runner_metrics.json
+cirrus-apps/static/cluster_status.json

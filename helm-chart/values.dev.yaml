@@ -9,7 +9,7 @@ webapp:
     fqdn: cirrus-dev.k8s.ucar.edu
     secretName: cirrus-dev-website-ssl
   container:
-    image: hub.k8s.ucar.edu/ncote/cirrus-user-web-dev:2026-09-30.20.58
+    image: hub.k8s.ucar.edu/ncote/cirrus-user-web-dev:2026-10-23.15.41
 mcp:
   enabled: true
   name: cirrus-dev-mcp

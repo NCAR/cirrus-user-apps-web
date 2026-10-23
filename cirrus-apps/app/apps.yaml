@@ -59,6 +59,11 @@
   screenshot: mesonet.png
   available: External
 
+- name: MusicBox
+  url: https://musicbox.acom.ucar.edu/
+  screenshot: musicbox.png
+  available: External
+
 - name: NEON Dashboard
   url: https://ncar-neon-viz.k8s.ucar.edu/neon_dashboard
   screenshot: neon-dashboard.png

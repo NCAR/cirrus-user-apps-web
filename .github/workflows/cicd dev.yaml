@@ -45,11 +45,11 @@ jobs:
             file: Dockerfile
       - name: Update Helm values.yaml
         run: |
-          sed -i "/cirrus-user-web/ c\    image: hub.k8s.ucar.edu/ncote/cirrus-user-web-dev:${{ steps.date.outputs.date }}" dev-helm-chart/values.yaml
+          sed -i "/cirrus-user-web/ c\    image: hub.k8s.ucar.edu/ncote/cirrus-user-web-dev:${{ steps.date.outputs.date }}" helm-chart/values.dev.yaml
       - name: Push changes to GitHub
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
-          git add dev-helm-chart/values.yaml
+          git add helm-chart/values.dev.yaml
           git commit -a -m "Update Helm chart via GH Actions"
           git push origin dev

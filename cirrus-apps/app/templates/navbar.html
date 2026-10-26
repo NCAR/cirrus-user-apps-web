@@ -50,13 +50,12 @@
                         <a class="nav-link" href="{{ url_for('services') }}">Services</a>
                     </li>
                     <li class="nav-item dropdown d-flex flex-wrap align-items-center">
-                        <a class="nav-link" href="#">Info</a>
                         <button id="info"
-                                class="btn dropdown-toggle px-3 px-md-0 mx-md-1"
+                                class="btn nav-link dropdown-toggle"
                                 type="button"
                                 data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                                aria-label="Expand/Collapse Info">
+                                aria-expanded="false">
+                            Info
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="info">
                             <li><a class="dropdown-item" href="{{ url_for('architecture') }}">Architecture</a></li>
@@ -67,13 +66,12 @@
                         </ul>
                     </li>
                     <li class="nav-item dropdown d-flex flex-wrap align-items-center">
-                        <a class="nav-link" href="#">Resources</a>
                         <button id="resources"
-                                class="btn dropdown-toggle px-3 px-md-0 mx-md-1"
+                                class="btn nav-link dropdown-toggle"
                                 type="button"
                                 data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                                aria-label="Expand/Collapse Resources">
+                                aria-expanded="false">
+                            Resources
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="resources">
                             <li><a class="dropdown-item" href="https://mlc1-argo.k8s.ucar.edu/" target="_blank">ML Argo CD</a></li>

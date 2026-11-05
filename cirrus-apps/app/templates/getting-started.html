@@ -10,7 +10,8 @@
             <div class="col-lg-10 mx-auto text-center">
                 <h1 class="page-title">Getting Started with CIRRUS</h1>
                 <p class="page-description">
-                    Deploy your research application on NCAR's cloud-native Kubernetes platform in four steps.
+                    Learn how CIRRUS works and how to get your workload running.<br>
+                    Our team can walk you through it, or you can go at your own pace.
                 </p>
             </div>
         </div>
@@ -18,23 +19,81 @@
 </div>
 
 <div class="container">
-    <div class="content-wrapper">
+    <div class="page-sections">
+        <!-- Introduction -->
+        <section class="page-section">
+            <h2 class="section-heading">How Does CIRRUS Work?</h2>
+            <p class="lead lead-callout">Like NCAR's HPC systems, CIRRUS is a cluster of servers.<br>
+            Instead of a batch scheduler running jobs that start and finish, it runs Kubernetes.<br>
+            Kubernetes keeps containers running at scale across all of those servers.</p>
+
+            <div class="concept-list">
+                <div class="concept-card">
+                    <h3>Containers package your code</h3>
+                    <p>Like a shipping container, a software container works the same way no matter what's inside or where it goes. A <em>Containerfile</em> (or Dockerfile) lists how to install and run your code, and that builds an <em>image</em> holding only your code and what it needs. The image runs the same on your laptop, a colleague's machine, or CIRRUS, and it can be stored in a <em>container registry</em>, an online library for images, so it's easy to share. You don't have to build everything yourself, either: many tools, such as databases, web servers, and JupyterHub, already publish ready-to-use images you can run as is or build on.</p>
+                </div>
+                <div class="concept-card">
+                    <h3>Kubernetes keeps containers running</h3>
+                    <p>On its own, a container runs on one machine, and if it stops, it stays down until someone notices. Kubernetes (Greek for helmsman) runs containers across a whole cluster of servers. You tell it what to run, how many copies, and what resources they need, and it keeps it that way. It restarts anything that fails, balances traffic between copies, and moves your workload off a server during maintenance without taking it offline.</p>
+                </div>
+                <div class="concept-card">
+                    <h3>Your deployment is defined in code</h3>
+                    <p>What Kubernetes should run is written in YAML, plain-text configuration files, often bundled together as a <em>Helm chart</em>. Those files live in a git repository alongside your code, so every change is tracked and your work is reproducible on any Kubernetes cluster.</p>
+                </div>
+                <div class="concept-card">
+                    <h3>Continuous delivery keeps it up to date</h3>
+                    <p><em>Continuous delivery</em> means changes are deployed automatically as soon as they land in git, instead of someone logging in to update things by hand. CIRRUS uses a continuous delivery tool called <em>Argo CD</em>. It watches your git repository and automatically syncs what is running on CIRRUS to match it, so updating your workload is just pushing a change to git. If something goes wrong, rolling back is as simple as reverting that change.</p>
+                </div>
+                <div class="concept-card">
+                    <h3>The CIRRUS team runs the platform</h3>
+                    <p>We maintain the servers and Kubernetes, and provide shared services like certificates, web addresses, storage, and monitoring. You focus on your code.</p>
+                </div>
+            </div>
+
+            <p class="mb-0">Want more detail? <a href="{{ url_for('architecture') }}">See how the pieces fit together on the Architecture page.</a></p>
+        </section>
+
+        <!-- Working with the team -->
+        <section class="page-section">
+            <h2 class="section-heading">Working With the CIRRUS Team</h2>
+            <p class="lead">You don't need to know containers or Kubernetes to get started. Most projects begin with a conversation.</p>
+
+            <div class="access-overview mt-4">
+                <div class="access-point">
+                    <p><strong>Reach out.</strong> Tell us what you want to run, whether it's an idea or code that's ready to go. We'll set up a meeting to talk through your project and the next steps.</p>
+                </div>
+                <div class="access-point">
+                    <p><strong>Get your space.</strong> We create a namespace for your project: your own area of the cluster for you and your team, a bit like an HPC allocation, with limits on the resources it can use.</p>
+                </div>
+                <div class="access-point">
+                    <p><strong>Package and deploy together.</strong> We help get your code into git, package it into a container, and write the Helm chart or manifests to deploy it. Then we connect your repository to Argo CD so updates roll out automatically.</p>
+                </div>
+                <div class="access-point">
+                    <p><strong>Learn at your own pace.</strong> Go as deep as you want over time. We can also help automate testing and builds as your project grows.</p>
+                </div>
+
+                <div class="service-actions">
+                    <a href="mailto:cirrus-admin@ucar.edu" class="btn btn-primary">Contact the CIRRUS Team</a>
+                    <a href="{{ JIRA_HELP_URL }}" target="_blank" class="btn btn-primary">Open a Jira Ticket</a>
+                </div>
+            </div>
+        </section>
 
         <!-- Deployment Steps -->
-        <section class="mb-5">
-            <h2 class="section-heading">Four Steps to Deploy Your Application</h2>
-            <p class="lead">CIRRUS uses a GitOps workflow where your application is defined as code in a Git repository.</p>
+        <section class="page-section">
+            <h2 class="section-heading">Deploying a Workload on CIRRUS</h2>
+            <p class="lead">Here's what it takes to go from code on your laptop to a workload, in this example a Python-based Flask web application, running on CIRRUS at its own URL.</p>
 
             <div class="deployment-step">
                 <div class="step-header">
                     <span class="step-number">1</span>
-                    <h3>Containerize Your Application</h3>
+                    <h3>Build a Container Image</h3>
                 </div>
                 <div class="step-content">
-                    <p>Package your application as an OCI container image. This makes it portable and ensures it runs consistently across environments. Any OCI-compliant image works. Docker is one way to build one, but tools like Podman or Buildah produce the same result.</p>
+                    <p>A Containerfile (or Dockerfile) lists how to install and run your code. Building it produces an image, which you push to any container registry CIRRUS can pull from, public or private, such as GitHub Container Registry, Docker Hub, Quay, or the <a href="{{ url_for('services') }}#svc-registry">CIRRUS container registry, Harbor</a>. If a ready-made image already does what you need, such as a database or web server, you can skip building and use it directly.</p>
 
                     <div class="code-example">
-                        <p><strong>Example Containerfile (Dockerfile) for a Python Flask app:</strong></p>
+                        <p><strong>Example Containerfile for a Python web app:</strong></p>
                         <pre><code>FROM python:3.11-slim
 
 WORKDIR /app
@@ -46,15 +105,15 @@ COPY . .
 
 CMD ["python", "app.py"]</code></pre>
                     </div>
-                    
-                    <p class="mt-3">Build and push your image to Harbor (CIRRUS container registry):</p>
+
+                    <p class="mt-3">Build the image and push it to a registry, for example Harbor:</p>
                     <pre><code>docker build -t hub.k8s.ucar.edu/your-project/your-app:v1.0 .
 docker push hub.k8s.ucar.edu/your-project/your-app:v1.0</code></pre>
-                    
-                    <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/03-deploying-applications/containerize/" 
-                       target="_blank" 
-                       class="btn btn-sm btn-outline-primary mt-3">
-                        <i class="fas fa-book"></i> Detailed Containerization Guide
+
+                    <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/03-deploying-applications/containerize/"
+                       target="_blank"
+                       class="btn btn-sm btn-primary mt-3">
+                        Containerization Guide
                     </a>
                 </div>
             </div>
@@ -62,29 +121,37 @@ docker push hub.k8s.ucar.edu/your-project/your-app:v1.0</code></pre>
             <div class="deployment-step">
                 <div class="step-header">
                     <span class="step-number">2</span>
-                    <h3>Create a Helm Chart</h3>
+                    <h3>Describe How It Runs</h3>
                 </div>
                 <div class="step-content">
-                    <p>Define your application's Kubernetes resources using Helm, a package manager for Kubernetes. Helm charts describe what your app needs: containers, storage, networking, scaling rules, etc.</p>
-                    
-                    <p><strong>Basic Helm chart structure:</strong></p>
-                    <pre><code>my-app/
-├── Chart.yaml          # Chart metadata
-├── values.yaml         # Configuration values
-└── templates/
-    ├── deployment.yaml # Your application pods
-    ├── service.yaml    # Network access
-    └── ingress.yaml    # External URL (optional)</code></pre>
-                    
-                    <p class="mt-3">CIRRUS provides example templates to get you started:</p>
-                    <ul>
-                        <li><a href="https://github.com/NCAR/cirrus-examples" target="_blank">CIRRUS Examples Repository</a></li>
-                    </ul>
-                    
-                    <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/03-deploying-applications/helm/" 
-                       target="_blank" 
-                       class="btn btn-sm btn-outline-primary mt-3">
-                        <i class="fas fa-book"></i> Helm Chart Documentation
+                    <p>Next, tell Kubernetes how to run that image: how many copies, how much CPU and memory, which port it listens on, and the URL it should be reachable at. This is written in YAML, either as plain manifests or as a Helm chart. Most CIRRUS applications use a Helm chart, where the settings you change most often live in a single <code>values.yaml</code> file.</p>
+
+                    <div class="code-example">
+                        <p><strong>Example <code>values.yaml</code>:</strong></p>
+                        <pre><code>replicaCount: 2                  # run two copies, with traffic balanced between them
+
+webapp:
+  name: your-app
+  tls:
+    fqdn: your-app.k8s.ucar.edu    # the URL; DNS and the certificate are set up for you
+  container:
+    image: hub.k8s.ucar.edu/your-project/your-app:v1.0
+    port: 5000
+    memory: "1G"
+    cpu: "1"
+
+ingress:
+  className: traefik-external     # traefik-internal keeps it on the UCAR network only</code></pre>
+                    </div>
+
+                    <p class="mt-3"><strong>Never put passwords or other sensitive information in <code>values.yaml</code>.</strong> For those values, use the CIRRUS secrets manager, <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/07-secret-manager/openbao/" target="_blank">OpenBao</a>.</p>
+
+                    <p>You don't have to start from scratch. The <a href="https://github.com/NCAR/cirrus-examples" target="_blank">CIRRUS examples repository</a> has charts for common application types.</p>
+
+                    <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/03-deploying-applications/"
+                       target="_blank"
+                       class="btn btn-sm btn-primary mt-3">
+                        Helm Chart Guide
                     </a>
                 </div>
             </div>
@@ -92,148 +159,112 @@ docker push hub.k8s.ucar.edu/your-project/your-app:v1.0</code></pre>
             <div class="deployment-step">
                 <div class="step-header">
                     <span class="step-number">3</span>
-                    <h3>Push to Git Repository</h3>
+                    <h3>Put It in Git</h3>
                 </div>
                 <div class="step-content">
-                    <p>Store your Helm chart in a Git repository (GitHub recommended). CIRRUS uses GitOps principles where your Git repository is the source of truth.</p>
-                    
-                    <p><strong>Repository structure:</strong></p>
+                    <p>Your code, Containerfile, and Helm chart all live together in one git repository. That repository becomes the single source of truth for what runs on CIRRUS.</p>
+
                     <pre><code>your-repo/
-├── src/                # Your application code
-├── Dockerfile          # Container definition
-├── helm/               # Helm chart
+├── src/                # your application code
+├── Containerfile       # how the image is built
+├── helm/               # how it runs on CIRRUS
 │   ├── Chart.yaml
 │   ├── values.yaml
 │   └── templates/
 └── .github/
-    └── workflows/      # CI/CD (optional)</code></pre>
-                    
-                    <div class="alert alert-info mt-3">
-                        <strong><i class="fas fa-info-circle"></i> New:</strong> CIRRUS now provides organizational GitHub runners for the NCAR GitHub organization. You can use these for CI/CD without providing a Personal Access Token.
-                    </div>
-                    
-                    <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/05-github-actions/scale-sets/" 
-                       target="_blank" 
-                       class="btn btn-sm btn-outline-primary mt-3">
-                        <i class="fas fa-book"></i> GitHub Actions Integration
-                    </a>
+    └── workflows/      # automated builds (optional)</code></pre>
                 </div>
             </div>
 
             <div class="deployment-step">
                 <div class="step-header">
                     <span class="step-number">4</span>
-                    <h3>Request Application Onboarding</h3>
+                    <h3>Connect It to CIRRUS</h3>
                 </div>
                 <div class="step-content">
-                    <p>Submit a request to the CIRRUS team with your application details. We'll review your Helm chart and deploy it to the platform.</p>
-                    
-                    <p><strong>Information to include in your request:</strong></p>
-                    <ul>
-                        <li><strong>Git Repository URL:</strong> Link to your repository with Helm chart</li>
-                        <li><strong>GitHub Branch:</strong> Branch to deploy from (e.g., main, production)</li>
-                        <li><strong>Helm Chart Folder:</strong> Path to Helm chart directory in your repo</li>
-                        <li><strong>Application URL:</strong> Desired external URL (e.g., myapp.k8s.ucar.edu)</li>
-                    </ul>
-                    
-                    <p class="mt-3">The CIRRUS team will:</p>
-                    <ol>
-                        <li>Review your Helm chart for best practices and security</li>
-                        <li>Set up Argo CD to automatically sync your app from Git</li>
-                        <li>Configure monitoring, logging, and alerting</li>
-                        <li>Provide your application URL and access information</li>
-                    </ol>
-                    
-                    <div class="alert alert-info mt-4">
-                        <h6 class="alert-heading"><i class="fas fa-info-circle"></i> Submit your request:</h6>
-                        <div class="row mt-3">
-                            <div class="col-md-6">
-                                <p class="mb-2"><strong>Webform to create Jira ticket</strong></p>
-                                <p class="small text-muted mb-3">Link to open request app web form</p>
-                                <a href="{{ url_for('request_app') }}" 
-                                   target="_blank" 
-                                   class="btn btn-outline-primary">
-                                    <i class="fas fa-external-link-alt"></i> Open Request App Web Form
-                                </a>
-                                <hr>
-                                <p class="mb-2"><strong>Create ticket in Jira</strong></p>
-                                <p class="small text-muted mb-3">Link to open CIRRUS Jira ticket creation</p>
-                                <a href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10903&customfield_10281=CCPP-108" 
-                                   target="_blank" 
-                                   class="btn btn-outline-primary">
-                                    <i class="fas fa-external-link-alt"></i> Open Jira
-                                </a>
-                            </div>
-                        </div>
+                    <p>This is the one step that goes through the CIRRUS team, and it only happens once. Send us your repository URL, the branch to deploy from, and the path to your Helm chart. We connect the repository to Argo CD, and Argo CD deploys your application to your CIRRUS namespace and it's live.</p>
+
+                    <div class="service-actions">
+                        <a href="{{ url_for('request_app') }}" class="btn btn-primary">Add Your Workload</a>
+                        <a href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10903&customfield_10281=CCPP-108"
+                           target="_blank"
+                           class="btn btn-primary">Open a Jira Ticket</a>
                     </div>
+                </div>
+            </div>
+
+            <div class="deployment-step">
+                <div class="step-header">
+                    <span class="step-number">5</span>
+                    <h3>Ship Updates Through Git</h3>
+                </div>
+                <div class="step-content">
+                    <p>From here on, updating your application never involves logging in to a server. Build and push a new image, change the image tag in <code>values.yaml</code>, and push that change to git. Argo CD sees it and rolls out the new version. If something goes wrong, revert the commit and the previous version comes back.</p>
+
+                    <p>You can automate the whole loop with GitHub Actions so that every push builds a new image and updates the chart for you. CIRRUS provides GitHub Actions runners for the NCAR GitHub organization, with more resources than GitHub's free runners and GPU access when you need it.</p>
+
+                    <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/05-github-actions/scale-sets/"
+                       target="_blank"
+                       class="btn btn-sm btn-primary mt-3">
+                        GitHub Actions on CIRRUS
+                    </a>
                 </div>
             </div>
         </section>
 
-        <hr class="my-5">
-
         <!-- Access -->
-        <section class="mb-5">
-            <h2 class="section-heading">Access</h2>
-            
+        <section class="page-section">
+            <h2 class="section-heading">Accessing the Platform</h2>
+            <p class="lead">You don't need cluster access to run on CIRRUS. Access is for seeing what's happening and doing things yourself.</p>
+
             <div class="access-overview mt-4">
                 <div class="access-point">
-                    <i class="fas fa-rocket"></i>
-                    <p><strong>Deploying needs no access at all.</strong> Argo CD deploys your workload straight from Git. A CIRRUS admin adds your repository once, and from then on every change you push is synced to the cluster automatically.</p>
+                    <p><strong>What you can access.</strong> Watch your workload in the Argo CD UI, read its logs through Argo CD or <code>kubectl</code>, store images in Harbor, view metrics and logs in Grafana, or manage secrets in OpenBao. Each one is optional and independent, so request only what you need.</p>
                 </div>
                 <div class="access-point">
-                    <i class="fas fa-eye"></i>
-                    <p><strong>Access is for looking under the hood, not for running.</strong> Request it only when you want to do something yourself: watch your app in the Argo CD UI, read its logs through Argo CD or <code>kubectl</code>, push images to Harbor, view metrics in Grafana, or inject secrets with OpenBao. Each one is optional and independent.</p>
-                </div>
-                <div class="access-point">
-                    <i class="fas fa-id-badge"></i>
-                    <p><strong>When you do want it, it is simple.</strong> You sign in with your existing UCAR SSO credentials through Entra ID. Kubernetes and Argo CD access is scoped to just where your resources live, ands is set up through a quick Jira ticket.</p>
+                    <p><strong>How to get it.</strong> You sign in with your existing UCAR SSO credentials. Kubernetes and Argo CD access is scoped to your namespace, and is set up through a quick Jira ticket.</p>
                 </div>
 
                 <div class="service-actions">
-                    <a href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10903&summary=Access%20Request:" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-ticket-alt"></i> Request Access via Jira</a>
-                    <a href="mailto:cirrus-admin@ucar.edu" class="btn btn-sm btn-outline-primary"><i class="fas fa-envelope"></i> Email the CIRRUS Team</a>
+                    <a href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10903&summary=Access%20Request:" target="_blank" class="btn btn-sm btn-primary">Request Access via Jira</a>
+                    <a href="mailto:cirrus-admin@ucar.edu" class="btn btn-sm btn-primary">Email the CIRRUS Team</a>
                 </div>
                 <p class="small text-muted mt-3 mb-0">Each service on the <a href="{{ url_for('services') }}">Services</a> page has its own note on exactly what access it offers and how to request it.</p>
             </div>
         </section>
 
         <!-- Next Steps -->
-        <section class="mb-5">
+        <section class="page-section">
             <h2 class="section-heading">Additional Resources</h2>
             <div class="row g-4 mt-3">
                 <div class="col-md-4">
                     <div class="resource-card">
-                        <h5><i class="fas fa-book-open"></i> Full Documentation</h5>
+                        <h5>Full Documentation</h5>
                         <p>Comprehensive guides on deploying applications, managing secrets, and using platform services.</p>
-                        <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/" 
-                           target="_blank" 
-                           class="btn btn-sm btn-outline-primary">
+                        <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/"
+                           target="_blank"
+                           class="btn btn-sm btn-primary">
                             View Docs
                         </a>
                     </div>
                 </div>
-                
+
                 <div class="col-md-4">
                     <div class="resource-card">
-                        <h5><i class="fas fa-code"></i> Example Applications</h5>
-                        <p>Ready-to-use Helm chart templates for common application patterns.</p>
-                        <a href="https://github.com/NCAR/cirrus-examples" 
-                           target="_blank" 
-                           class="btn btn-sm btn-outline-primary">
-                            View Examples
+                        <h5>Applications on CIRRUS</h5>
+                        <p>See real research applications running on the platform today.</p>
+                        <a href="{{ url_for('apps') }}" class="btn btn-sm btn-primary">
+                            View Applications
                         </a>
                     </div>
                 </div>
-                
+
                 <div class="col-md-4">
                     <div class="resource-card">
-                        <h5><i class="fas fa-question-circle"></i> Get Help</h5>
-                        <p>Have questions? The CIRRUS team is here to help with deployment and troubleshooting.</p>
-                        <a href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10903&summary=User%20Request:" 
-                           target="_blank" 
-                           class="btn btn-sm btn-outline-primary">
-                            Contact Us
+                        <h5>Platform Services</h5>
+                        <p>Shared tools like JupyterHub, Harbor, Grafana, and OpenBao, and how to access each one.</p>
+                        <a href="{{ url_for('services') }}" class="btn btn-sm btn-primary">
+                            View Services
                         </a>
                     </div>
                 </div>

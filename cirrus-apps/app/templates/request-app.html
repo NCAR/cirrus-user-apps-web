@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
-{% block title %}Request Application - CIRRUS{% endblock %}
-{% block og_title %}Request Application - NSF NCAR CIRRUS{% endblock %}
+{% block title %}Add Workload - CIRRUS{% endblock %}
+{% block og_title %}Add Workload - NSF NCAR CIRRUS{% endblock %}
 
 {% block content %}
 <div class="container my-5">
@@ -9,8 +9,8 @@
         <div class="col-lg-8">
             <div class="card shadow-sm">
                 <div class="card-body p-5">
-                    <h1 class="card-title mb-2">Add Application to CIRRUS</h1>
-                    <p class="text-muted mb-4">Request to deploy a new application on the CIRRUS platform</p>
+                    <h1 class="card-title mb-2">Add Workload to CIRRUS</h1>
+                    <p class="text-muted mb-4">Request to deploy a new workload on the CIRRUS platform</p>
                     
                     {% with messages = get_flashed_messages(with_categories=true) %}
                         {% if messages %}
@@ -127,7 +127,7 @@
                     
                     <div class="alert alert-info mb-0">
                         <h6 class="alert-heading"><i class="fas fa-info-circle me-2"></i>What happens next?</h6>
-                        <p class="mb-0">Your request will be created as a Jira ticket and assigned to the CIRRUS team. We'll review your application and reach out if we need any additional information.</p>
+                        <p class="mb-0">Your request will be created as a Jira ticket and assigned to the CIRRUS team. We'll review your request and reach out if we need any additional information.</p>
                     </div>
                 </div>
             </div>

@@ -47,6 +47,9 @@
                         <a class="nav-link" href="{{ url_for('apps') }}">Applications</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('architecture') }}">Architecture</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('services') }}">Services</a>
                     </li>
                     <li class="nav-item dropdown d-flex flex-wrap align-items-center">
@@ -58,7 +61,6 @@
                             Info
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="info">
-                            <li><a class="dropdown-item" href="{{ url_for('architecture') }}">Architecture</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('sla') }}">SLA</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('status') }}">Status</a></li>
                             <li><hr class="dropdown-divider"></li>
@@ -82,14 +84,12 @@
                             <li><a class="dropdown-item" href="https://hub.k8s.ucar.edu/" target="_blank">Harbor Registry</a></li>
                             <li><a class="dropdown-item" href="https://grafana.k8s.ucar.edu/" target="_blank">Grafana</a></li>
                             <li><a class="dropdown-item" href="https://bao.k8s.ucar.edu/ui/vault/auth?with=oidc" target="_blank">OpenBao</a></li>
+                            <li><a class="dropdown-item" href="https://cs3.k8s.ucar.edu/" target="_blank">S3 Key Management</a></li>
+                            <li><a class="dropdown-item" href="https://llm.k8s.ucar.edu/" target="_blank">Open WebUI (LLM)</a></li>
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link"
-                           href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10905"
-                           target="_blank">
-                            Report Issue
-                        </a>
+                        <a class="nav-link" href="{{ JIRA_HELP_URL }}" target="_blank">Help</a>
                     </li>
                 </ul>
             </div>

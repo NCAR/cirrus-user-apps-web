@@ -22,7 +22,7 @@
     gtag('js', new Date());
     gtag('config', 'G-FFX1XL3CYV');
     </script>
-    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
     <script src="https://jira.ucar.edu/plugins/servlet/issueCollectorBootstrap.js?collectorId=193544aa&locale=en"></script>
     <script type="text/javascript">
         window.ATL_JQ_PAGE_PROPS = {
@@ -67,8 +67,8 @@
                                     <li class="nav-item"><a class="nav-link" href="{{ url_for('home') }}">Home</a></li>
                                     <li class="nav-item"><a class="nav-link" href="{{ url_for('getting_started') }}">Getting Started</a></li>
                                     <li class="nav-item"><a class="nav-link" href="{{ url_for('apps') }}">Applications</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="{{ url_for('services') }}">Services</a></li>
                                     <li class="nav-item"><a class="nav-link" href="{{ url_for('architecture') }}">Architecture</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="{{ url_for('services') }}">Services</a></li>
                                     <li class="nav-item"><a class="nav-link" href="{{ url_for('sla') }}">SLA</a></li>
                                     <li class="nav-item"><a class="nav-link" href="{{ url_for('status') }}">Status</a></li>
                                     <li class="nav-item"><a class="nav-link" href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/01-intro/" target="_blank">Documentation</a></li>
@@ -101,7 +101,9 @@
                                     <li class="nav-item"><a class="nav-link" href="https://hub.k8s.ucar.edu/" target="_blank">Harbor Registry</a></li>
                                     <li class="nav-item"><a class="nav-link" href="https://grafana.k8s.ucar.edu/" target="_blank">Grafana</a></li>
                                     <li class="nav-item"><a class="nav-link" href="https://bao.k8s.ucar.edu/ui/vault/auth?with=oidc" target="_blank">OpenBao</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10905" target="_blank">Report Issue</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="https://cs3.k8s.ucar.edu/" target="_blank">S3 Key Management</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="https://llm.k8s.ucar.edu/" target="_blank">Open WebUI (LLM)</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="{{ JIRA_HELP_URL }}" target="_blank">Help</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -147,7 +149,7 @@
                             <div id="ucarCollapseMenu" class="collapse d-md-block" aria-labelledby="ucarHeader">
                                 <ul class="nav flex-column">
                                     <li class="nav-item"><a class="nav-link" href="https://www.ucar.edu" target="_blank">UCAR Homepage</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="https://www.ucar.edu/who-we-are/governance/member-institutions" target="_blank">Member Institutions</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="https://www.ucar.edu/who-we-are/membership" target="_blank">Member Institutions</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -214,7 +216,6 @@
         </div>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     {% block extra_scripts %}{% endblock %}
 </body>

@@ -10,8 +10,7 @@
             <div class="col-lg-10 mx-auto text-center">
                 <h1 class="page-title">CIRRUS User Applications</h1>
                 <p class="page-description">
-                    Explore the diverse set of scientific applications and services deployed on the CIRRUS platform, 
-                    supporting Earth system science research and data analysis.
+                    Real research workloads running on CIRRUS today.
                 </p>
             </div>
         </div>
@@ -62,7 +61,7 @@
                         <a href="{{ app.url }}" 
                            target="_blank" 
                            rel="noopener noreferrer"
-                           class="btn btn-sm btn-outline-primary">
+                           class="btn btn-sm btn-primary">
                             Visit <i class="fas fa-arrow-right ms-1"></i>
                         </a>
                     </div>
@@ -76,17 +75,13 @@
 <section class="help-section py-5 bg-light">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 mx-auto text-center">
+            <div class="col-lg-10 mx-auto text-center">
                 <h2 class="mb-4">Need Help?</h2>
                 <p class="mb-4">
                     If you're experiencing issues with any application or need assistance deploying your own, 
                     our team is here to help.
                 </p>
-                <a href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10905" 
-                   target="_blank"
-                   class="btn btn-primary">
-                    <i class="fas fa-ticket-alt me-2"></i>Report an Issue
-                </a>
+                <a href="{{ JIRA_HELP_URL }}" target="_blank" class="btn btn-primary">Request Help</a>
             </div>
         </div>
     </div>

@@ -38,3 +38,5 @@ spec:
           value: {{ .Values.env.CLUSTER_STATUS_DISPLAY_CLUSTERS | quote }}
         - name: CLUSTER_STATUS_MAX_AGE_SECONDS
           value: {{ .Values.env.CLUSTER_STATUS_MAX_AGE_SECONDS | quote }}
+        - name: CIRRUS_MCP_PATH
+          value: {{ if .Values.mcp.enabled }}{{ .Values.mcp.path | quote }}{{ else }}""{{ end }}

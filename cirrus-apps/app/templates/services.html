@@ -77,7 +77,7 @@
                                 <img src="{{ url_for('static', filename='logos/argo.png') }}" alt="Argo CD">
                                 <div>
                                     <h3>Argo CD</h3>
-                                    <span class="badge service-badge-core">Used by every workload</span>
+                                    <span class="badge service-badge-core">Recommended</span>
                                 </div>
                             </div>
                             <p>Argo CD is the GitOps engine at the heart of CIRRUS. It continuously watches your git repository and keeps what is running on the cluster in sync with the Helm chart you have committed. There is no deploy button and no kubectl access required: pushing to git is how you deploy.</p>
@@ -90,6 +90,7 @@
                                 <li><strong>Chart path</strong>: the folder containing your Helm chart</li>
                             </ul>
                             <p>From then on, any change merged to that branch is automatically synced to the cluster. You can log in to the Argo CD UI to watch syncs, view application health, and inspect the live state of your resources.</p>
+                            <p>Argo CD is the recommended way to deploy, but not the only one. With <a href="#svc-k8sapi">Kubernetes API access</a>, you can also deploy yourself with <code>helm install</code> or <code>kubectl apply</code>. Most people start with Argo CD and pick that up later, once they're comfortable using <code>kubectl</code> to look around a workload that's already running.</p>
 
                             <div class="service-access">
                                 <h4>Access</h4>
@@ -224,11 +225,12 @@ spec:
                                     <span class="badge service-badge-addon">Optional add-on</span>
                                 </div>
                             </div>
-                            <p>Most workloads never need the Kubernetes API: Argo CD deploys from git, and your Helm chart is all the platform needs. API access is for when you want to work with the cluster yourself, such as running <code>kubectl</code> to watch pods and read logs, or creating Fission functions and MPIJobs from the command line. You sign in as yourself with your UCAR SSO credentials, and <a href="https://projectcapsule.dev/" target="_blank">Capsule</a>, a Kubernetes multi-tenancy operator, limits what you can see and do to your own namespaces.</p>
+                            <p>Most workloads never need the Kubernetes API: Argo CD deploys from git, and your Helm chart is all the platform needs. API access is for when you want to work with the cluster yourself, such as running <code>kubectl</code> to watch pods and read logs, deploying with <code>helm install</code> or <code>kubectl apply</code> instead of Argo CD, or creating Fission functions and MPIJobs from the command line. You sign in as yourself with your UCAR SSO credentials, and <a href="https://projectcapsule.dev/" target="_blank">Capsule</a>, a Kubernetes multi-tenancy operator, limits what you can see and do to your own namespaces.</p>
+                            <p>Changes made by hand aren't tracked in git, and Argo CD overwrites any edits to resources it manages on its next sync.</p>
 
                             <div class="service-access">
                                 <h4>Access</h4>
-                                <p>Kubernetes API access has to be requested before anything below will work. <a href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10903" target="_blank">Open a Jira ticket</a> and include the namespaces you work in. The CIRRUS team grants your account access to the sign-in and creates a Capsule tenant scoped to those namespaces. We'll let you know on the ticket when it's ready, and you can set up your tools in the meantime.</p>
+                                <p>Kubernetes API access has to be requested before anything below will work. <a href="{{ JIRA_ACCESS_URL }}" target="_blank">Open a Jira ticket</a> and include the namespaces you work in. The CIRRUS team grants your account access to the sign-in and creates a Capsule tenant scoped to those namespaces. We'll let you know on the ticket when it's ready, and you can set up your tools in the meantime.</p>
                             </div>
 
                             <h4>How it works</h4>
@@ -260,7 +262,7 @@ kubectl get pods -n your-namespace</code></pre>
                             <div class="service-actions">
                                 <a href="https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/guides/10-kubectl/kubectl/" target="_blank" class="btn btn-sm btn-primary">kubectl Setup Docs</a>
                                 <a href="https://projectcapsule.dev/" target="_blank" class="btn btn-sm btn-primary">Capsule Docs</a>
-                                <a href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10903" target="_blank" class="btn btn-sm btn-primary">Request Access via Jira</a>
+                                <a href="{{ JIRA_ACCESS_URL }}" target="_blank" class="btn btn-sm btn-primary">Request Access via Jira</a>
                             </div>
                         </div>
 

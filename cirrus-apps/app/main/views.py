@@ -8,6 +8,7 @@ import os
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
+from urllib.parse import urljoin
 
 @app.route('/')
 def home():
@@ -126,7 +127,14 @@ def sla():
                 
                 for element in article.find_all('aside'):
                     element.decompose()
-                
+
+                # The docs use links relative to the readthedocs page, which
+                # would 404 once served from this site; make them absolute.
+                for tag, attr in (('a', 'href'), ('img', 'src')):
+                    for element in article.find_all(tag, **{attr: True}):
+                        if not element[attr].startswith(('#', 'mailto:')):
+                            element[attr] = urljoin(response.url, element[attr])
+
                 # Get the content
                 content_html = str(article)
                 print(f"Content extracted, length: {len(content_html)}")
@@ -143,6 +151,16 @@ def sla():
         content_html = None
     
     return render_template('sla.html', content_html=content_html)
+
+@app.route('/llms.txt')
+def llms_txt():
+    # CIRRUS_MCP_PATH is set by the Helm chart only when the MCP server is enabled.
+    mcp_path = os.environ.get('CIRRUS_MCP_PATH', '')
+    # TLS ends at Traefik and the app has no ProxyFix, so url_root would say http.
+    base = f'https://{request.host}/'
+    body = render_template('llms.txt', base=base,
+                           mcp_url=urljoin(base, mcp_path) if mcp_path else None)
+    return body, 200, {'Content-Type': 'text/plain; charset=utf-8'}
 
 @app.route('/templates/navbar.html')
 def navbar():

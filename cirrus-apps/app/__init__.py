@@ -23,13 +23,16 @@ app.config['SESSION_TYPE'] = 'filesystem'
 
 Session(app)
 
-# Jira "new issue" form for help requests, filed under the User Requests epic
-# (CCPP-108). Works whether or not the visitor is signed in to Jira; Jira asks
-# for login first, then opens the pre-filled form.
-app.jinja_env.globals["JIRA_HELP_URL"] = (
+# Jira "new issue" forms, all filed under the User Requests epic (CCPP-108)
+# and differing only in the pre-filled summary prefix. Works whether or not the
+# visitor is signed in to Jira; Jira asks for login first, then opens the form.
+_JIRA_NEW_ISSUE = (
     "https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa"
-    "?pid=18470&issuetype=10903&customfield_10281=CCPP-108&summary=User%20Request:"
+    "?pid=18470&issuetype=10903&customfield_10281=CCPP-108&summary="
 )
+app.jinja_env.globals["JIRA_HELP_URL"] = _JIRA_NEW_ISSUE + "User%20Request:"
+app.jinja_env.globals["JIRA_ACCESS_URL"] = _JIRA_NEW_ISSUE + "Access%20Request:"
+app.jinja_env.globals["JIRA_WORKLOAD_URL"] = _JIRA_NEW_ISSUE + "Add%20Workload:"
 
 from app.main import views
 from app.jira import views

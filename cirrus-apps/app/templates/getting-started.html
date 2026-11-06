@@ -186,7 +186,7 @@ ingress:
 
                     <div class="service-actions">
                         <a href="{{ url_for('request_app') }}" class="btn btn-primary">Add Your Workload</a>
-                        <a href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10903&customfield_10281=CCPP-108"
+                        <a href="{{ JIRA_WORKLOAD_URL }}"
                            target="_blank"
                            class="btn btn-primary">Open a Jira Ticket</a>
                     </div>
@@ -226,7 +226,7 @@ ingress:
                 </div>
 
                 <div class="service-actions">
-                    <a href="https://jira.ucar.edu/secure/CreateIssueDetails!init.jspa?pid=18470&issuetype=10903&summary=Access%20Request:" target="_blank" class="btn btn-sm btn-primary">Request Access via Jira</a>
+                    <a href="{{ JIRA_ACCESS_URL }}" target="_blank" class="btn btn-sm btn-primary">Request Access via Jira</a>
                     <a href="mailto:cirrus-admin@ucar.edu" class="btn btn-sm btn-primary">Email the CIRRUS Team</a>
                 </div>
                 <p class="small text-muted mt-3 mb-0">Each service on the <a href="{{ url_for('services') }}">Services</a> page has its own note on exactly what access it offers and how to request it.</p>

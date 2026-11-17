@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
-{% block title %}Getting Started | NSF NCAR CIRRUS{% endblock %}
-{% block og_title %}Getting Started | NSF NCAR CIRRUS{% endblock %}
+{% block title %}Architecture | NSF NCAR CIRRUS{% endblock %}
+{% block og_title %}Architecture | NSF NCAR CIRRUS{% endblock %}
 
 {% block content %}
 <div class="page-header">
@@ -10,7 +10,8 @@
             <div class="col-lg-10 mx-auto text-center">
                 <h1 class="page-title">CIRRUS Architecture</h1>
                 <p class="page-description">
-                    A look at the different components used to build CIRRUS and how they can be used to grow the reach of your science.
+                    CIRRUS is two Kubernetes clusters, one at the NCAR Mesa Lab and one at the
+                    NCAR-Wyoming Supercomputing Center (NWSC), run by the CIRRUS team.
                 </p>
             </div>
         </div>
@@ -18,128 +19,187 @@
 </div>
 
 <div class="container">
-    <div class="content-wrapper">
-        <section class="mb-5 architecture">
-            <h2 class="section-heading">Basic CIRRUS Architecture</h2>
-            <img src="{{ url_for('static', filename='images/CIRRUS-basic-arch.png') }}" 
-                                 alt="CIRRUS Basic Architecture"
-                                 class="">
+    <div class="page-sections">
+        <!-- Introduction -->
+        <section class="page-section">
+            <h2 class="section-heading">What Is CIRRUS?</h2>
+            <p class="lead lead-callout">The cloud is just servers someone runs for you, with specialized software on top.<br>
+            CIRRUS is a cluster of servers the CIRRUS team manages.<br>
+            It uses Kubernetes and additional software to deliver workloads customized to your research.</p>
+
+            <p>CIRRUS is built around <em>Cloud Native</em> principles: workloads are packaged in containers, described in code, and deployed from git. That means anything built to run on CIRRUS can also run on any other Kubernetes cluster, whether on-premises, at another institution, or in a public cloud like AWS, Google Cloud, or Azure. Your work is portable and reproducible, not locked into one environment.</p>
+
+            <h3 class="h5 mt-4">How CIRRUS relates to HPC</h3>
+            <p>CIRRUS is not a replacement for NCAR's HPC systems, it is a complement to them. HPC clusters and their batch schedulers are built for large, finite compute jobs such as model runs and simulations that start, run, and finish. CIRRUS is built for long-running, always-on workloads such as websites, dashboards, APIs, and interactive services that need to stay available around the clock.</p>
+            <p class="mb-0">Many research groups use both. You might run a simulation on HPC and then use CIRRUS to host a dashboard or API that serves the results to collaborators or the public. Because CIRRUS can mount NCAR storage, the work you do on HPC and the workloads you run on CIRRUS can share the same datasets.</p>
         </section>
 
-        <section>
-            <div class="content-panel">
-                <h2 class="section-heading">Understanding the CIRRUS Platform</h2>
-                <p class="lead">CIRRUS is a cloud-native Kubernetes platform. This means workloads designed to run on CIRRUS can run on any Kubernetes cluster, whether on-premises, in the cloud (AWS, GCP, Azure), or on other infrastructure. The platform uses industry-standard tools and practices, ensuring your work is portable and not locked into a specific environment.</p>
-                <hr style="color: #fff">
-                <h2 class="section-heading">How CIRRUS Relates to HPC</h2>
-                <p>CIRRUS is not a replacement for NCAR's HPC systems, it is a complement to them. HPC clusters and their batch schedulers are built for large, finite compute jobs such as model runs and simulations that start, run, and finish. CIRRUS is built for long-running, always-on workloads such as websites, dashboards, APIs, and interactive services that need to stay available around the clock.</p>
+        <!-- Containers -->
+        <section class="page-section">
+            <h2 class="section-heading">Containers</h2>
+            <p class="lead">Everything on CIRRUS runs in a container, a standard package holding only your code and what it needs to run.</p>
 
-                <p>Many research groups use both. You might run a simulation on HPC and then use CIRRUS to host a dashboard or API that serves the results to collaborators or the public. Because CIRRUS can mount NCAR storage and data, the work you do on HPC and the workloads you run on CIRRUS can share the same underlying datasets.</p>
+            <details class="section-details">
+                <summary><span class="when-closed">Show details</span><span class="when-open">Hide details</span><i class="fas fa-chevron-down ms-2"></i></summary>
+
+
+            <div class="concept-list">
+                <div class="concept-card">
+                    <h3>A standard way to ship software</h3>
+                    <p>The name comes from shipping. A shipping container has a standard size, shape, and set of connections, so it is handled the same way whether it holds pens or Porsches. Software containers work on the same principle: every container is started, stopped, and connected the same way, no matter what is inside. Because a container brings its own dependencies, updates to the server underneath don't conflict with your code, and it runs the same on your laptop, a colleague's machine, CIRRUS, or a public cloud.</p>
+                </div>
+                <div class="concept-card">
+                    <h3>Containerfiles and images</h3>
+                    <p>A <em>Containerfile</em> (also called a Dockerfile) is a short text file with instructions for installing and running your code, usually starting from a base image such as a specific version of Python. Building it produces an <em>image</em>, a fixed snapshot of your code and its requirements. Images are versioned with <em>tags</em>, like <code>v1.0</code>, so you always know exactly which version is running. Because the Containerfile records how the image was built, anyone can rebuild it the same way.</p>
+                </div>
+                <div class="concept-card">
+                    <h3>Container registries</h3>
+                    <p>Images can be stored in a <em>container registry</em>, an online library for images that makes them easy to share. CIRRUS can run images from any registry it can reach, public or private, including GitHub Container Registry, Docker Hub, and Quay. CIRRUS also runs its own registry, <a href="{{ url_for('services') }}#svc-registry">Harbor</a>, at <code>hub.k8s.ucar.edu</code>, which stores private and public images for your projects and caches images pulled from public registries.</p>
+                </div>
+                <div class="concept-card">
+                    <h3>Start from existing images</h3>
+                    <p>You don't have to build everything yourself. Many tools, such as databases, web servers, and JupyterHub, publish ready-to-use images you can run as is or use as a base for your own.</p>
+                </div>
             </div>
+            </details>
         </section>
-        
-            <div class="deployment-step">
-                <div class="step-header">
-                    <h3>What is a Container?</h3>
+
+        <!-- Kubernetes -->
+        <section class="page-section">
+            <h2 class="section-heading">Kubernetes</h2>
+            <p class="lead">A container on its own runs on one machine, and if it stops, it stays down until someone notices. Kubernetes runs containers across a whole cluster of servers and keeps them running.</p>
+
+            <details class="section-details">
+                <summary><span class="when-closed">Show details</span><span class="when-open">Hide details</span><i class="fas fa-chevron-down ms-2"></i></summary>
+
+
+            <div class="concept-list">
+                <div class="concept-card">
+                    <h3>Container orchestration</h3>
+                    <p>Kubernetes (Greek for helmsman or pilot) is a container orchestration platform, originally developed at Google and donated to the Cloud Native Computing Foundation in 2015. It decides which server each container runs on, restarts containers that fail, and balances traffic between copies. You describe what you want running, and Kubernetes continuously works to keep the cluster matching that description.</p>
                 </div>
-                <div class="step-content">
-                    <p>A container is a way to package your application with all the dependencies it needs to run, without including anything extra. It provides only what you need and makes reproducibility easy. Your application runs the same way everywhere, whether on your laptop, a colleague's machine, or in production.</p>
+                <div class="concept-card">
+                    <h3>Built to stay up</h3>
+                    <p>Because your workload can run as multiple copies on different servers, a single server failing doesn't take it offline. Kubernetes moves traffic away from the failed server and starts replacement copies elsewhere. The same mechanism lets the CIRRUS team take servers offline for maintenance and upgrades without interrupting your workload, and lets you roll out a new version gradually instead of all at once.</p>
+                </div>
+                <div class="concept-card">
+                    <h3>Defined in YAML and Helm charts</h3>
+                    <p>What Kubernetes should run is written in YAML, a plain-text format for configuration files. Each file describes a resource: a <em>Deployment</em> that runs your containers, a <em>Service</em> that gives them a stable network address, an <em>Ingress</em> that routes a URL to them, and so on. Those files can be applied individually, or bundled together as a <em>Helm chart</em>, a reusable package where the settings you change most often live in a single <code>values.yaml</code> file. Because the definitions are plain text, they can be kept in git right next to your code.</p>
+                </div>
+                <div class="concept-card">
+                    <h3>Namespaces</h3>
+                    <p>A Kubernetes cluster is divided into <em>namespaces</em>. On CIRRUS, each project gets its own namespace: an area of the cluster for you and your team, with limits on the resources it can use, a bit like an HPC allocation. Access to the cluster is scoped to your namespace.</p>
                 </div>
             </div>
+            </details>
+        </section>
 
-            <div class="deployment-step">
-                <div class="step-header">
-                    <h3>Storing Images in a Container Registry</h3>
+        <!-- The CIRRUS Platform -->
+        <section class="page-section">
+            <h2 class="section-heading">The CIRRUS Platform</h2>
+            <p class="lead">Each workload runs on one of the two CIRRUS clusters, using the compute, storage, networking, and security the platform provides.</p>
+
+            <details class="section-details">
+                <summary><span class="when-closed">Show details</span><span class="when-open">Hide details</span><i class="fas fa-chevron-down ms-2"></i></summary>
+
+            <p>The two clusters don't provide failover for each other, so if a cluster has an outage, workloads on it aren't automatically served from the other. Workloads can be set up to move between clusters when needed.</p>
+
+            <div class="concept-list">
+                <div class="concept-card">
+                    <h3>Compute and GPUs</h3>
+                    <p>Each running copy of your workload lives on a single server and uses only that server's CPU, memory, and GPU. Running multiple copies lets your workload use more of the cluster, with copies usually placed on different servers and traffic automatically load balanced between them by Kubernetes. Some CIRRUS servers include GPUs for workloads like model inference, visualization, and testing code against GPUs.</p>
                 </div>
-                <div class="step-content">
-                    <p>Once you have a working container image, you store it in a container registry. CIRRUS provides Harbor as a private registry, and you can also use public registries like GHCR (GitHub Container Registry) or Docker Hub.</p>
+                <div class="concept-card">
+                    <h3>Storage</h3>
+                    <p>Containers start fresh each time they are created, so anything that needs to persist is kept in separate storage. CIRRUS offers several persistent storage options, depending on how your workload needs to store its data. Workloads can also mount NCAR HPC storage directly, giving your workloads access to existing datasets without copying data into the cluster.</p>
+                </div>
+                <div class="concept-card">
+                    <h3>Networking and access</h3>
+                    <p>Workloads can be made available to the public internet or kept on the UCAR network, depending on what your project needs. Each application gets its own web address secured with HTTPS, with no networking setup required on your part.</p>
+                </div>
+                <div class="concept-card">
+                    <h3>Security</h3>
+                    <p>Security is enforced at both the cluster and network level. Cluster policies define what workloads are and aren't allowed to do, and network policies control what traffic can reach them. Sensitive values like passwords and API keys are kept in a secrets manager, never in git. You sign in with your UCAR credentials, and role-based access control (RBAC) limits you to only the resources and actions you need.</p>
+                </div>
+                <div class="concept-card">
+                    <h3>Observability</h3>
+                    <p>Metrics and logs are collected from every workload, and you can view dashboards for your own workloads to see how they are performing and troubleshoot problems.</p>
                 </div>
             </div>
+            </details>
+        </section>
 
-            <div class="deployment-step">
-                <div class="step-header">
-                    <h3>What is Kubernetes?</h3>
+        <!-- GitOps -->
+        <section class="page-section">
+            <h2 class="section-heading">GitOps and Argo CD</h2>
+            <p class="lead">Between your container image and your Kubernetes YAML or Helm chart, everything needed to run your workload is defined in code. GitOps keeps that code in git and uses it to deploy your workload automatically.</p>
+
+            <details class="section-details">
+                <summary><span class="when-closed">Show details</span><span class="when-open">Hide details</span><i class="fas fa-chevron-down ms-2"></i></summary>
+
+
+            <div class="concept-list">
+                <div class="concept-card">
+                    <h3>Git</h3>
+                    <p>Git is a version control system that tracks every change to a set of files over time. Each meaningful change is saved as a <em>commit</em>, a snapshot of your files with a message describing what changed and who changed it. Repositories are pushed to a service like GitHub, where collaborators can work on separate <em>branches</em> and propose changes through <em>pull requests</em> that others review before they are merged. If a change breaks something, the history shows exactly what changed and lets you roll back to a version you know works.</p>
                 </div>
-                <div class="step-content">
-                    <p>Kubernetes is a container orchestration platform that manages containerized workloads at scale. It handles deploying, scaling, and operating containers across clusters of hosts.</p>
+                <div class="concept-card">
+                    <h3>GitOps and continuous delivery</h3>
+                    <p><em>GitOps</em> makes a git repository the single source of truth for what is running. Instead of someone logging in to update things by hand, changes are deployed automatically as soon as they land in git, a practice called <em>continuous delivery</em>. Every deployment is tracked, reviewable, and reversible, and other researchers can use your repository to deploy the same workload themselves.</p>
+                </div>
+                <div class="concept-card">
+                    <h3>Argo CD</h3>
+                    <p>CIRRUS uses <em>Argo CD</em>, an open source continuous delivery tool, to put GitOps into practice. Argo CD watches the branch and path of your repository that define your application and continuously compares them to what is running on the cluster. When they differ, it syncs the cluster to match git. Rolling back is as simple as reverting a commit. Because each application points at a branch, you can run a development version from one branch alongside production from another, and promote changes by merging a pull request.</p>
+                </div>
+                <div class="concept-card">
+                    <h3>Automating builds with GitHub Actions</h3>
+                    <p>GitHub Actions can automate the rest of the loop. When you push code, a workflow builds a new container image, pushes it to a registry, and updates the image tag in your Helm chart, which Argo CD then deploys. CIRRUS provides GitHub Actions runners that run these workflows on CIRRUS hardware, with more resources than GitHub's free runners, optional GPU access, and access to NCAR datasets for testing.</p>
                 </div>
             </div>
+            </details>
+        </section>
 
-            <div class="deployment-step">
-                <div class="step-header">
-                    <h3>Defining Your Workloads with Helm Charts</h3>
+        <!-- Components -->
+        <section class="page-section">
+            <h2 class="section-heading">Platform Components</h2>
+            <p class="lead">The open source software that makes up CIRRUS, for those who want the specifics.</p>
+
+            <details class="section-details">
+                <summary><span class="when-closed">Show details</span><span class="when-open">Hide details</span><i class="fas fa-chevron-down ms-2"></i></summary>
+
+
+            <div class="concept-list">
+                <div class="concept-card">
+                    <h3>Ingress, DNS, and certificates</h3>
+                    <p>When someone visits your application, the request reaches the cluster through an <em>ingress controller</em>, which routes it to your containers based on the web address. CIRRUS uses Traefik as its ingress controller, with two ingress classes: <code>traefik-external</code> for applications reachable from the public internet, and <code>traefik-internal</code> for applications reachable only within the UCAR network. External endpoints get publicly accessible IP addresses from LoxiLB, which advertises them over BGP. ExternalDNS automatically creates DNS records in the <code>*.k8s.ucar.edu</code> domain for the name you choose, and cert-manager requests and renews InCommon TLS certificates from CertiNext over ACME to provide HTTPS for your applications.</p>
                 </div>
-                <div class="step-content">
-                    <p>Once your image is in a registry, it can be referenced in a Helm chart, a package that defines how your workload deploys on Kubernetes, including configuration, resources, and dependencies. Helm charts can be used to deploy resources on any Kubernetes cluster.</p>
+                <div class="concept-card">
+                    <h3>Persistent storage</h3>
+                    <p>CIRRUS uses Ceph for persistent storage, which provides three types: block storage (RBD) for volumes used by a single workload, such as a database; a shared file system (CephFS) that multiple copies of a workload can read and write at once; and object storage for files accessed over an API, similar to Amazon S3. Block and file storage are attached to containers through Kubernetes persistent volumes, so data survives container restarts and can be backed up.</p>
+                </div>
+                <div class="concept-card">
+                    <h3>Authentication and access control</h3>
+                    <p>You sign in to CIRRUS tools with your existing UCAR SSO credentials. Access is managed with role-based access control (RBAC), which sets both what you can see and what you can do, such as viewing your application in Argo CD read-only or being able to sync it yourself. Depending on your project, access can include Kubernetes API and <code>kubectl</code> for your namespace, Argo CD for your applications, Harbor for your team's images, OpenBao for your secrets, and Grafana for your team's metrics and logs. The <a href="{{ url_for('services') }}">Services</a> page covers what access each one offers and how to request it.</p>
+                </div>
+                <div class="concept-card">
+                    <h3>Secrets management</h3>
+                    <p><a href="{{ url_for('services') }}#svc-openbao">OpenBao</a> works with the External Secrets Operator to store sensitive data like API keys, passwords, and credentials. Secrets are encrypted at rest in OpenBao and delivered to your containers encrypted in transit, so sensitive information never lives in your git repository or Helm chart.</p>
+                </div>
+                <div class="concept-card">
+                    <h3>Monitoring and logging</h3>
+                    <p>Prometheus collects metrics and Loki collects logs from across the cluster. Grafana brings both together, with dashboards and alerts built on top of them. Each team gets its own Grafana organization, so you see your own metrics, logs, and dashboards without seeing anyone else's.</p>
                 </div>
             </div>
+            </details>
+        </section>
 
-            <div class="deployment-step">
-                <div class="step-header">
-                    <h3>Continuous Delivery via Argo CD</h3>
-                </div>
-                <div class="step-content">
-                    <p>Argo CD continuously monitors your Helm charts in Git repositories. When changes are detected, it automatically syncs and deploys your workload to the Kubernetes cluster, implementing true GitOps practices.</p>
-                </div>
-            </div>
-
-            <div class="deployment-step">
-                <div class="step-header">
-                    <h3>Automation with GitHub Actions</h3>
-                </div>
-                <div class="step-content">
-                    <p>GitHub Actions workflows automate your deployment pipeline. When you push code changes, workflows automatically build a new container image, push it to your container registry, update your Helm chart values to reference the new image, and trigger Argo CD to deploy the updated workload.</p>
-
-                    <p>With CIRRUS, you can connect a GitHub Actions Runner Scale Set to your repository. This provides access to more computational resources including GPUs, allowing your CI/CD workflows to run directly on the Kubernetes cluster with the hardware your builds and tests require.</p>
-                </div>
-            </div>
-
-            <div class="deployment-step">
-                <div class="step-header">
-                    <h3>Accessing Your Application: Ingress and TLS</h3>
-                </div>
-                <div class="step-content">
-                    <p>CIRRUS uses Traefik as its ingress controller, with two ingress classes: <code>traefik-external</code> for applications reachable from the public internet, and <code>traefik-internal</code> for applications reachable only within the UCAR network. External endpoints get publicly accessible IP addresses from LoxiLB, which advertises them over BGP peering.</p>
-
-                    <p>ExternalDNS automatically creates DNS records in the *.k8s.ucar.edu domain for your services, while cert-manager requests and renews InCommon TLS certificates from CertiNext over ACME to provide HTTPS endpoints for your web applications.</p>
-                </div>
-            </div>
-
-            <div class="deployment-step">
-                <div class="step-header">
-                    <h3>Mounting NCAR Storage and Data</h3>
-                </div>
-                <div class="step-content">
-                    <p>Your workloads do not have to start from scratch. CIRRUS can mount NCAR storage systems and data directly into your containers, giving your applications access to existing datasets and shared storage without copying data into the cluster. This lets you bring compute to the data your research already depends on.</p>
-                </div>
-            </div>
-
-            <div class="deployment-step">
-                <div class="step-header">
-                    <h3>Security: Secrets Management</h3>
-                </div>
-                <div class="step-content">
-                    <p>OpenBao works with the External Secrets Operator to securely store sensitive data like API keys, passwords, and credentials. Secrets are encrypted at rest in OpenBao and securely injected into your containers with encryption in transit, ensuring sensitive information never lives in your Git repository or Helm charts.</p>
-                </div>
-            </div>
-
-            <div class="deployment-step">
-                <div class="step-header">
-                    <h3>Databases: CloudNativePG</h3>
-                </div>
-                <div class="step-content">
-                    <p>If your application needs a database, CIRRUS offers CloudNativePG, a Kubernetes operator that deploys and manages highly available PostgreSQL clusters with automated backups, failover, and scaling.</p>
-                </div>
-            </div>
-
-            <div class="deployment-step">
-                <div class="step-header">
-                    <h3>Observability: Monitoring and Logging</h3>
-                </div>
-                <div class="step-content">
-                    <p>CIRRUS provides access to Grafana, which integrates with Prometheus (for metrics) and Loki (for logs) to gather telemetry from your applications. You can create custom dashboards to analyze and monitor application performance, set up alerts, and troubleshoot issues.</p>
-                </div>
-            </div>
+        <!-- Services -->
+        <section class="page-section">
+            <h2 class="section-heading">Beyond the Core Platform</h2>
+            <p>The components above are what it takes to run CIRRUS. On top of them, CIRRUS offers many additional services you can build on, such as managed databases, JupyterHub, GitHub Actions runners, and more, each with details on how to use it and request access.</p>
+            <a href="{{ url_for('services') }}" class="btn btn-primary">
+                Explore Platform Services <i class="fas fa-arrow-right ms-2"></i>
+            </a>
         </section>
     </div>
 </div>

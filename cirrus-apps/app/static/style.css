@@ -122,6 +122,15 @@ code:not(pre code) {
     transition: var(--transition);
 }
 
+/* The logo is ~530px wide at 70px tall; on phones scale it to fit instead of widening the page */
+@media (max-width: 767px) {
+    .ncar-logo img {
+        height: auto;
+        max-height: 70px;
+        max-width: 100%;
+    }
+}
+
 .ncar-logo a:hover img {
     opacity: 0.85;
 }
@@ -403,7 +412,7 @@ code:not(pre code) {
 /* ===== HERO SECTION ===== */
 .hero-section {
     background: linear-gradient(135deg, #0057C2 50%, #00357A 80%);
-    padding: 5rem 0;
+    padding: 3.5rem 0;
     position: relative;
     overflow: hidden;
 }
@@ -426,7 +435,7 @@ code:not(pre code) {
 }
 
 .hero-logo {
-    max-width: 400px;
+    max-width: min(400px, 100%);
     height: auto;
     filter: brightness(0) invert(1);
 }
@@ -435,15 +444,16 @@ code:not(pre code) {
     color: #ffffff;
     font-size: 2.5rem;
     font-weight: 700;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .hero-description {
     color: rgba(255, 255, 255, 0.95);
     font-size: 1.15rem;
     line-height: 1.8;
-    margin-bottom: 2rem;
-    max-width: 800px;
+    margin-bottom: 1.75rem;
+    max-width: 960px;
+    text-wrap: balance;
     margin-left: auto;
     margin-right: auto;
 }
@@ -458,6 +468,19 @@ code:not(pre code) {
 /* ===== BUTTONS ===== */
 .atlwdg-trigger.atlwdg-TOP {
     left: 85% !important;
+}
+
+/* Keep the Jira "Request Help" tab small on phones */
+@media (max-width: 767px) {
+    .atlwdg-trigger.atlwdg-TOP {
+        left: auto !important;
+        right: 0.5rem !important;
+        font-size: 0.75rem !important;
+        padding: 0.25rem 0.6rem !important;
+        line-height: 1.2 !important;
+        width: auto !important;
+        height: auto !important;
+    }
 }
 
 .btn-primary {
@@ -540,6 +563,76 @@ code:not(pre code) {
 }
 
 /* ===== FEATURES SECTION ===== */
+.what-is-section .lead {
+    text-wrap: balance;
+    margin-bottom: 0;
+}
+
+/* What Can You Build: five cards on one line; scrolls sideways on small screens */
+.build-cards {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 0.5rem;
+}
+
+.build-cards > .col {
+    flex: 0 0 75%;
+    max-width: 75%;
+    scroll-snap-align: start;
+}
+
+/* Round screenshot thumbnails; the runners card keeps its icon at the same size */
+.build-shot,
+.build-cards .feature-icon {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 1.25rem;
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px #ffffff, 0 0 0 6px rgba(0, 87, 194, 0.25);
+}
+
+.build-shot {
+    overflow: hidden;
+    background-color: var(--ncar-gray-light);
+}
+
+.build-shot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.build-cards .feature-icon {
+    font-size: 3rem;
+}
+
+.build-cards .feature-card {
+    padding: 2rem 1.25rem;
+}
+
+.build-cards .feature-card h3 {
+    font-size: 1.15rem;
+    margin-bottom: 0;
+}
+
+@media (min-width: 768px) {
+    .build-cards > .col {
+        flex-basis: 40%;
+        max-width: 40%;
+    }
+}
+
+@media (min-width: 992px) {
+    .build-cards {
+        overflow-x: visible;
+    }
+
+    .build-cards > .col {
+        flex: 1 0 0;
+        max-width: none;
+    }
+}
+
 .features-section {
     background-color: transparent;
 }
@@ -552,6 +645,7 @@ code:not(pre code) {
 }
 
 .section-subtitle {
+    margin-bottom: 0;
     font-size: 1.15rem;
     color: var(--ncar-blue-dark);
 }
@@ -694,13 +788,16 @@ em {
 .step-card {
     background: var(--ncar-blue-dark);
     border-radius: 16px;
-    padding: 3rem;
+    padding: 2rem 1.5rem;
     height: 100%;
     border: 1px solid var(--ncar-blue-light);
 }
 
 .step-card h4 {
     color: #fff;
+    font-size: 1.2rem;
+    font-weight: 600;
+    white-space: nowrap;
 }
 
 .step-banner {
@@ -762,6 +859,7 @@ em {
     line-height: 1.8;
     max-width: 800px;
     margin: 0 auto;
+    text-wrap: balance;
 }
 
 /* ===== APP CARDS ===== */
@@ -1145,34 +1243,35 @@ em {
 }
 
 /* ===== CONTENT WRAPPER ===== */
+/* Getting Started: each section is its own card */
+.page-sections {
+    margin-bottom: 2rem;
+}
+
+.page-section {
+    background-color: #ffffff;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.page-section > :last-child {
+    margin-bottom: 0;
+}
+
+@media (max-width: 767px) {
+    .page-section {
+        padding: 1.5rem;
+    }
+}
+
 .content-wrapper {
     background-color: white;
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 2rem;
-}
-
-.content-panel {
-    background: linear-gradient(135deg, #0057C2 50%, #00357A 80%);
-    border-radius: 0.75rem;
-    padding: 2.5rem;
-    margin-bottom: 3rem;
-    position: relative;
-    overflow: hidden;
-}
-
-.content-panel .section-heading,
-.content-panel p {
-    color: #fff;
-}
-
-.content-panel p:last-child {
-    margin-bottom: 0;
-}
-
-.content-panel .section-heading {
-    text-align: center;
 }
 
 /* ReadTheDocs table styling */
@@ -1518,12 +1617,15 @@ em {
     margin-right: 0.5rem;
 }
 
-/* ===== ARCHITECTURE ===== */
-.architecture img {
-    width: 100%;
+/* ===== SERVICES PAGE ===== */
+.services-intro {
+    margin-bottom: 2rem;
 }
 
-/* ===== SERVICES PAGE ===== */
+.services-intro li + li {
+    margin-top: 0.25rem;
+}
+
 .services-nav {
     background: white;
     border: 2px solid #e9ecef;
@@ -1583,19 +1685,6 @@ em {
     width: 56px;
     height: 56px;
     object-fit: contain;
-    flex-shrink: 0;
-}
-
-.service-pane-icon {
-    width: 56px;
-    height: 56px;
-    background: var(--ncar-blue);
-    color: white;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
     flex-shrink: 0;
 }
 
@@ -1737,6 +1826,90 @@ em {
     margin-bottom: 1rem;
 }
 
+.lead-callout {
+    background: linear-gradient(135deg, #0057C2 50%, #00357A 80%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 1.75rem 2.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.15rem;
+    line-height: 1.7;
+    text-align: center;
+    text-wrap: balance;
+}
+
+@media (max-width: 767px) {
+    .lead-callout {
+        padding: 1.25rem 1.25rem;
+        font-size: 1.05rem;
+    }
+}
+
+.concept-list {
+    margin: 1.5rem 0;
+}
+
+/* Simple divider between concepts, like an <hr> */
+.concept-card + .concept-card {
+    border-top: 1px solid #dee2e6;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+}
+
+.concept-card h3 {
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--ncar-blue-dark);
+    margin-bottom: 0.5rem;
+}
+
+.concept-card p {
+    margin-bottom: 0;
+}
+
+/* Collapsible section details (Architecture page) */
+.section-details > summary {
+    display: inline-flex;
+    align-items: center;
+    list-style: none;
+    cursor: pointer;
+    color: var(--ncar-blue);
+    font-weight: 600;
+}
+
+.section-details > summary::-webkit-details-marker {
+    display: none;
+}
+
+.section-details > summary:hover {
+    text-decoration: underline;
+}
+
+.section-details > summary i {
+    transition: transform 0.2s ease;
+}
+
+.section-details[open] > summary i {
+    transform: rotate(180deg);
+}
+
+.section-details .when-open,
+.section-details[open] .when-closed {
+    display: none;
+}
+
+.section-details[open] .when-open {
+    display: inline;
+}
+
+.section-details > summary + * {
+    margin-top: 1.5rem;
+}
+
+.section-details > :last-child {
+    margin-bottom: 0;
+}
+
 .access-overview .access-point {
     display: flex;
     gap: 1rem;
@@ -1800,7 +1973,7 @@ em {
 
 @media (max-width: 767px) {
     .hero-section {
-        padding: 3rem 0;
+        padding: 2.5rem 0;
     }
 
     .hero-title {
@@ -1825,7 +1998,7 @@ em {
     }
 
     .cta-card {
-        padding: 2rem;
+        padding: 1.5rem;
     }
 
     .cta-card .btn {

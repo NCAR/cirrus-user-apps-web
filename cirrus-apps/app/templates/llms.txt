@@ -1,0 +1,28 @@
+# CIRRUS
+
+> CIRRUS is NSF NCAR's Cloud Native platform for always-on research workloads: two Kubernetes clusters (NCAR Mesa Lab and NWSC) run by the CIRRUS team. Workloads are packaged as containers, described with Helm charts or Kubernetes YAML in git, and deployed by Argo CD. It complements NCAR's HPC systems rather than replacing them.
+{% if mcp_url %}
+## For AI agents
+
+Prefer the CIRRUS MCP server over scraping these pages. It provides platform information in a structured form.
+
+- MCP server (Streamable HTTP): {{ mcp_url }}
+{% endif %}
+## Pages
+
+- [Getting Started]({{ base }}getting-started): how CIRRUS works and the steps to deploy a workload
+- [Architecture]({{ base }}architecture): containers, Kubernetes, GitOps, and the platform components
+- [Services]({{ base }}services): platform services (Argo CD, Harbor, OpenBao, CloudNativePG, storage, JupyterHub, GitHub Actions runners, Grafana, and more) and how to request access to each
+- [Applications]({{ base }}apps): research workloads running on CIRRUS today
+- [SLA]({{ base }}sla): service level agreement
+- [Status]({{ base }}status): current cluster status
+
+## Documentation
+
+- [CIRRUS documentation](https://ncar-hpc-docs.readthedocs.io/en/latest/compute-systems/cirrus/): full user guides
+- [CIRRUS examples](https://github.com/NCAR/cirrus-examples): example Helm charts
+
+## Contact
+
+- Email: cirrus-admin@ucar.edu
+- Help requests: {{ JIRA_HELP_URL }}
